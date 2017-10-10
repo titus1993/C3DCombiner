@@ -1,0 +1,10 @@
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe.config
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.pdb
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.csprojResolveAssemblyReference.cache
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.Properties.Resources.resources
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.csproj.GenerateResource.Cache
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.pdb
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\FastColoredTextBox.xml
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.Form1.resources

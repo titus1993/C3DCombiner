@@ -146,7 +146,7 @@ namespace C3DCombiner
         public const String PARA = "para";
         public const String LOOP = "loop";
         public const String LITERALES = "literales";
-
+        public const String LISTA_IMPORTAR = "lista_importar";
         public const String IMPORTAR = "importar";
         public const String LISTA_ARCHIVO = "lista_archivo";
         public const String ARCHIVO = "archivo";

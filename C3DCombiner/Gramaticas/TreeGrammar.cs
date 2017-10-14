@@ -197,11 +197,14 @@ namespace C3DCombiner
             var PARA = new NonTerminal(Constante.PARA);
             var LOOP = new NonTerminal(Constante.LOOP);
             var LITERALES = new NonTerminal(Constante.LITERALES);
+            var LISTA_IMPORTAR = new NonTerminal(Constante.LISTA_IMPORTAR);
             var IMPORTAR = new NonTerminal(Constante.IMPORTAR);
             var LISTA_ARCHIVO = new NonTerminal(Constante.LISTA_ARCHIVO);
             var ARCHIVO = new NonTerminal(Constante.ARCHIVO);
 
-            INICIO.Rule = IMPORTAR + LISTA_CLASE;
+            INICIO.Rule = LISTA_IMPORTAR + LISTA_CLASE;
+
+            LISTA_IMPORTAR.Rule = MakePlusRule(LISTA_IMPORTAR, IMPORTAR);
 
             IMPORTAR.Rule = TImportar + LISTA_ARCHIVO + Eos
                 | Empty;
@@ -301,23 +304,22 @@ namespace C3DCombiner
                 | TIPO + Id + LISTA_DIMENSIONES;
 
 
-            ASIGNACION.Rule = OBJETO + TAsignacion + EXP
+            ASIGNACION.Rule = OBJETO + Id + LISTA_DIMENSIONES + TAsignacion + EXP
+                | Id + LISTA_DIMENSIONES + TAsignacion + EXP
+                | OBJETO + Id + TAsignacion + EXP
+                | Id + TAsignacion + EXP
                 | TParentesis_Izq + EXP + TAumento + TParentesis_Der
                 | TParentesis_Izq + EXP + TDecremento + TParentesis_Der
-                | TSelf + HIJO + TAsignacion + EXP
-                | TSuper + TPunto + OBJETO + TAsignacion + EXP
                 ;
 
-            LLAMADA.Rule = Id + TPunto + OBJETO
-                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der + TPunto + OBJETO //llamada vector o funcion
-                | Id + LISTA_DIMENSIONES + TPunto + OBJETO//llamada arreglo
-                | TSelf + TPunto + OBJETO
-                | TSuper + TPunto + OBJETO
-                | TSuper + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+            LLAMADA.Rule = OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | OBJETO + Id + LISTA_DIMENSIONES
+                | Id + LISTA_DIMENSIONES
                 | TOutString + TCorchete_Izq + EXP + TCorchete_Der
+                | TSuper + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
                 ;
-
-            //Sentencia SI
+            
             SI.Rule = TSi + EXP + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent + LISTA_SINOSIS + SINO;
 
             LISTA_SINOSIS.Rule = LISTA_SINOSI
@@ -348,7 +350,7 @@ namespace C3DCombiner
             REPETIR.Rule = TRepetir + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent + THasta + EXP + Eos;
 
             PARA.Rule = TPara + TCorchete_Izq + ASIGNACION + TDosPuntos + EXP + TDosPuntos + EXP + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
-                | TPara + TCorchete_Izq + ASIGNACION + TDosPuntos + EXP + TDosPuntos + EXP + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
+                | TPara + TCorchete_Izq + DECLARACION + TDosPuntos + EXP + TDosPuntos + EXP + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
                 ;
 
             LOOP.Rule = TLoop + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent;
@@ -360,47 +362,6 @@ namespace C3DCombiner
                 | TTrue
                 | TFalse
                 ;
-
-            /*                      
-
-            
-
-
-            //Selecciona
-            SELECCIONA.Rule = TSelecciona + TParentesis_Abre + EXP + TParentesis_Cierra + LISTA_CASOS + DEFECTOS;
-
-            LISTA_CASOS.Rule = this.MakePlusRule(LISTA_CASOS, CASO);
-
-            CASO.Rule = VALOR + TDosPuntos + TLlave_Abre + LISTA_INSTRUCCIONES + TLlave_Cierra;
-
-            DEFECTOS.Rule = DEFECTO
-                | Empty;
-
-            DEFECTO.Rule = TDefecto + TDosPuntos + TLlave_Abre + LISTA_INSTRUCCIONES + TLlave_Cierra;
-
-            VALOR.Rule = Numero
-                | Cadena;
-
-
-            //Para
-            PARA.Rule = TPara + TParentesis_Abre + TIPO + Id + TIgual + EXP + TPuntoyComa + EXP + TPuntoyComa + SIMPLIFICADA + TParentesis_Cierra + TLlave_Abre + LISTA_INSTRUCCIONES + TLlave_Cierra;
-
-            SIMPLIFICADA.Rule = TAumento
-                | TDecremento;
-
-
-            //Hasta
-            HASTA.Rule = THasta + TParentesis_Abre + EXP + TParentesis_Cierra + TLlave_Abre + LISTA_INSTRUCCIONES + TLlave_Cierra;
-
-
-            //Mientras
-            MIENTRAS.Rule = TMientras + TParentesis_Abre + EXP + TParentesis_Cierra + TLlave_Abre + LISTA_INSTRUCCIONES + TLlave_Cierra;
-
-            //Expresiones y tipo
-            TIPO.Rule = TNumber
-                | TString
-                | TBool
-                | TVoid;*/
 
             LISTA_EXPS.Rule = LISTA_EXP
                 | Empty;
@@ -431,11 +392,15 @@ namespace C3DCombiner
                 | Entero
                 | Caracter
                 | Cadena
-                | OBJETO
                 | TTrue
                 | TFalse
-                | TSelf + HIJO
-                | TSuper + TPunto + OBJETO
+                | TSelf
+                | OBJETO + Id
+                | OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | OBJETO + Id + LISTA_DIMENSIONES
+                | Id
+                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | Id + LISTA_DIMENSIONES
                 | TNuevo + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
                 | TParseInt + TCorchete_Izq + EXP + TCorchete_Der
                 | TParseDouble + TCorchete_Izq + EXP + TCorchete_Der
@@ -444,14 +409,14 @@ namespace C3DCombiner
                 | TDoubleToInt + TCorchete_Izq + EXP + TCorchete_Der
                 ;
 
-            OBJETO.Rule = Id + HIJO
-                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der + HIJO //llamada vector o funcion
-                | Id + LISTA_DIMENSIONES + HIJO;//llamada arreglo
+            OBJETO.Rule = MakePlusRule(OBJETO, HIJO);
 
-            HIJO.Rule = TPunto + Id + HIJO
-                | TPunto + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der + HIJO //llamada vector o funcion
-                | TPunto + Id + LISTA_DIMENSIONES + HIJO//llamada arreglo
-                | Empty;
+            HIJO.Rule = Id + TPunto
+                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der + TPunto
+                | Id + LISTA_DIMENSIONES + TPunto
+                | TSelf + TPunto
+                | TSuper + TPunto
+                ;
 
 
             RegisterOperators(1, Associativity.Left, TOr.ToString());

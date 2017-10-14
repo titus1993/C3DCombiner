@@ -16,13 +16,22 @@ namespace C3DCombiner
         public TitusTabControl()
         {
             initComponents();
+            setImageIco();
         }
 
+        private void setImageIco()
+        {
+            ImageList lista = new ImageList();
+            lista.Images.Add("Archivo", Image.FromFile(@"ocl.ico"));
+            lista.Images.Add("Archivo", Image.FromFile(@"tree.ico"));
+            lista.Images.Add("Archivo", Image.FromFile(@"ddd.ico"));
+            this.ImageList = lista;
+        }
 
         private void initComponents()
-        {              
+        {
             ImageList imgButtons = new System.Windows.Forms.ImageList();
-            
+
             // imgButtons
             imgButtons = new ImageList();
             imgButtons.TransparentColor = System.Drawing.Color.Transparent;
@@ -34,6 +43,7 @@ namespace C3DCombiner
             this.Location = new System.Drawing.Point(12, 30);
             this.ButtonImageList = imgButtons;
             this.TabButtonClicked += TitusTabControl_TabButtonClicked;
+            this.Dock = DockStyle.Fill;
         }
 
         //evento para cerrar las pestañas
@@ -77,7 +87,8 @@ namespace C3DCombiner
                                         default:
                                             break;
                                     }
-                                }else
+                                }
+                                else
                                 {
                                     page.Remove();
                                 }
@@ -89,29 +100,46 @@ namespace C3DCombiner
         }
 
 
-        public void agregarNewTab()
+        public void agregarNewTab(int tipo)
         {
             String nombre = "Nuevo Documento " + contador.ToString();
-            TitusTab aux = new TitusTab(nombre,"", "");
+            TitusTab aux = new TitusTab(nombre, "", "", tipo, true);
             this.Pages.Add(aux);
             contador++;
         }
 
         public void abrirTab()
         {
-            OpenFileDialog abrir = new OpenFileDialog();
-            abrir.Filter = TitusTools.DialogFilter;
-            abrir.Title = "Abrir";
-            abrir.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            abrir.ShowDialog();
+            TitusTools.FDAbrirArchivo.ShowDialog();
 
-            if (abrir.FileName != "")
+            if (TitusTools.FDAbrirArchivo.FileName != "")
             {
-                TitusTab aux = new TitusTab(abrir.SafeFileName, File.ReadAllText(abrir.FileName), abrir.FileName);
-                this.Pages.Add(aux);
-            }                      
+                if (TitusTools.FDAbrirArchivo.FilterIndex == 1)
+                {
+                    TitusTab aux = new TitusTab(TitusTools.FDAbrirArchivo.SafeFileName, File.ReadAllText(TitusTools.FDAbrirArchivo.FileName), TitusTools.FDAbrirArchivo.FileName, 0, false);
+                    this.Pages.Add(aux);
+                }
+                else if (TitusTools.FDAbrirArchivo.FilterIndex == 2)
+                {
+                    TitusTab aux = new TitusTab(TitusTools.FDAbrirArchivo.SafeFileName, File.ReadAllText(TitusTools.FDAbrirArchivo.FileName), TitusTools.FDAbrirArchivo.FileName, 1, false);
+                    this.Pages.Add(aux);
+                }
+                else if (TitusTools.FDAbrirArchivo.FilterIndex == 3)
+                {
+                    TitusTab aux = new TitusTab(TitusTools.FDAbrirArchivo.SafeFileName, File.ReadAllText(TitusTools.FDAbrirArchivo.FileName), TitusTools.FDAbrirArchivo.FileName, 2, false);
+                    this.Pages.Add(aux);
+                }
+            }
+
+            TitusTools.FDAbrirArchivo.FileName = "";
         }
-        
+
+        public void abrirTab(String nombre, String ruta, int tipo)
+        {
+            TitusTab aux = new TitusTab(nombre, File.ReadAllText(ruta), ruta, tipo, false);
+            this.Pages.Add(aux);
+        }
+
         public void guardarTab()
         {
             TitusTab TTaux = (TitusTab)this.SelectedPage;
@@ -120,7 +148,7 @@ namespace C3DCombiner
                 TTaux.guardarArchivo();
                 this.Refresh();
                 this.UpdateLayout();
-            }            
+            }
         }
 
         public void guardarComoTab()

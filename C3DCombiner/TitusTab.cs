@@ -16,18 +16,38 @@ namespace C3DCombiner
         Label panel;
         bool modificado;
         string ruta;
+        int tipo; // 0 ocl, 1 tree, 2 ddd
 
         //Variables para usar Irony
         //SBScriptGrammar Gramatica;
         LanguageData language;
         Parser parser;
 
-        public TitusTab(String nombre, String texto, String ruta)
+        public TitusTab(String nombre, String texto, String ruta, int tipo , Boolean extension)
         {
             this.Text = nombre;
+            this.ImageIndex = tipo;
+            if (extension)
+            {
+                switch (tipo)
+                {
+                    case 0:
+                        this.Text += ".ocl";
+                        break;
+
+                    case 1:
+                        this.Text += ".tree";
+                        break;
+
+                    case 2:
+                        this.Text += ".ddd";
+                        break;
+                }
+            }            
+
             //inicializamos la variable que tendra la ruta del archivo
             this.ruta = ruta;
-            
+            this.tipo = tipo;
             initComponent(texto);
         }
 
@@ -114,18 +134,15 @@ namespace C3DCombiner
             Boolean estado = false;
             if (String.IsNullOrWhiteSpace(ruta))
             {
-                SaveFileDialog guardar = new SaveFileDialog();
-                
-                guardar.Filter = TitusTools.DialogFilter;
-                guardar.Title = "Guardar Archivo";
-                guardar.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-                if (guardar.ShowDialog() == DialogResult.OK)
+                TitusTools.FDGuardarArchivo.FilterIndex = tipo+1;
+
+                if (TitusTools.FDGuardarArchivo.ShowDialog() == DialogResult.OK)
                 {
-                    System.IO.FileStream fs = (System.IO.FileStream)guardar.OpenFile();
+                    System.IO.FileStream fs = (System.IO.FileStream)TitusTools.FDGuardarArchivo.OpenFile();
                     fs.Close();
-                    System.IO.File.WriteAllText(guardar.FileName, this.TBContenido.Text);
-                    ruta = guardar.FileName;
+                    System.IO.File.WriteAllText(TitusTools.FDGuardarArchivo.FileName, this.TBContenido.Text);
+                    ruta = TitusTools.FDGuardarArchivo.FileName;
                     modificado = false;
                     this.Text = System.IO.Path.GetFileName(ruta);
                     estado = true;
@@ -137,28 +154,25 @@ namespace C3DCombiner
                 this.Text = System.IO.Path.GetFileName(ruta);
                 estado = true;
             }
+            TitusTools.FDGuardarArchivo.FileName = "";
             return estado;
         }
 
         public void guardarComoArchivo()
         {
-            SaveFileDialog guardar = new SaveFileDialog();
+            TitusTools.FDGuardarArchivo.FilterIndex = tipo + 1;
 
-            guardar.Filter = TitusTools.DialogFilter;
-            guardar.Title = "Guardar Archivo";
-            guardar.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            
-
-            if (guardar.ShowDialog() == DialogResult.OK)
+            if (TitusTools.FDGuardarArchivo.ShowDialog() == DialogResult.OK)
             {
-                System.IO.FileStream fs = (System.IO.FileStream)guardar.OpenFile();
+                System.IO.FileStream fs = (System.IO.FileStream)TitusTools.FDGuardarArchivo.OpenFile();
                 fs.Close();
-                System.IO.File.WriteAllText(guardar.FileName, this.TBContenido.Text);
-                ruta = guardar.FileName;
+                System.IO.File.WriteAllText(TitusTools.FDGuardarArchivo.FileName, this.TBContenido.Text);
+                ruta = TitusTools.FDGuardarArchivo.FileName;
 
                 modificado = false;
                 this.Text = System.IO.Path.GetFileName(ruta);
-            }            
+            }
+            TitusTools.FDGuardarArchivo.FileName = "";
         }
     }    
 }

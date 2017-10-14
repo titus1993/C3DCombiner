@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>C3DCombiner</RootNamespace>
     <AssemblyName>C3DCombiner</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
@@ -93,14 +93,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FMain.cs">
+    <Compile Include="Forms\FAddClase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FMain.Designer.cs">
+    <Compile Include="Forms\FAddClase.Designer.cs">
+      <DependentUpon>FAddClase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FAddVariable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FAddVariable.Designer.cs">
+      <DependentUpon>FAddVariable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gramaticas\Constante.cs" />
+    <Compile Include="Gramaticas\TreeGrammar.cs" />
     <Compile Include="IronyFCTB.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\FUml.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FUml.Designer.cs">
+      <DependentUpon>FUml.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -114,13 +134,24 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TitusTools.cs" />
-    <Compile Include="Tree\TitusNode.cs" />
     <Compile Include="Tree\TitusTree.cs">
       <SubType>Component</SubType>
     </Compile>
-    <EmbeddedResource Include="FMain.resx">
+    <Compile Include="UML\Atributo.cs" />
+    <Compile Include="UML\Clase.cs" />
+    <EmbeddedResource Include="Forms\FAddClase.resx">
+      <DependentUpon>FAddClase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FAddVariable.resx">
+      <DependentUpon>FAddVariable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FUml.resx">
+      <DependentUpon>FUml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -146,16 +177,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\Abrir.png" />
+    <None Include="bin\Debug\acf.ico" />
     <Content Include="bin\Debug\Album.png" />
+    <None Include="bin\Debug\carpeta.ico" />
+    <None Include="bin\Debug\Carpeta2.png" />
+    <None Include="bin\Debug\archivo.ico" />
     <Content Include="bin\Debug\cerrar.ico" />
     <Content Include="bin\Debug\Console.png" />
+    <None Include="bin\Debug\Tree.png" />
+    <None Include="bin\Debug\ddd.png" />
     <Content Include="bin\Debug\Ejecutar.png" />
     <Content Include="bin\Debug\Error.png" />
     <Content Include="bin\Debug\Guardar.png" />
     <Content Include="bin\Debug\guardarcomo.png" />
     <Content Include="bin\Debug\GuardarComo2.png" />
+    <None Include="bin\Debug\jc.ico" />
     <Content Include="bin\Debug\Logo2.ico" />
     <Content Include="bin\Debug\Nuevo.png" />
+    <None Include="bin\Debug\Ocl.png" />
     <Content Include="bin\Debug\Salir.png" />
   </ItemGroup>
   <ItemGroup>

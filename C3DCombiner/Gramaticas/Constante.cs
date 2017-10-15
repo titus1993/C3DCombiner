@@ -34,6 +34,7 @@ namespace C3DCombiner
         public const String TPor = "*";
         public const String TDivision = "/";
         public const String TPotencia = "pow";
+        public const String TPotenciaOCL = "^";
         public const String TAumento = "++";
         public const String TDecremento = "--";
         public const String TMayor = ">";
@@ -46,6 +47,11 @@ namespace C3DCombiner
         public const String TOr = "or";
         public const String TXor = "xor";
         public const String TNot = "not";
+
+        public const String TAndOCL = "&&";
+        public const String TOrOCL = "||";
+        public const String TXorOCL = "??";
+        public const String TNotOCL = "!";
 
         public const String TParetesis_Izq = "(";
         public const String TParentesis_Der = ")";
@@ -60,6 +66,7 @@ namespace C3DCombiner
         public const String TIgual = "=";
         public const String TAsignacion = "=>";
 
+        public const String TLlamar = "llamar";
         public const String TImportar = "importar";
         public const String TClase = "clase";
         public const String TConstructor = "__constructor";
@@ -111,6 +118,7 @@ namespace C3DCombiner
         public const String DECLARACION = "declaracion";
         public const String ASIGNACION = "asignacion";
         public const String TIPO = "tipo";
+        public const String TIPO_METODO = "tipo_metodo";
         public const String LISTA_ID = "lista_id";
         public const String LISTA_DIMENSIONES = "lista_dimensiones";
         public const String DIMENSION = "dimension";

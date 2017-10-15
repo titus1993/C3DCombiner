@@ -19,11 +19,12 @@ namespace C3DCombiner
         int tipo; // 0 ocl, 1 tree, 2 ddd
 
         //Variables para usar Irony
-        //SBScriptGrammar Gramatica;
+        TreeGrammar Gramatica;
+
         LanguageData language;
         Parser parser;
 
-        public TitusTab(String nombre, String texto, String ruta, int tipo , Boolean extension)
+        public TitusTab(String nombre, String texto, String ruta, int tipo, Boolean extension)
         {
             this.Text = nombre;
             this.ImageIndex = tipo;
@@ -43,7 +44,7 @@ namespace C3DCombiner
                         this.Text += ".ddd";
                         break;
                 }
-            }            
+            }
 
             //inicializamos la variable que tendra la ruta del archivo
             this.ruta = ruta;
@@ -62,9 +63,9 @@ namespace C3DCombiner
                 EjecutarSBS primerpasada = a.GenerarSimbolo(TBContenido.Text, ruta);//primera pasada solo para generar los simbolos
                 //segunda pasada para buscar el principal y algunos errores
                 Ejecucion.Ejecutar Iniciar = new Ejecucion.Ejecutar(primerpasada);*/
-                
+
             }
-                
+
         }
 
         private void initComponent(String texto)
@@ -72,20 +73,54 @@ namespace C3DCombiner
             //iniciamos la bandera para saber si ha sido guardado los datos
             this.modificado = false;
 
-            //Inicializamos la gramatica y su lenguage para tener el parse
-            //Gramatica = new SBScriptGrammar();
-            //language = new LanguageData(Gramatica);
-            //parser = new Parser(language);
+            switch (this.tipo)
+            {
+                case 0:
+                    {
+                        //Inicializamos la gramatica y su lenguage para tener el parse
+                        /*Gramatica = new TreeGrammar();
+                        language = new LanguageData(Gramatica);
+                        parser = new Parser(language);*/
 
-            //creamos el textbox
-            TBContenido = new IronyFCTB();
-            //TBContenido.Grammar = Gramatica;
-            
-            
+                        //creamos el textbox
+                        TBContenido = new IronyFCTB();
+                        //TBContenido.Grammar = Gramatica;
+                    }
+                    break;
+
+                case 1:
+                    {
+                        //Inicializamos la gramatica y su lenguage para tener el parse
+                        Gramatica = new TreeGrammar();
+                        language = new LanguageData(Gramatica);
+                        parser = new Parser(language);
+
+                        //creamos el textbox
+                        TBContenido = new IronyFCTB();
+                        TBContenido.Grammar = Gramatica;
+                    }
+                    break;
+
+                case 2:
+                    {
+                        //Inicializamos la gramatica y su lenguage para tener el parse
+                        /*Gramatica = new TreeGrammar();
+                        language = new LanguageData(Gramatica);
+                        parser = new Parser(language);*/
+
+                        //creamos el textbox
+                        TBContenido = new IronyFCTB();
+                        //TBContenido.Grammar = Gramatica;
+                    }
+                    break;
+            }
+
+
+
             TBContenido.Multiline = true;
             TBContenido.Text = texto;
             //TBContenido.ScrollBars = RichTextBoxScrollBars.Both;
- 
+
             TBContenido.WordWrap = false;
             TBContenido.Dock = DockStyle.Fill;
 
@@ -94,7 +129,7 @@ namespace C3DCombiner
             panel.Dock = DockStyle.Bottom;
             panel.Text = "Linea: 1, Columna: 1";
             panel.TextAlign = ContentAlignment.MiddleRight;
-            
+
 
             //agregamos los eventos
             TBContenido.TextChanged += TBContenido_TextChanged;
@@ -135,7 +170,7 @@ namespace C3DCombiner
             if (String.IsNullOrWhiteSpace(ruta))
             {
 
-                TitusTools.FDGuardarArchivo.FilterIndex = tipo+1;
+                TitusTools.FDGuardarArchivo.FilterIndex = tipo + 1;
 
                 if (TitusTools.FDGuardarArchivo.ShowDialog() == DialogResult.OK)
                 {
@@ -147,7 +182,8 @@ namespace C3DCombiner
                     this.Text = System.IO.Path.GetFileName(ruta);
                     estado = true;
                 }
-            }else
+            }
+            else
             {
                 System.IO.File.WriteAllText(this.ruta, this.TBContenido.Text);
                 modificado = false;
@@ -174,5 +210,5 @@ namespace C3DCombiner
             }
             TitusTools.FDGuardarArchivo.FileName = "";
         }
-    }    
+    }
 }

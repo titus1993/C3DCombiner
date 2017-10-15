@@ -1,25 +1,24 @@
-﻿using System;
+﻿using Irony.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Irony.Parsing;
-using Irony.Ast;
 
 namespace C3DCombiner
 {
-    [Language("Tree", "1.0", "Tree Grammar")]
-    class TreeGrammar : Grammar
+    [Language("OCL++", "1.0", "OCL++ Grammar")]
+    class OCLGrammar : Grammar
     {
 
         private readonly TerminalSet mSkipTokensInPreview = new TerminalSet(); //used in token preview for conflict resolution
 
-        public TreeGrammar() : base(caseSensitive: false)
+        public OCLGrammar() : base(caseSensitive: false)
         {
-            
+
             //Comentarios
-            CommentTerminal DelimitedComment = new CommentTerminal("DelimitedComment", "{--", "--}");
-            CommentTerminal SingleLineComment = new CommentTerminal("SingleLineComment", "##", "\r", "\n", "\u2085", "\u2028", "\u2029");
+            CommentTerminal DelimitedComment = new CommentTerminal("DelimitedComment", "{/-", "-/}");
+            CommentTerminal SingleLineComment = new CommentTerminal("SingleLineComment", "//", "\r", "\n", "\u2085", "\u2028", "\u2029");
 
 
             NonGrammarTerminals.Add(DelimitedComment);
@@ -51,7 +50,7 @@ namespace C3DCombiner
             var TMenos = ToTerm(Constante.TMenos);
             var TPor = ToTerm(Constante.TPor);
             var TDivision = ToTerm(Constante.TDivision);
-            var TPotencia = ToTerm(Constante.TPotencia);
+            var TPotencia = ToTerm(Constante.TPotenciaOCL);
             var TAumento = ToTerm(Constante.TAumento);
             var TDecremento = ToTerm(Constante.TDecremento);
             var TMayor = ToTerm(Constante.TMayor);
@@ -60,10 +59,10 @@ namespace C3DCombiner
             var TMenorIgual = ToTerm(Constante.TMenorIgual);
             var TIgualacion = ToTerm(Constante.TIgualacion);
             var TDiferenciacion = ToTerm(Constante.TDiferenciacion);
-            var TAnd = ToTerm(Constante.TAnd);
-            var TOr = ToTerm(Constante.TOr);
-            var TXor = ToTerm(Constante.TXor);
-            var TNot = ToTerm(Constante.TNot);
+            var TAnd = ToTerm(Constante.TAndOCL);
+            var TOr = ToTerm(Constante.TOrOCL);
+            var TXor = ToTerm(Constante.TXorOCL);
+            var TNot = ToTerm(Constante.TNotOCL);
 
             var TParentesis_Izq = ToTerm(Constante.TParetesis_Izq);
             var TParentesis_Der = ToTerm(Constante.TParentesis_Der);
@@ -78,16 +77,17 @@ namespace C3DCombiner
             var TIgual = ToTerm(Constante.TIgual);
             var TAsignacion = ToTerm(Constante.TAsignacion);
 
+            var THereda = ToTerm(Constante.THereda);
             var TImportar = ToTerm(Constante.TImportar);
+            var TLlamar = ToTerm(Constante.TLlamar);
             var TClase = ToTerm(Constante.TClase);
             var TConstructor = ToTerm(Constante.TConstructor);
             var TMetodo = ToTerm(Constante.TMetodo);
             var TFuncion = ToTerm(Constante.TFuncion);
             var TRetorno = ToTerm(Constante.TRetorno);
-            var TNuevo = ToTerm(Constante.TNuevo);
             var TSuper = ToTerm(Constante.TSuper);
-            var TSobrescribirTree = ToTerm(Constante.TSobrescribirTree);
-            var TSelf = ToTerm(Constante.TSelf);
+            var TSobrescribirOLC = ToTerm(Constante.TSobrescribirOLC);
+            var TEste = ToTerm(Constante.TEste);
             var TSi = ToTerm(Constante.TSi);
             var TSino = ToTerm(Constante.TSino);
             var TSinoSi = ToTerm(Constante.TSinoSi);
@@ -107,6 +107,15 @@ namespace C3DCombiner
             var TIntToStr = ToTerm(Constante.TIntToStr);
             var TDoubleToStr = ToTerm(Constante.TDoubleToStr);
             var TDoubleToInt = ToTerm(Constante.TDoubleToInt);
+
+
+
+            var TPrincipal = ToTerm(Constante.TPrincipal);
+            var TNew = ToTerm(Constante.TNew);
+            var TX = ToTerm(Constante.TX);
+            var TUntil = ToTerm(Constante.TUntil);
+            var TImprimir = ToTerm(Constante.TImprimir);
+
 
 
 
@@ -130,7 +139,7 @@ namespace C3DCombiner
             MarkReservedWords(Constante.TNuevo);
             MarkReservedWords(Constante.TSuper);
             MarkReservedWords(Constante.TSobrescribirTree);
-            MarkReservedWords(Constante.TSelf);
+            MarkReservedWords(Constante.TEste);
             MarkReservedWords(Constante.TSi);
             MarkReservedWords(Constante.TSino);
             MarkReservedWords(Constante.TSinoSi);
@@ -162,6 +171,7 @@ namespace C3DCombiner
             var DECLARACION = new NonTerminal(Constante.DECLARACION);
             var ASIGNACION = new NonTerminal(Constante.ASIGNACION);
             var TIPO = new NonTerminal(Constante.TIPO);
+            var TIPO_METODO = new NonTerminal(Constante.TIPO_METODO);
             var LISTA_EXPS = new NonTerminal(Constante.LISTA_EXPS);
             var LISTA_EXP = new NonTerminal(Constante.LISTA_EXP);
             var EXP = new NonTerminal(Constante.EXP);
@@ -206,20 +216,14 @@ namespace C3DCombiner
 
             LISTA_IMPORTAR.Rule = MakePlusRule(LISTA_IMPORTAR, IMPORTAR);
 
-            IMPORTAR.Rule = TImportar + LISTA_ARCHIVO + Eos
-                | Empty;
-
-            LISTA_ARCHIVO.Rule = MakeListRule(LISTA_ARCHIVO, TComa, ARCHIVO);
-
-            ARCHIVO.Rule = Id + ".tree"
-                | Id + ".olc"
-                | Cadena
+            IMPORTAR.Rule = TImportar + TParentesis_Izq + Cadena + TParentesis_Der + TPuntoComa
+                | TLlamar + TParentesis_Izq + Cadena + TParentesis_Der + TPuntoComa
                 ;
 
             LISTA_CLASE.Rule = MakePlusRule(LISTA_CLASE, CLASE);
 
-            CLASE.Rule = TClase + Id + TCorchete_Izq + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_SENTENCIAS + Dedent
-                | TClase + Id + TCorchete_Izq + Id + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_SENTENCIAS + Dedent
+            CLASE.Rule = TClase + Id + TLlave_Izq + LISTA_SENTENCIAS + TLlave_Der
+                | TClase + Id + THereda + Id + TLlave_Izq + LISTA_SENTENCIAS + TLlave_Der
                 ;
 
             LISTA_SENTENCIAS.Rule = LISTA_SENTENCIA
@@ -229,14 +233,13 @@ namespace C3DCombiner
             LISTA_SENTENCIA.Rule = this.MakePlusRule(LISTA_SENTENCIA, SENTENCIA);
 
             SENTENCIA.Rule = FUNCION
-                | VISIBILIDAD + DECLARACION + Eos;
-            
+                | VISIBILIDAD + DECLARACION
+                ;
 
-            FUNCION.Rule = TSobrescribirTree + Eos + VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
-                | VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
-                | TSobrescribirTree + Eos + VISIBILIDAD + TFuncion + TIPO + DIMENSIONES_METODO + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
-                | VISIBILIDAD + TFuncion + TIPO + DIMENSIONES_METODO + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
-                | TConstructor + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
+            FUNCION.Rule = TSobrescribirOLC + VISIBILIDAD + TIPO_METODO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | VISIBILIDAD + TIPO_METODO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | TPrincipal + TParentesis_Izq + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
                 ;
 
 
@@ -268,13 +271,13 @@ namespace C3DCombiner
 
             LISTA_INSTRUCCION.Rule = MakePlusRule(LISTA_INSTRUCCION, INSTRUCCION);
 
-            INSTRUCCION.Rule = ASIGNACION + Eos
-                | DECLARACION + Eos
-                | TRetorno + EXP + Eos
-                | TContinuar + Eos
-                | TSalir + Eos
-                | TContinuar + Eos
-                | LLAMADA + Eos
+            INSTRUCCION.Rule = ASIGNACION
+                | DECLARACION + TPuntoComa
+                | TRetorno + EXP + TPuntoComa
+                | TContinuar + TPuntoComa
+                | TSalir + TPuntoComa
+                | TContinuar + TPuntoComa
+                | LLAMADA
                 | SI
                 | ELEGIR
                 | MIENTRAS
@@ -284,7 +287,7 @@ namespace C3DCombiner
                 | LOOP
                 ;
 
-            
+
             TIPO.Rule = TEntero
                 | TDecimal
                 | TCaracter
@@ -293,33 +296,41 @@ namespace C3DCombiner
                 | Id
                 ;
 
+            TIPO_METODO.Rule = TEntero
+                | TDecimal
+                | TCaracter
+                | TCadena
+                | TBooleano
+                | Id
+                | TVoid
+                ;
+
             LISTA_ID.Rule = this.MakeListRule(LISTA_ID, TComa, Id);
 
             LISTA_DIMENSIONES.Rule = this.MakePlusRule(LISTA_DIMENSIONES, DIMENSION);
 
             DIMENSION.Rule = TCorchete_Izq + EXP + TCorchete_Der;
 
-            DECLARACION.Rule = TIPO + LISTA_ID + TAsignacion + EXP
-                | TIPO + LISTA_ID
-                | TIPO + Id + LISTA_DIMENSIONES;
+            DECLARACION.Rule = TIPO + LISTA_ID + TIgual + EXP 
+                | TIPO + LISTA_ID 
+                | TIPO + Id + LISTA_DIMENSIONES 
+                | TIPO + Id + LISTA_DIMENSIONES + TIgual + EXP 
+                ;
 
 
             ASIGNACION.Rule = OBJETO + Id + LISTA_DIMENSIONES + TAsignacion + EXP
                 | Id + LISTA_DIMENSIONES + TAsignacion + EXP
                 | OBJETO + Id + TAsignacion + EXP
                 | Id + TAsignacion + EXP
-                | TParentesis_Izq + EXP + TAumento + TParentesis_Der
-                | TParentesis_Izq + EXP + TDecremento + TParentesis_Der
+                | EXP + TAumento
+                | EXP + TDecremento
                 ;
 
-            LLAMADA.Rule = OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | OBJETO + Id + LISTA_DIMENSIONES
-                | Id + LISTA_DIMENSIONES
+            LLAMADA.Rule = OBJETO + Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
+                | Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
                 | TOutString + TCorchete_Izq + EXP + TCorchete_Der
-                | TSuper + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
                 ;
-            
+
             SI.Rule = TSi + EXP + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent + LISTA_SINOSIS + SINO;
 
             LISTA_SINOSIS.Rule = LISTA_SINOSI
@@ -368,43 +379,40 @@ namespace C3DCombiner
 
             LISTA_EXP.Rule = MakeListRule(LISTA_EXP, TComa, EXP);
 
-            EXP.Rule = TParentesis_Izq + EXP + EXP + TMas + TParentesis_Der
-                | TParentesis_Izq + EXP + EXP + TMenos + TParentesis_Der
-                | TParentesis_Izq + EXP + TMenos + TParentesis_Der
-                | TParentesis_Izq + EXP + TAumento + TParentesis_Der
-                | TParentesis_Izq + EXP + TDecremento + TParentesis_Der
-                | TParentesis_Izq + EXP + EXP + TPor + TParentesis_Der
-                | TParentesis_Izq + EXP + EXP + TDivision + TParentesis_Der
-                | TParentesis_Izq + EXP + EXP + TPotencia + TParentesis_Der
-                | TCorchete_Izq + EXP + EXP + TMayor + TCorchete_Der
-                | TCorchete_Izq + EXP + EXP + TMenor + TCorchete_Der
-                | TCorchete_Izq + EXP + EXP + TMayorIgual + TCorchete_Der
-                | TCorchete_Izq + EXP + EXP + TMenorIgual + TCorchete_Der
-                | TCorchete_Izq + EXP + EXP + TIgualacion + TCorchete_Der
-                | TCorchete_Izq + EXP + EXP + TDiferenciacion + TCorchete_Der
-                | TLlave_Izq + EXP + EXP + TOr + TLlave_Der
-                | TLlave_Izq + EXP + EXP + TAnd + TLlave_Der
-                | TLlave_Izq + EXP + EXP + TXor + TLlave_Der
-                | TLlave_Izq + EXP + TNot + TLlave_Der
+            EXP.Rule = EXP + TMas + EXP
+                | EXP + TMenos + EXP
+                | TMenos + EXP
+                | EXP + TAumento
+                | EXP + TDecremento
+                | EXP + TPor + EXP
+                | EXP + TDivision + EXP
+                | EXP + TPotencia + EXP
+                | EXP + TMayor + EXP
+                | EXP + TMenor + EXP
+                | EXP + TMayorIgual + EXP
+                | EXP + TMenorIgual + EXP
+                | EXP + TIgualacion + EXP
+                | EXP + TDiferenciacion + EXP
+                | EXP + TOr + EXP
+                | EXP + TAnd + EXP
+                | EXP + TXor + EXP
+                | TNot + EXP
+                | TParentesis_Izq + EXP + TParentesis_Der
+                | TLlave_Izq + LISTA_EXP + TLlave_Der //arreglonativo
                 | Decimal
                 | Entero
                 | Caracter
                 | Cadena
                 | TTrue
                 | TFalse
-                | TSelf
+                | TEste
                 | OBJETO + Id
-                | OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | OBJETO + Id + TParentesis_Izq + LISTA_EXPS + TCorchete_Der
                 | OBJETO + Id + LISTA_DIMENSIONES
                 | Id
-                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
                 | Id + LISTA_DIMENSIONES
-                | TNuevo + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | TParseInt + TCorchete_Izq + EXP + TCorchete_Der
-                | TParseDouble + TCorchete_Izq + EXP + TCorchete_Der
-                | TIntToStr + TCorchete_Izq + EXP + TCorchete_Der
-                | TDoubleToStr + TCorchete_Izq + EXP + TCorchete_Der
-                | TDoubleToInt + TCorchete_Izq + EXP + TCorchete_Der
+                | TNew + Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
                 ;
 
             OBJETO.Rule = MakePlusRule(OBJETO, HIJO);
@@ -412,8 +420,7 @@ namespace C3DCombiner
             HIJO.Rule = Id + TPunto
                 | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der + TPunto
                 | Id + LISTA_DIMENSIONES + TPunto
-                | TSelf + TPunto
-                | TSuper + TPunto
+                | TEste + TPunto
                 ;
 
 
@@ -435,13 +442,6 @@ namespace C3DCombiner
 
             //Para generar el AST
             //LanguageFlags = LanguageFlags.CreateAst;
-        }
-
-        public override void CreateTokenFilters(LanguageData language, TokenFilterList filters)
-        {
-            var outlineFilter = new CodeOutlineFilter(language.GrammarData,
-              OutlineOptions.ProduceIndents | OutlineOptions.CheckBraces, ToTerm(@"\")); // "\" is continuation symbol
-            filters.Add(outlineFilter);
         }
     }
 }

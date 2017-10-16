@@ -118,7 +118,6 @@ namespace C3DCombiner
         public const String DECLARACION = "declaracion";
         public const String ASIGNACION = "asignacion";
         public const String TIPO = "tipo";
-        public const String TIPO_METODO = "tipo_metodo";
         public const String LISTA_ID = "lista_id";
         public const String LISTA_DIMENSIONES = "lista_dimensiones";
         public const String DIMENSION = "dimension";
@@ -158,5 +157,8 @@ namespace C3DCombiner
         public const String IMPORTAR = "importar";
         public const String LISTA_ARCHIVO = "lista_archivo";
         public const String ARCHIVO = "archivo";
+        public const String X = "ciclo x";
+        public const String TSinoOCL = "sino";
+        public const String TSinoSiOCL = "sino si";
     }
 }

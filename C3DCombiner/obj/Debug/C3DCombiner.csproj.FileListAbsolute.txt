@@ -8,7 +8,7 @@ D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\o
 D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.FUml.resources
 D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.FAddClase.resources
 D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.Forms.FAddVariable.resources
-D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe.config
-D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe
-D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe.licenses
-D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.dll.config
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.dll
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.dll.licenses
+D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.dll

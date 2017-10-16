@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>C3DCombiner</RootNamespace>
     <AssemblyName>C3DCombiner</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>

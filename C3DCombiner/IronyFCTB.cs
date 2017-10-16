@@ -29,6 +29,9 @@ namespace FastColoredTextBoxNS
 
         protected Parser parser;
         public Style WavyStyle = new WavyLineStyle(255, Color.Red);
+        Style purpleStyle = new TextStyle(Brushes.Purple, Brushes.White, FontStyle.Regular);
+        Style orangeStyle = new TextStyle(Brushes.Orange, Brushes.White, FontStyle.Regular);
+
 
         /// <summary>
         /// Grammar of custom language
@@ -156,16 +159,16 @@ namespace FastColoredTextBoxNS
                 {
                     case "KeyTerm":
                         if ((t.Terminal.Flags & TermFlags.IsKeyword) != 0) //keywords are highlighted only
-                            GetTokenRange(t).SetStyle(SyntaxHighlighter.KeywordStyle);
+                            GetTokenRange(t).SetStyle(SyntaxHighlighter.KeywordStyle);                            
                         break;
                     case "NumberLiteral":
-                        GetTokenRange(t).SetStyle(SyntaxHighlighter.NumberStyle);
+                        GetTokenRange(t).SetStyle(purpleStyle);
                         break;
                     case "StringLiteral":
-                        GetTokenRange(t).SetStyle(SyntaxHighlighter.StringStyle);
+                        GetTokenRange(t).SetStyle(orangeStyle);
                         break;
                     case "CommentTerminal":
-                        GetTokenRange(t).SetStyle(SyntaxHighlighter.CommentStyle);
+                        GetTokenRange(t).SetStyle(SyntaxHighlighter.GrayStyle);
                         break;
                 }
             }

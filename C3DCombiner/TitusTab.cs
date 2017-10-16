@@ -19,7 +19,8 @@ namespace C3DCombiner
         int tipo; // 0 ocl, 1 tree, 2 ddd
 
         //Variables para usar Irony
-        TreeGrammar Gramatica;
+        TreeGrammar GramaticaTree;
+        OLCGrammar GramaticaOLC;
 
         LanguageData language;
         Parser parser;
@@ -78,26 +79,26 @@ namespace C3DCombiner
                 case 0:
                     {
                         //Inicializamos la gramatica y su lenguage para tener el parse
-                        /*Gramatica = new TreeGrammar();
-                        language = new LanguageData(Gramatica);
-                        parser = new Parser(language);*/
+                        GramaticaOLC = new OLCGrammar();
+                        language = new LanguageData(GramaticaOLC);
+                        parser = new Parser(language);
 
                         //creamos el textbox
                         TBContenido = new IronyFCTB();
-                        //TBContenido.Grammar = Gramatica;
+                        TBContenido.Grammar = GramaticaOLC;
                     }
                     break;
 
                 case 1:
                     {
                         //Inicializamos la gramatica y su lenguage para tener el parse
-                        Gramatica = new TreeGrammar();
-                        language = new LanguageData(Gramatica);
+                        GramaticaTree = new TreeGrammar();
+                        language = new LanguageData(GramaticaTree);
                         parser = new Parser(language);
 
                         //creamos el textbox
                         TBContenido = new IronyFCTB();
-                        TBContenido.Grammar = Gramatica;
+                        TBContenido.Grammar = GramaticaTree;
                     }
                     break;
 

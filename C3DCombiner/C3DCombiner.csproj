@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>C3DCombiner</RootNamespace>
     <AssemblyName>C3DCombiner</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
@@ -114,7 +114,7 @@
     <Compile Include="Gramaticas\Constante.cs" />
     <Compile Include="Gramaticas\Ejecutar3DC.cs" />
     <Compile Include="Gramaticas\GenerarTablaSimboloTree.cs" />
-    <Compile Include="Gramaticas\OCLGrammar.cs" />
+    <Compile Include="Gramaticas\OLCGrammar.cs" />
     <Compile Include="Gramaticas\TreeGrammar.cs" />
     <Compile Include="IronyFCTB.cs">
       <SubType>UserControl</SubType>

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace C3DCombiner
 {
     [Language("OCL++", "1.0", "OCL++ Grammar")]
-    class OCLGrammar : Grammar
+    class OLCGrammar : Grammar
     {
 
         private readonly TerminalSet mSkipTokensInPreview = new TerminalSet(); //used in token preview for conflict resolution
 
-        public OCLGrammar() : base(caseSensitive: false)
+        public OLCGrammar() : base(caseSensitive: false)
         {
 
             //Comentarios
@@ -88,8 +88,8 @@ namespace C3DCombiner
             var TSobrescribirOLC = ToTerm(Constante.TSobrescribirOLC);
             var TEste = ToTerm(Constante.TEste);
             var TSi = ToTerm(Constante.TSi);
-            var TSino = ToTerm(Constante.TSinoOCL);
             var TSinoSi = ToTerm(Constante.TSinoSiOCL);
+            var TSino = ToTerm(Constante.TSinoOCL);
             var TSalir = ToTerm(Constante.TSalir);
             var TElegir = ToTerm(Constante.TElegir);
             var TDefecto = ToTerm(Constante.TDefecto);
@@ -133,8 +133,8 @@ namespace C3DCombiner
             MarkReservedWords(Constante.TSobrescribirTree);
             MarkReservedWords(Constante.TEste);
             MarkReservedWords(Constante.TSi);
-            MarkReservedWords(Constante.TSino);
             MarkReservedWords(Constante.TSinoSi);
+            MarkReservedWords(Constante.TSino);
             MarkReservedWords(Constante.TSalir);
             MarkReservedWords(Constante.TElegir);
             MarkReservedWords(Constante.TDefecto);
@@ -185,8 +185,6 @@ namespace C3DCombiner
             var LLAMADA = new NonTerminal(Constante.LLAMADA);
             var SI = new NonTerminal(Constante.SI);
             var SINO = new NonTerminal(Constante.SINO);
-            var LISTA_SINOSIS = new NonTerminal(Constante.LISTA_SINOSIS);
-            var LISTA_SINOSI = new NonTerminal(Constante.LISTA_SINOSI);
             var SINOSI = new NonTerminal(Constante.SINOSI);
             var ELEGIR = new NonTerminal(Constante.ELEGIR);
             var LISTA_CASOS = new NonTerminal(Constante.LISTA_CASOS);
@@ -316,15 +314,14 @@ namespace C3DCombiner
                 | TImprimir + TParentesis_Izq + EXP + TParentesis_Der
                 ;
 
-            SI.Rule = TSi + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + LISTA_SINOSIS + SINO;
-
-            LISTA_SINOSIS.Rule = LISTA_SINOSI
-                | Empty
+            SI.Rule = TSi + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + SINOSI;
+            
                 ;
 
-            LISTA_SINOSI.Rule = MakePlusRule(LISTA_SINOSI, SINOSI);
-
-            SINOSI.Rule = TSinoSi + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der;
+            SINOSI.Rule = TSino + TSi + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + SINOSI
+                |SINO
+                |Empty
+                ;
 
             SINO.Rule = TSino + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
                 | Empty

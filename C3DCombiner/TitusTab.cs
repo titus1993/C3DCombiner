@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Irony.Parsing;
 using FastColoredTextBoxNS;
+using C3DCombiner.Ejecucion;
 //using _Compi2_Practica_201213587.Ejecucion;
 namespace C3DCombiner
 {
@@ -15,8 +16,8 @@ namespace C3DCombiner
         IronyFCTB TBContenido;
         Label panel;
         bool modificado;
-        string ruta;
-        int tipo; // 0 ocl, 1 tree, 2 ddd
+        string Ruta;
+        int Tipo; // 0 ocl, 1 tree, 2 ddd
 
         //Variables para usar Irony
         TreeGrammar GramaticaTree;
@@ -48,8 +49,8 @@ namespace C3DCombiner
             }
 
             //inicializamos la variable que tendra la ruta del archivo
-            this.ruta = ruta;
-            this.tipo = tipo;
+            this.Ruta = ruta;
+            this.Tipo = tipo;
             initComponent(texto);
         }
 
@@ -58,13 +59,32 @@ namespace C3DCombiner
         {
             if (guardarArchivo())
             {
-                /*TablaVariables.IncializarTabla();
-                TitusNotifiaciones.Limpiar();
-                GenerarArbol a = new GenerarArbol();
-                EjecutarSBS primerpasada = a.GenerarSimbolo(TBContenido.Text, ruta);//primera pasada solo para generar los simbolos
-                //segunda pasada para buscar el principal y algunos errores
-                Ejecucion.Ejecutar Iniciar = new Ejecucion.Ejecutar(primerpasada);*/
+                TitusTools.Limpiar();
+                ParseTree arbol = parser.Parse(TBContenido.Text);
 
+                if (arbol.Root != null && arbol.ParserMessages.Count == 0)
+                {                    
+                    TitusTools.Arbol = new ArbolSintactico(arbol.Root, this.Tipo, this.Ruta);
+                }
+                else
+                {
+                    foreach (Irony.LogMessage error in arbol.ParserMessages)
+                    {
+                        if (error.Message.Contains("Syntax error,"))
+                        {
+                            TitusTools.InsertarError("Sintactico", error.Message.Replace("Syntax error", " "), this.Ruta, (error.Location.Line + 1), (error.Location.Column + 1));
+                        }
+                        else if (error.Message.Contains("Invalid character"))
+                        {
+                            TitusTools.InsertarError("Lexico", error.Message.Replace("Invalid character", "Caracter invalido"), Ruta, (error.Location.Line + 1), (error.Location.Column + 1));
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError("Sintactico", error.Message.Replace("Unclosed cooment block", "Comentario de bloque sin cerrar"), Ruta, (error.Location.Line + 1), (error.Location.Column + 1));
+                        }
+
+                    }
+                }
             }
 
         }
@@ -74,7 +94,7 @@ namespace C3DCombiner
             //iniciamos la bandera para saber si ha sido guardado los datos
             this.modificado = false;
 
-            switch (this.tipo)
+            switch (this.Tipo)
             {
                 case 0:
                     {
@@ -168,27 +188,27 @@ namespace C3DCombiner
         public Boolean guardarArchivo()
         {
             Boolean estado = false;
-            if (String.IsNullOrWhiteSpace(ruta))
+            if (String.IsNullOrWhiteSpace(Ruta))
             {
 
-                TitusTools.FDGuardarArchivo.FilterIndex = tipo + 1;
+                TitusTools.FDGuardarArchivo.FilterIndex = Tipo + 1;
 
                 if (TitusTools.FDGuardarArchivo.ShowDialog() == DialogResult.OK)
                 {
                     System.IO.FileStream fs = (System.IO.FileStream)TitusTools.FDGuardarArchivo.OpenFile();
                     fs.Close();
                     System.IO.File.WriteAllText(TitusTools.FDGuardarArchivo.FileName, this.TBContenido.Text);
-                    ruta = TitusTools.FDGuardarArchivo.FileName;
+                    Ruta = TitusTools.FDGuardarArchivo.FileName;
                     modificado = false;
-                    this.Text = System.IO.Path.GetFileName(ruta);
+                    this.Text = System.IO.Path.GetFileName(Ruta);
                     estado = true;
                 }
             }
             else
             {
-                System.IO.File.WriteAllText(this.ruta, this.TBContenido.Text);
+                System.IO.File.WriteAllText(this.Ruta, this.TBContenido.Text);
                 modificado = false;
-                this.Text = System.IO.Path.GetFileName(ruta);
+                this.Text = System.IO.Path.GetFileName(Ruta);
                 estado = true;
             }
             TitusTools.FDGuardarArchivo.FileName = "";
@@ -197,17 +217,17 @@ namespace C3DCombiner
 
         public void guardarComoArchivo()
         {
-            TitusTools.FDGuardarArchivo.FilterIndex = tipo + 1;
+            TitusTools.FDGuardarArchivo.FilterIndex = Tipo + 1;
 
             if (TitusTools.FDGuardarArchivo.ShowDialog() == DialogResult.OK)
             {
                 System.IO.FileStream fs = (System.IO.FileStream)TitusTools.FDGuardarArchivo.OpenFile();
                 fs.Close();
                 System.IO.File.WriteAllText(TitusTools.FDGuardarArchivo.FileName, this.TBContenido.Text);
-                ruta = TitusTools.FDGuardarArchivo.FileName;
+                Ruta = TitusTools.FDGuardarArchivo.FileName;
 
                 modificado = false;
-                this.Text = System.IO.Path.GetFileName(ruta);
+                this.Text = System.IO.Path.GetFileName(Ruta);
             }
             TitusTools.FDGuardarArchivo.FileName = "";
         }

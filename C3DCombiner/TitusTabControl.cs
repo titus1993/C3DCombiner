@@ -161,5 +161,14 @@ namespace C3DCombiner
                 this.UpdateLayout();
             }
         }
+
+        public void Ejecutar()
+        {
+            TitusTab TTaux = (TitusTab)this.SelectedPage;
+            if (TTaux != null)
+            {
+                TTaux.Analizar();
+            }
+        }
     }
 }

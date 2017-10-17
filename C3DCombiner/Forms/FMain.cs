@@ -89,5 +89,10 @@ namespace C3DCombiner
             FUml mUml = new FUml();
             mUml.Show();
         }
+
+        private void ejecutarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TitusTools.Tabs.Ejecutar();
+        }
     }
 }

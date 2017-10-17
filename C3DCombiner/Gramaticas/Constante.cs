@@ -140,8 +140,8 @@ namespace C3DCombiner
         public const String LLAMADA = "llamada";
         public const String SI = "si";
         public const String SINO = "sino";
-        public const String LISTA_SINOSIS = "sinosis";
-        public const String LISTA_SINOSI = "sinosi";
+        public const String LISTA_SINOSIS = "lista_sinosis";
+        public const String LISTA_SINOSI = "lista_sinosi";
         public const String SINOSI = "sinosi";
         public const String ELEGIR = "elegir";
         public const String LISTA_CASOS = "lista_casos";
@@ -160,5 +160,8 @@ namespace C3DCombiner
         public const String X = "ciclo x";
         public const String TSinoOCL = "sino";
         public const String TSinoSiOCL = "sino si";
+
+
+        public const String TErrorSemantico = "Semantico";
     }
 }

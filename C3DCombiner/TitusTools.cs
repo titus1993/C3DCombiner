@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C3DCombiner.Ejecucion;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace C3DCombiner
         public static RichTextBox Consola = new RichTextBox();
 
         public static DataGridView Errores = new DataGridView();
+
+        public static ArbolSintactico Arbol = null;
 
         public static void IniciarEstaticos()
         {
@@ -99,13 +102,11 @@ namespace C3DCombiner
         {
             return Errores;
         }
+        
 
-        public static void setDatosErrores(DataTable tabla)
+        public static void InsertarError(String Tipo, String Descripcion, String Ruta, int Fila, int Columna)
         {
-            foreach (DataRow row in tabla.Rows)
-            {
-                Errores.Rows.Insert(Errores.Rows.Count - 1, Errores.Rows.Count, row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
-            }
+            Errores.Rows.Insert(Errores.Rows.Count - 1, Errores.Rows.Count, Tipo, Descripcion, Ruta, Fila, Columna);
         }
 
         public static void LimpiarDatosErrores()

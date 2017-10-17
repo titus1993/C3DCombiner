@@ -1,14 +1,13 @@
-﻿using C3DCombiner.Ejecucion;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace C3DCombiner
+namespace C3DCombiner.Funciones
 {
-    class Ejecutar3DC
+    class FClase
     {
-        
+        List<String> Imports = new List<String>();
     }
 }

@@ -93,6 +93,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ejecucion\Ambito.cs" />
+    <Compile Include="Ejecucion\ArbolSintactico.cs" />
+    <Compile Include="Ejecucion\Archivo.cs" />
+    <Compile Include="Ejecucion\Simbolo.cs" />
     <Compile Include="Forms\FAddClase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +115,9 @@
     <Compile Include="Forms\FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Funciones\FClase.cs" />
+    <Compile Include="Funciones\FNodoExpresion.cs" />
+    <Compile Include="Funciones\Nodo3D.cs" />
     <Compile Include="Gramaticas\Constante.cs" />
     <Compile Include="Gramaticas\Ejecutar3DC.cs" />
     <Compile Include="Gramaticas\GenerarTablaSimboloTree.cs" />

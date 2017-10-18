@@ -164,7 +164,10 @@ namespace C3DCombiner
 
 
         public const String TErrorSemantico = "Semantico";
-        public const String VARIABLEARREGLO = "varibale_arreglo";
-        public const String VARIABLEMETODO = "variable_metodo";
+        public const String LLAMADA_ARREGLO = "llamada_arreglo";
+        public const String LLAMADA_METODO = "llamada_metodo";
+        public const String LLAMADA_OBJETO = "llamada_objeto";
+        public const String LLAMADA_METODO_ARREGLO = "llamada_metodo_arreglo";
+
     }
 }

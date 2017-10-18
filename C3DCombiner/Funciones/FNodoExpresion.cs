@@ -19,7 +19,7 @@ namespace C3DCombiner.Funciones
         public char Caracter;
         public String Cadena;
         public Boolean Bool;
-        //public FLlamadaObjeto Objeto;
+        public FLlamadaObjeto LlamadaObjeto;
         //public Objeto Obj;
         //public FLlamadaMetodo Metodo;
         //public FNodoArreglo Arreglo;
@@ -38,7 +38,7 @@ namespace C3DCombiner.Funciones
             this.Entero = nodo.Entero;
             this.Fila = nodo.Fila;
             this.Nombre = nodo.Nombre;
-            //this.Objeto = nodo.Objeto;
+            this.LlamadaObjeto = nodo.LlamadaObjeto;
             this.Tipo = nodo.Tipo;
         }
 
@@ -86,6 +86,12 @@ namespace C3DCombiner.Funciones
                         this.Bool = false;
                         this.Entero = 0;
                         this.Decimal = 0;
+                    }
+                    break;
+
+                case Constante.LLAMADA_OBJETO:
+                    {
+                        this.LlamadaObjeto = (FLlamadaObjeto)valor;
                     }
                     break;
 

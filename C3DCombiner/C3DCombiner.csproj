@@ -116,6 +116,10 @@
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Funciones\FClase.cs" />
+    <Compile Include="Funciones\FLlamadaArreglo.cs" />
+    <Compile Include="Funciones\FLlamadaMetodo.cs" />
+    <Compile Include="Funciones\FLlamadaMetodoArrelgoTree.cs" />
+    <Compile Include="Funciones\FLlamadaObjeto.cs" />
     <Compile Include="Funciones\FNodoExpresion.cs" />
     <Compile Include="Funciones\Nodo3D.cs" />
     <Compile Include="Gramaticas\Constante.cs" />

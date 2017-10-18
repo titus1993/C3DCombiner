@@ -16,7 +16,7 @@ namespace C3DCombiner
 
         public TreeGrammar() : base(caseSensitive: false)
         {
-            
+
             //Comentarios
             CommentTerminal DelimitedComment = new CommentTerminal("DelimitedComment", "{--", "--}");
             CommentTerminal SingleLineComment = new CommentTerminal("SingleLineComment", "##", "\r", "\n", "\u2085", "\u2028", "\u2029");
@@ -201,6 +201,7 @@ namespace C3DCombiner
             var IMPORTAR = new NonTerminal(Constante.IMPORTAR);
             var LISTA_ARCHIVO = new NonTerminal(Constante.LISTA_ARCHIVO);
             var ARCHIVO = new NonTerminal(Constante.ARCHIVO);
+            var LLAMADA_EXP = new NonTerminal(Constante.LLAMADA_EXP);
 
             INICIO.Rule = LISTA_IMPORTAR + LISTA_CLASE;
 
@@ -230,7 +231,7 @@ namespace C3DCombiner
 
             SENTENCIA.Rule = FUNCION
                 | VISIBILIDAD + DECLARACION + Eos;
-            
+
 
             FUNCION.Rule = TSobrescribirTree + Eos + VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
                 | VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
@@ -284,7 +285,7 @@ namespace C3DCombiner
                 | LOOP
                 ;
 
-            
+
             TIPO.Rule = TEntero
                 | TDecimal
                 | TCaracter
@@ -319,7 +320,7 @@ namespace C3DCombiner
                 | TOutString + TCorchete_Izq + EXP + TCorchete_Der
                 | TSuper + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
                 ;
-            
+
             SI.Rule = TSi + EXP + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent + LISTA_SINOSIS + SINO;
 
             LISTA_SINOSIS.Rule = LISTA_SINOSI
@@ -393,18 +394,21 @@ namespace C3DCombiner
                 | TTrue
                 | TFalse
                 | TSelf
-                | OBJETO + Id
-                | OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | OBJETO + Id + LISTA_DIMENSIONES
-                | Id
-                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | Id + LISTA_DIMENSIONES
+                | LLAMADA_EXP
                 | TNuevo + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
                 | TParseInt + TCorchete_Izq + EXP + TCorchete_Der
                 | TParseDouble + TCorchete_Izq + EXP + TCorchete_Der
                 | TIntToStr + TCorchete_Izq + EXP + TCorchete_Der
                 | TDoubleToStr + TCorchete_Izq + EXP + TCorchete_Der
                 | TDoubleToInt + TCorchete_Izq + EXP + TCorchete_Der
+                ;
+
+            LLAMADA_EXP.Rule = OBJETO + Id
+                | OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | OBJETO + Id + LISTA_DIMENSIONES
+                | Id
+                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+                | Id + LISTA_DIMENSIONES
                 ;
 
             OBJETO.Rule = MakePlusRule(OBJETO, HIJO);

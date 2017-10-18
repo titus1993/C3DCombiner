@@ -421,21 +421,23 @@ namespace C3DCombiner
 
                 case Constante.LISTA_EXPS:
                     {
+                        List<FNodoExpresion> le = new List<FNodoExpresion>();
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            le = (List<FNodoExpresion>)RecorrerArbol(nodo);
                         }
+                        return le;
                     }
-                    break;
 
                 case Constante.LISTA_EXP:
                     {
+                        List<FNodoExpresion> le = new List<FNodoExpresion>();
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            le.Add((FNodoExpresion)RecorrerArbol(nodo));
                         }
+                        return le;
                     }
-                    break;
 
                 case Constante.EXP:
                     {
@@ -474,6 +476,12 @@ namespace C3DCombiner
                                     {
                                         FNodoExpresion izq = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
                                         nodo = new FNodoExpresion(null, izq, Constante.TNot, Constante.TNot, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, null);
+                                    }
+                                    break;
+
+                                case Constante.Id:
+                                    {
+
                                     }
                                     break;
 
@@ -528,12 +536,21 @@ namespace C3DCombiner
 
                 case Constante.TTrue:
                     return new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, Nodo.Token.ValueString);
+                    
 
+                case Constante.LLAMADA_EXP:
+                    {
+                        if (Nodo.ChildNodes.Count == 1)
+                        {
 
+                        }else if(Nodo.ChildNodes.Count == 2){
 
-                default:
-                    { }
-                    return null;
+                        }else if (Nodo.ChildNodes.Count == 3)
+                        {
+
+                        }
+                    }
+                    break;
 
             }
             return null;

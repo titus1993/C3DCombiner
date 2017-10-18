@@ -12,3 +12,18 @@ D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\b
 D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe
 D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe.licenses
 D:\Titus\Documents\Proyectos\Compiladores 2\Proyecto 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe.config
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.exe
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\bin\Debug\C3DCombiner.pdb
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\bin\Debug\FastColoredTextBox.xml
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.csprojResolveAssemblyReference.cache
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.FAddClase.resources
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.Forms.FAddVariable.resources
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.FMain.resources
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.FUml.resources
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.Properties.Resources.resources
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.csproj.GenerateResource.Cache
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe.licenses
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.csproj.CoreCompileInputs.cache
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.exe
+C:\Users\Titus\Documents\Proyectos\Compiladores 2\C3DCombiner\C3DCombiner\obj\Debug\C3DCombiner.pdb

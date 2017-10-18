@@ -115,6 +115,7 @@ namespace C3DCombiner
         public const String LISTA_EXPS = "lista_exps";
         public const String LISTA_EXP = "lista_exp";
         public const String EXP = "exp";
+        public const String LLAMADA_EXP = "llamada_exp";
         public const String DECLARACION = "declaracion";
         public const String ASIGNACION = "asignacion";
         public const String TIPO = "tipo";
@@ -163,5 +164,7 @@ namespace C3DCombiner
 
 
         public const String TErrorSemantico = "Semantico";
+        public const String VARIABLEARREGLO = "varibale_arreglo";
+        public const String VARIABLEMETODO = "variable_metodo";
     }
 }

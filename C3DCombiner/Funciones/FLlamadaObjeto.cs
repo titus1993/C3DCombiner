@@ -36,6 +36,9 @@ namespace C3DCombiner.Funciones
             else if (Tipo.Equals(Constante.LLAMADA_METODO))
             {
                 this.LlamadaMetodo = (FLlamadaMetodo)valor;
+            }else if (Tipo.Equals(Constante.LLAMADA_METODO_ARREGLO))
+            {
+                this.LlamadaMetodoArreglo = (FLlamadaMetodoArrelgoTree)valor;
             }
 
             this.Hijo = null;

@@ -20,11 +20,7 @@ namespace C3DCombiner.Funciones
         public String Cadena;
         public Boolean Bool;
         public FLlamadaObjeto LlamadaObjeto;
-        //public Objeto Obj;
-        //public FLlamadaMetodo Metodo;
-        //public FNodoArreglo Arreglo;
-        //public Arreglo ArregloResuelto;
-        //public FNodoExpresion PosArreglo;
+        public FNuevo Nuevo;
 
         public FNodoExpresion(FNodoExpresion nodo)
         {
@@ -40,6 +36,7 @@ namespace C3DCombiner.Funciones
             this.Nombre = nodo.Nombre;
             this.LlamadaObjeto = nodo.LlamadaObjeto;
             this.Tipo = nodo.Tipo;
+            this.Nuevo = nodo.Nuevo;
         }
 
         public FNodoExpresion(FNodoExpresion izq, FNodoExpresion der, String tipo, String nombre, int fila, int columna, Object valor)
@@ -92,6 +89,12 @@ namespace C3DCombiner.Funciones
                 case Constante.LLAMADA_OBJETO:
                     {
                         this.LlamadaObjeto = (FLlamadaObjeto)valor;
+                    }
+                    break;
+
+                case Constante.TNuevo:
+                    {
+                        this.Nuevo = (FNuevo)valor;
                     }
                     break;
 

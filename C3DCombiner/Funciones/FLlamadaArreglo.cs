@@ -13,7 +13,7 @@ namespace C3DCombiner.Funciones
         public int Fila, Columna;
         public List<FNodoExpresion> Dimensiones;
 
-        Simbolo Padre;
+        public Simbolo Padre;
 
         public FLlamadaArreglo(String nombre, List<FNodoExpresion> dimensiones, int fila, int columna)
         {

@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace C3DCombiner.Funciones
 {
-    class FLlamadaMetodoArrelgoTree
+    class FNuevo
     {
         public String Nombre;
         public int Fila, Columna;
         public List<FNodoExpresion> Parametros;
 
-        public Simbolo Padre;
+        Simbolo Padre;
 
-        public FLlamadaMetodoArrelgoTree(String nombre, List<FNodoExpresion> parametros, int fila, int columna)
+        public FNuevo(String nombre, List<FNodoExpresion> parametros, int fila, int columna)
         {
             this.Nombre = nombre;
             this.Parametros = parametros;

@@ -1,4 +1,5 @@
-﻿using C3DCombiner.Funciones;
+﻿using C3DCombiner.Ejecucion;
+using C3DCombiner.Funciones;
 using Irony.Parsing;
 using System;
 using System.Collections.Generic;
@@ -96,30 +97,23 @@ namespace C3DCombiner
 
                 case Constante.LISTA_SENTENCIAS:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        return RecorrerArbol(Nodo.ChildNodes[0]);
                     }
-                    break;
 
                 case Constante.LISTA_SENTENCIA:
                     {
+                        List<Simbolo> tabla = new List<Simbolo>();
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            tabla.Add((Simbolo)RecorrerArbol(nodo));
                         }
                     }
                     break;
 
                 case Constante.SENTENCIA:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        return RecorrerArbol(Nodo.ChildNodes[0]);
                     }
-                    break;
 
                 case Constante.VISIBILIDAD:
                     {
@@ -141,10 +135,9 @@ namespace C3DCombiner
 
                 case Constante.DECLARACION:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+
+                        Object o = RecorrerArbol(Nodo.ChildNodes[2]);
+
                     }
                     break;
 
@@ -204,30 +197,23 @@ namespace C3DCombiner
 
                 case Constante.LISTA_INSTRUCCIONES:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        return RecorrerArbol(Nodo.ChildNodes[0]);
                     }
-                    break;
 
                 case Constante.LISTA_INSTRUCCION:
                     {
+                        List<Simbolo> tabla = new List<Simbolo>();
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            tabla.Add((Simbolo)RecorrerArbol(nodo));
                         }
+                        return tabla;
                     }
-                    break;
 
                 case Constante.INSTRUCCION:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        return RecorrerArbol(Nodo.ChildNodes[0]);
                     }
-                    break;
 
                 case Constante.TIPO:
                     {
@@ -249,21 +235,18 @@ namespace C3DCombiner
 
                 case Constante.LISTA_DIMENSIONES:
                     {
+                        List<FNodoExpresion> d = new List<FNodoExpresion>();
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            d.Add((FNodoExpresion)RecorrerArbol(nodo));
                         }
+                        return d;
                     }
-                    break;
 
                 case Constante.DIMENSION:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        return RecorrerArbol(Nodo.ChildNodes[0]);
                     }
-                    break;
 
                 case Constante.ASIGNACION:
                     {
@@ -367,6 +350,8 @@ namespace C3DCombiner
 
                 case Constante.MIENTRAS:
                     {
+                        FNodoExpresion condicion = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[1]);
+                        List<Simbolo> tablasimbolo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[2]);
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
                             Object o = RecorrerArbol(nodo);
@@ -527,7 +512,9 @@ namespace C3DCombiner
                         {
                             if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.TNuevo))
                             {
-
+                                List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
+                                FNuevo fn = new FNuevo(Nodo.ChildNodes[1].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                nodo = new FNodoExpresion(null, null, Constante.TNuevo, Constante.TNuevo, fn.Fila, fn.Columna, fn);
                             }
                             else
                             {
@@ -541,18 +528,69 @@ namespace C3DCombiner
 
                 case Constante.OBJETO:
                     {
+                        FLlamadaObjeto lo = null;
+                        int i = 0;
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            if (i == 0)
+                            {
+                                lo = (FLlamadaObjeto)RecorrerArbol(nodo);
+                                i++;
+                            }
+                            else
+                            {
+                                FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(nodo);
+                                lo.InsertarHijo(loaux);
+                            }
                         }
+                        return lo;
                     }
-                    break;
 
                 case Constante.HIJO:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
+                        if (Nodo.ChildNodes.Count == 1)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            switch (Nodo.ChildNodes[0].Term.Name)
+                            {
+                                case Constante.TSuper:
+                                    return new FLlamadaObjeto(Constante.TSuper, Constante.TSuper, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, null);
+
+                                case Constante.TSelf:
+                                    return new FLlamadaObjeto(Constante.TSelf, Constante.TSelf, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, null);
+
+
+                                default:
+                                    return new FLlamadaObjeto(Constante.Id, Nodo.ChildNodes[0].Token.ValueString, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, null);
+
+                            }
+                        }
+                        else
+                        {
+                            switch (Nodo.ChildNodes[1].Term.Name)
+                            {
+                                case Constante.LISTA_DIMENSIONES:
+                                    {
+                                        if (Nodo.ChildNodes[1].ChildNodes.Count == 1)
+                                        {
+                                            List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                                            FLlamadaMetodoArrelgoTree lma = new FLlamadaMetodoArrelgoTree(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                            return new FLlamadaObjeto(Constante.LLAMADA_METODO_ARREGLO, lma.Nombre, lma.Fila, lma.Columna, lma);
+                                        }
+                                        else
+                                        {
+                                            List<FNodoExpresion> d = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                                            FLlamadaArreglo la = new FLlamadaArreglo(Nodo.ChildNodes[0].Token.ValueString, d, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                            return new FLlamadaObjeto(Constante.LLAMADA_ARREGLO, la.Nombre, la.Fila, la.Columna, la);
+                                        }
+                                    }
+
+                                case Constante.LISTA_EXPS:
+                                    {
+                                        List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                                        FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                        return new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+                                    }
+                            }
                         }
                     }
                     break;
@@ -608,14 +646,14 @@ namespace C3DCombiner
                                         if (Nodo.ChildNodes[1].ChildNodes.Count == 1)
                                         {
                                             List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
-                                            FLlamadaMetodoArrelgoTree lm = new FLlamadaMetodoArrelgoTree(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
-                                            lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+                                            FLlamadaMetodoArrelgoTree lma = new FLlamadaMetodoArrelgoTree(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                            lo = new FLlamadaObjeto(Constante.LLAMADA_METODO_ARREGLO, lma.Nombre, lma.Fila, lma.Columna, lma);
                                         }
                                         else
                                         {
-                                            List<FNodoExpresion> d= (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                                            List<FNodoExpresion> d = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
                                             FLlamadaArreglo la = new FLlamadaArreglo(Nodo.ChildNodes[0].Token.ValueString, d, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
-                                            lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, la.Nombre, la.Fila, la.Columna, la);
+                                            lo = new FLlamadaObjeto(Constante.LLAMADA_ARREGLO, la.Nombre, la.Fila, la.Columna, la);
                                         }
                                     }
                                     break;
@@ -623,7 +661,7 @@ namespace C3DCombiner
                                 case Constante.LISTA_EXPS:
                                     {
                                         List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
-                                        FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line +1, Nodo.ChildNodes[0].Token.Location.Column +1);
+                                        FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
                                         lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
                                     }
                                     break;
@@ -634,9 +672,36 @@ namespace C3DCombiner
                             switch (Nodo.ChildNodes[2].Term.Name)
                             {
                                 case Constante.LISTA_DIMENSIONES:
+                                    {
+                                        FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+                                        if (Nodo.ChildNodes[2].ChildNodes.Count == 1)
+                                        {
+                                            List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
+                                            FLlamadaMetodoArrelgoTree lma = new FLlamadaMetodoArrelgoTree(Nodo.ChildNodes[1].Token.ValueString, p, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                            FLlamadaObjeto lmaaux = new FLlamadaObjeto(Constante.LLAMADA_METODO_ARREGLO, lma.Nombre, lma.Fila, lma.Columna, lma);
+                                            loaux.InsertarHijo(lmaaux);
+                                            lo = loaux;
+                                        }
+                                        else
+                                        {
+                                            List<FNodoExpresion> d = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
+                                            FLlamadaArreglo la = new FLlamadaArreglo(Nodo.ChildNodes[1].Token.ValueString, d, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                            FLlamadaObjeto laaux = new FLlamadaObjeto(Constante.LLAMADA_ARREGLO, la.Nombre, la.Fila, la.Columna, la);
+                                            loaux.InsertarHijo(laaux);
+                                            lo = loaux;
+                                        }
+                                    }
                                     break;
 
                                 case Constante.LISTA_EXPS:
+                                    {
+                                        FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+                                        List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
+                                        FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[1].Token.ValueString, p, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                        FLlamadaObjeto lmaux = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+                                        loaux.InsertarHijo(lmaux);
+                                        lo = loaux;
+                                    }
                                     break;
                             }
                         }
@@ -645,6 +710,9 @@ namespace C3DCombiner
 
                 case Constante.Id:
                     return new FLlamadaObjeto(Constante.Id, Nodo.Token.ValueString, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, Nodo.Token.ValueString);
+
+                case Constante.TSuper:
+                    return new FLlamadaObjeto(Constante.TSuper, Constante.TSuper, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, null);
 
             }
             return null;

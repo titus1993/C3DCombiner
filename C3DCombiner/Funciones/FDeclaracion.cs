@@ -26,7 +26,8 @@ namespace C3DCombiner.Funciones
             this.Ambito = ambito;
             this.Padre = null;
             this.Fila = fila;
-            this.Columna = columna;           
+            this.Columna = columna;
+            this.Valor = (FNodoExpresion)valor;
         }
     }
 }

@@ -12,6 +12,7 @@ namespace C3DCombiner.Ejecucion
         public String Nombre, Rol, Tipo, Visibilidad;
         public Ambito Ambito = null;
         public Simbolo Hermano = null;
+        public Simbolo Padre = null;
         public Object Valor = null;
 
 

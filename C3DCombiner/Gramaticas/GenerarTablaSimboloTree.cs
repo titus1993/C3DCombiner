@@ -181,30 +181,15 @@ namespace C3DCombiner
 
                 case Constante.DIMENSIONES_METODO:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
+                        if (Nodo.ChildNodes.Count == 0)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            return 0;
+                        }
+                        else
+                        {
+                            return Nodo.ChildNodes[0].ChildNodes.Count;
                         }
                     }
-                    break;
-
-                case Constante.LISTA_DIMENSION_METODO:
-                    {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
-                    }
-                    break;
-
-                case Constante.DIMENSION_METODO:
-                    {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
-                    }
-                    break;
 
                 case Constante.LISTA_PARAMETROS:
                     {
@@ -323,15 +308,32 @@ namespace C3DCombiner
                         List<FSinoSi> sinosi = (List<FSinoSi>)RecorrerArbol(Nodo.ChildNodes[3]);
                         FSino sino = (FSino)RecorrerArbol(Nodo.ChildNodes[4]);
 
-                        FMientras mientras = new FMientras(condicion, new Ambito(Constante.TMientras, tablasimbolo));
-                        Simbolo sim = new Simbolo("", "", "", Constante.TMientras, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, mientras.Ambito, mientras);
+                        FSi si = new FSi(condicion, new Ambito(Constante.TSi, tablasimbolo), sinosi, sino);
+                        Simbolo sim = new Simbolo("", "", "", Constante.TSi, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, si.Ambito, si);
 
 
-                        mientras.Padre = sim;
+                        si.Padre = sim;
                         List<Simbolo> list = new List<Simbolo>();
                         list.Add(sim);
 
+                        condicion.Padre = sim;
+                        //asignamos el padre del ambito de si
                         foreach (Simbolo s in tablasimbolo)
+                        {
+                            s.Padre = sim;
+                        }
+
+                        //asignamos el padre a los ambitos de sinosi
+                        foreach (FSinoSi fsns in sinosi)
+                        {
+                            fsns.Condicion.Padre = sim;
+                            foreach (Simbolo s in fsns.Ambito.TablaSimbolo)
+                            {
+                                s.Padre = sim;
+                            }
+                        }
+
+                        foreach (Simbolo s in sino.Ambito.TablaSimbolo)
                         {
                             s.Padre = sim;
                         }
@@ -339,7 +341,6 @@ namespace C3DCombiner
                         return list;
 
                     }
-                    break;
 
                 case Constante.LISTA_SINOSIS:
                     {
@@ -376,39 +377,65 @@ namespace C3DCombiner
 
                 case Constante.ELEGIR:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
+                        FNodoExpresion condicion = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[1]);
+                        List<FCaso> casos = (List<FCaso>)RecorrerArbol(Nodo.ChildNodes[2]);
+                        FCaso defecto = (FCaso)RecorrerArbol(Nodo.ChildNodes[3]);
+
+
+                        FElegir elegir = new FElegir(condicion, new Ambito(Constante.TElegir), casos, defecto);
+                        Simbolo sim = new Simbolo("", "", "", Constante.TElegir, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, elegir.Ambito, elegir);
+
+
+                        elegir.Padre = sim;
+                        List<Simbolo> list = new List<Simbolo>();
+                        list.Add(sim);
+
+                        foreach (FCaso cas in casos)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            cas.Padre = sim;
                         }
+
+                        if (defecto != null)
+                        {
+                            defecto.Padre = sim;
+                        }
+
+                        return list;
                     }
-                    break;
 
                 case Constante.LISTA_CASOS:
                     {
+                        List<FCaso> lcasos = new List<FCaso>();
                         foreach (ParseTreeNode nodo in Nodo.ChildNodes)
                         {
-                            Object o = RecorrerArbol(nodo);
+                            lcasos.Add((FCaso)RecorrerArbol(nodo));
                         }
+                        return lcasos;
                     }
-                    break;
 
                 case Constante.CASO:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        FNodoExpresion condicion = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
+                        List<Simbolo> tabla = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[1]);
+                        FCaso caso = new FCaso(condicion, new Ambito(Constante.CASO, tabla));
+                        return caso;
                     }
-                    break;
 
                 case Constante.DEFECTO:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
+                        if (Nodo.ChildNodes.Count > 0)
                         {
-                            Object o = RecorrerArbol(nodo);
+
+                            FNodoExpresion condicion = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
+                            List<Simbolo> tabla = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[1]);
+                            FCaso caso = new FCaso(new Ambito(Constante.CASO, tabla));
+                            return caso;
+                        }
+                        else
+                        {
+                            return null;
                         }
                     }
-                    break;
 
                 case Constante.MIENTRAS:
                     {
@@ -417,7 +444,7 @@ namespace C3DCombiner
 
                         FMientras mientras = new FMientras(condicion, new Ambito(Constante.TMientras, tablasimbolo));
                         Simbolo sim = new Simbolo("", "", "", Constante.TMientras, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, mientras.Ambito, mientras);
-                        
+
 
                         mientras.Padre = sim;
                         List<Simbolo> list = new List<Simbolo>();
@@ -438,7 +465,7 @@ namespace C3DCombiner
 
                         FHacer hacer = new FHacer(condicion, new Ambito(Constante.THacer, tablasimbolo));
                         Simbolo sim = new Simbolo("", "", "", Constante.THacer, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, hacer.Ambito, hacer);
-                        
+
 
                         hacer.Padre = sim;
                         List<Simbolo> list = new List<Simbolo>();
@@ -459,7 +486,7 @@ namespace C3DCombiner
 
                         FRepetir repetir = new FRepetir(condicion, new Ambito(Constante.TRepetir, tablasimbolo));
                         Simbolo sim = new Simbolo("", "", "", Constante.TRepetir, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, repetir.Ambito, repetir);
-                        
+
 
                         repetir.Padre = sim;
                         List<Simbolo> list = new List<Simbolo>();
@@ -483,7 +510,7 @@ namespace C3DCombiner
 
                         FPara para = new FPara(accionanterior[0], condicion, accionposterior, new Ambito(Constante.TRepetir, tablasimbolo));
                         Simbolo sim = new Simbolo("", "", "", Constante.TPara, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, para.Ambito, para);
-                        
+
 
 
                         para.AccionAnterior.Padre = sim;
@@ -542,12 +569,8 @@ namespace C3DCombiner
 
                 case Constante.LITERALES:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
-                        {
-                            Object o = RecorrerArbol(nodo);
-                        }
+                        return RecorrerArbol(Nodo.ChildNodes[0]);
                     }
-                    break;
 
                 case Constante.LISTA_EXPS:
                     {

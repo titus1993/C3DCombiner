@@ -9,13 +9,12 @@ namespace C3DCombiner.Funciones
 {
     class FSi
     {
-        public Ambito Si;
         public List<FSinoSi> SinoSi;
         public FSino Sino;
         public Ambito Ambito;
         public FNodoExpresion Condicion;
 
-        Simbolo Padre;
+        public Simbolo Padre;
 
         public FSi(FNodoExpresion condicion, Ambito ambito, List<FSinoSi> sinosi, FSino sino)
         {

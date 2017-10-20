@@ -115,8 +115,10 @@
     <Compile Include="Forms\FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Funciones\FCaso.cs" />
     <Compile Include="Funciones\FClase.cs" />
     <Compile Include="Funciones\FDeclaracion.cs" />
+    <Compile Include="Funciones\FElegir.cs" />
     <Compile Include="Funciones\FHacer.cs" />
     <Compile Include="Funciones\FLlamadaArreglo.cs" />
     <Compile Include="Funciones\FLlamadaMetodo.cs" />

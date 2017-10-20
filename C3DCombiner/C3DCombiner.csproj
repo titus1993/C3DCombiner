@@ -122,10 +122,15 @@
     <Compile Include="Funciones\FLlamadaMetodo.cs" />
     <Compile Include="Funciones\FLlamadaMetodoArrelgoTree.cs" />
     <Compile Include="Funciones\FLlamadaObjeto.cs" />
+    <Compile Include="Funciones\FLoop.cs" />
     <Compile Include="Funciones\FMientras.cs" />
     <Compile Include="Funciones\FNodoExpresion.cs" />
     <Compile Include="Funciones\FNuevo.cs" />
+    <Compile Include="Funciones\FPara.cs" />
     <Compile Include="Funciones\FRepetir.cs" />
+    <Compile Include="Funciones\FSi.cs" />
+    <Compile Include="Funciones\FSino.cs" />
+    <Compile Include="Funciones\FSinoSi.cs" />
     <Compile Include="Funciones\Nodo3D.cs" />
     <Compile Include="Gramaticas\Constante.cs" />
     <Compile Include="Gramaticas\Ejecutar3DC.cs" />

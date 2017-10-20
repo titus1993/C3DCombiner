@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace C3DCombiner.Funciones
 {
-    class FMientras
+    class FLoop
     {
         public Ambito Ambito;
-        public FNodoExpresion Condicion;
 
         public Simbolo Padre;
 
-        public FMientras(FNodoExpresion Condicion, Ambito Ambito)
+        public FLoop(Ambito Ambito)
         {
-            this.Condicion = Condicion;
             this.Ambito = Ambito;
             this.Padre = null;
         }

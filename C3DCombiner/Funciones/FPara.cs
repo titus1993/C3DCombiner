@@ -7,18 +7,23 @@ using System.Threading.Tasks;
 
 namespace C3DCombiner.Funciones
 {
-    class FMientras
+    class FPara
     {
+
+        public Simbolo AccionAnterior;
         public Ambito Ambito;
         public FNodoExpresion Condicion;
+        public FNodoExpresion AccionSiguiente;
 
         public Simbolo Padre;
 
-        public FMientras(FNodoExpresion Condicion, Ambito Ambito)
+        public FPara(Simbolo AccionAnterior, FNodoExpresion Condicion, FNodoExpresion AccionSiguiente, Ambito Ambito)
         {
+            this.AccionAnterior = AccionAnterior;
             this.Condicion = Condicion;
+            this.AccionSiguiente = AccionSiguiente;
             this.Ambito = Ambito;
             this.Padre = null;
         }
     }
-}
+} 

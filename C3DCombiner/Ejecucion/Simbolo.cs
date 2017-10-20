@@ -27,6 +27,7 @@ namespace C3DCombiner.Ejecucion
             this.Ambito = ambito;
             this.Valor = valor;
             this.Tamaño = this.Ambito.Tamaño;
+            this.Posicion = -1;
 
         }
     }

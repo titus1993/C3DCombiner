@@ -16,15 +16,9 @@ namespace C3DCombiner.Ejecucion
             this.TablaSimbolo = tablasimbolo;
             this.Nombre = nombre;
 
-            int pos = 0;    
             foreach (Simbolo sim in TablaSimbolo)
             {
-                if (sim.Rol.Equals(Constante.DECLARACION))
-                {
-                    sim.Posicion = pos;
-                    pos++;
-                    this.Tamaño += sim.Tamaño;
-                }
+                this.Tamaño += sim.Tamaño;
             }
 
 

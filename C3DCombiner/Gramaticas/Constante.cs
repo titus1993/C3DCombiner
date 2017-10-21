@@ -164,6 +164,8 @@ namespace C3DCombiner
 
 
         public const String TErrorSemantico = "Semantico";
+        public const String TErrorLexico = "Lexico";
+        public const String TErrorSintactico = "Sintactico";
         public const String LLAMADA_ARREGLO = "llamada_arreglo";
         public const String LLAMADA_METODO = "llamada_metodo";
         public const String LLAMADA_OBJETO = "llamada_objeto";

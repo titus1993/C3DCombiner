@@ -11,7 +11,7 @@ namespace C3DCombiner
 {
     static class GenerarTablaSimboloTree
     {
-
+        public static List<String> Rutas = new List<String>();
         public static Object RecorrerArbol(ParseTreeNode Nodo)
         {
             switch (Nodo.Term.Name)
@@ -241,7 +241,19 @@ namespace C3DCombiner
 
                 case Constante.INSTRUCCION:
                     {
-                        return RecorrerArbol(Nodo.ChildNodes[0]);
+                        if (Nodo.ChildNodes.Count == 1)
+                        {
+
+                            return RecorrerArbol(Nodo.ChildNodes[0]);
+                        }
+                        else
+                        {
+                            FNodoExpresion valor = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[1]);
+                            List<Simbolo> lista = new List<Simbolo>();
+                            lista.Add(new Simbolo(Constante.TProtegido, "", "", Constante.TRetorno, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TRetorno), valor));
+
+                            return lista;
+                        }
                     }
 
                 case Constante.TIPO:
@@ -285,21 +297,171 @@ namespace C3DCombiner
 
                 case Constante.ASIGNACION:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
+                        FAsignacion asigna = null;
+                        int Fila, Columna;
+                        if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.Id))
                         {
-                            Object o = RecorrerArbol(nodo);
+                            Fila = Nodo.ChildNodes[0].Token.Location.Line;
+                            Columna = Nodo.ChildNodes[0].Token.Location.Column;
+                            if (Nodo.ChildNodes[1].Term.Name.Equals(Constante.LISTA_DIMENSIONES))
+                            {
+                                //asig arreglo
+                                List<FNodoExpresion> d = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                                FLlamadaArreglo la = new FLlamadaArreglo(Nodo.ChildNodes[0].Token.ValueString, d, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_ARREGLO, la.Nombre, la.Fila, la.Columna, la);
+
+
+                                FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[2]);
+
+                                asigna = new FAsignacion(Constante.LLAMADA_OBJETO, new Ambito(Constante.ASIGNACION), val, lo);
+
+                            }
+                            else
+                            {
+                                //asig variable
+                                FLlamadaObjeto lo = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+
+                                FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[1]);
+
+                                asigna = new FAsignacion(Constante.LLAMADA_OBJETO, new Ambito(Constante.ASIGNACION), val, lo);
+                            }
                         }
+                        else if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.OBJETO))
+                        {
+                            Fila = Nodo.ChildNodes[1].Token.Location.Line;
+                            Columna = Nodo.ChildNodes[1].Token.Location.Column;
+                            //objeto
+                            if (Nodo.ChildNodes[2].Term.Name.Equals(Constante.LISTA_DIMENSIONES))
+                            {
+                                //asig arreglo
+                                FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+
+                                List<FNodoExpresion> d = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
+                                FLlamadaArreglo la = new FLlamadaArreglo(Nodo.ChildNodes[1].Token.ValueString, d, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                FLlamadaObjeto laaux = new FLlamadaObjeto(Constante.LLAMADA_ARREGLO, la.Nombre, la.Fila, la.Columna, la);
+                                loaux.InsertarHijo(laaux);
+                                FLlamadaObjeto lo = loaux;
+
+                                FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[3]);
+
+                                asigna = new FAsignacion(Constante.LLAMADA_OBJETO, new Ambito(Constante.ASIGNACION), val, lo);
+
+                            }
+                            else
+                            {
+                                //asig variable
+                                FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+                                FLlamadaObjeto idaux = new FLlamadaObjeto(Constante.Id, Nodo.ChildNodes[1].Token.ValueString, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, Nodo.ChildNodes[1].Token.ValueString);
+                                loaux.InsertarHijo(idaux);
+                                FLlamadaObjeto lo = loaux;
+
+                                FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[2]);
+
+                                asigna = new FAsignacion(Constante.LLAMADA_OBJETO, new Ambito(Constante.ASIGNACION), val, lo);
+                            }
+                        }
+                        else
+                        {
+                            Fila = Nodo.ChildNodes[1].Token.Location.Line;
+                            Columna = Nodo.ChildNodes[1].Token.Location.Column;
+                            //++ o --
+                            FNodoExpresion objeto = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
+
+                            FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[2]);
+
+                            asigna = new FAsignacion(Nodo.ChildNodes[1].Term.Name, new Ambito(Constante.ASIGNACION), val, val);
+                        }
+
+                        Simbolo sim = new Simbolo(Constante.TProtegido, "", "", Constante.ASIGNACION, Fila, Columna, asigna.Ambito, asigna);
+
+                        List<Simbolo> list = new List<Simbolo>();
+                        list.Add(sim);
+                        return list;
                     }
-                    break;
 
                 case Constante.LLAMADA:
                     {
-                        foreach (ParseTreeNode nodo in Nodo.ChildNodes)
+                        List<Simbolo> tabla = new List<Simbolo>();
+                        if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.Id))
                         {
-                            Object o = RecorrerArbol(nodo);
+                            List<FNodoExpresion> lista = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                            if (Nodo.ChildNodes[1].Term.Name.Equals(Constante.LISTA_EXPS))
+                            {
+                                FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[0].Token.ValueString, lista, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+
+                                Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, lo.Fila, lo.Columna, new Ambito(Constante.LLAMADA_METODO), lo);
+                                tabla.Add(llamada);
+                            }
+                            else
+                            {
+                                if (lista.Count == 1)
+                                {
+                                    FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[0].Token.ValueString, lista, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                    FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+
+                                    Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, lo.Fila, lo.Columna, new Ambito(Constante.LLAMADA_METODO), lo);
+                                    tabla.Add(llamada);
+                                }
+                                else
+                                {
+                                    TitusTools.InsertarError(Constante.TErrorSintactico, "No se puede llamar a un arreglo", GenerarTablaSimboloTree.Rutas[GenerarTablaSimboloTree.Rutas.Count - 1].ToString(), Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                }
+                            }
                         }
+                        else if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.OBJETO))
+                        {
+                            List<FNodoExpresion> lista = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
+                            if (Nodo.ChildNodes[2].Term.Name.Equals(Constante.LISTA_EXPS))
+                            {
+                                FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+                                FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[1].Token.ValueString, lista, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+
+                                loaux.InsertarHijo(lo);
+
+                                Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, loaux.Fila, loaux.Columna, new Ambito(Constante.LLAMADA_METODO), loaux);
+                                tabla.Add(llamada);
+                            }
+                            else
+                            {
+                                if (lista.Count == 1)
+                                {
+                                    FLlamadaObjeto loaux = (FLlamadaObjeto)RecorrerArbol(Nodo.ChildNodes[0]);
+                                    FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[1].Token.ValueString, lista, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                    FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+
+                                    loaux.InsertarHijo(lo);
+
+                                    Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, loaux.Fila, loaux.Columna, new Ambito(Constante.LLAMADA_METODO), loaux);
+                                    tabla.Add(llamada);
+                                }
+                                else
+                                {
+                                    TitusTools.InsertarError(Constante.TErrorSintactico, "No se puede llamar a un arreglo", GenerarTablaSimboloTree.Rutas[GenerarTablaSimboloTree.Rutas.Count - 1].ToString(), Nodo.ChildNodes[0].Token.Location.Line, Nodo.ChildNodes[0].Token.Location.Column);
+                                }
+                            }
+                        }
+                        else if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.TOutString))
+                        {
+                            FNodoExpresion valor = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[1]);
+                            FImprimir imprimir = new FImprimir(valor);
+
+                            Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.TImprimir, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TImprimir), imprimir);
+                            tabla.Add(llamada);
+                        }
+                        else
+                        {
+                            List<FNodoExpresion> parametros = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+
+                            FSuper super = new FSuper(parametros);
+
+                            Simbolo s = new Simbolo(Constante.TProtegido, "", "", Constante.TSuper, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TSuper), super);
+                            tabla.Add(s);
+                        }
+
+                        return tabla;
                     }
-                    break;
 
                 case Constante.SI:
                     {
@@ -327,6 +489,7 @@ namespace C3DCombiner
                         foreach (FSinoSi fsns in sinosi)
                         {
                             fsns.Condicion.Padre = sim;
+                            fsns.Padre = sim;
                             foreach (Simbolo s in fsns.Ambito.TablaSimbolo)
                             {
                                 s.Padre = sim;
@@ -335,6 +498,7 @@ namespace C3DCombiner
 
                         foreach (Simbolo s in sino.Ambito.TablaSimbolo)
                         {
+                            sino.Padre = sim;
                             s.Padre = sim;
                         }
 
@@ -393,11 +557,19 @@ namespace C3DCombiner
                         foreach (FCaso cas in casos)
                         {
                             cas.Padre = sim;
+                            foreach (Simbolo sm in cas.Ambito.TablaSimbolo)
+                            {
+                                sm.Padre = sim;
+                            }
                         }
 
                         if (defecto != null)
                         {
                             defecto.Padre = sim;
+                            foreach (Simbolo sm in defecto.Ambito.TablaSimbolo)
+                            {
+                                sm.Padre = sim;
+                            }
                         }
 
                         return list;
@@ -882,6 +1054,20 @@ namespace C3DCombiner
                 case Constante.TSuper:
                     return new FLlamadaObjeto(Constante.TSuper, Constante.TSuper, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, null);
 
+                case Constante.TContinuar:
+                    {
+                        List<Simbolo> lista = new List<Simbolo>();
+                        lista.Add(new Simbolo(Constante.TProtegido, "", "", Constante.TContinuar, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, new Ambito(Constante.TContinuar), null));
+                        return lista;
+                    }
+
+
+                case Constante.TSalir:
+                    {
+                        List<Simbolo> lista = new List<Simbolo>();
+                        lista.Add(new Simbolo(Constante.TProtegido, "", "", Constante.TSalir, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, new Ambito(Constante.TSalir), null));
+                        return lista;
+                    }
             }
             return null;
         }

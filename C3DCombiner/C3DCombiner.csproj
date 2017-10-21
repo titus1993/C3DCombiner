@@ -115,11 +115,13 @@
     <Compile Include="Forms\FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Funciones\FAsignacion.cs" />
     <Compile Include="Funciones\FCaso.cs" />
     <Compile Include="Funciones\FClase.cs" />
     <Compile Include="Funciones\FDeclaracion.cs" />
     <Compile Include="Funciones\FElegir.cs" />
     <Compile Include="Funciones\FHacer.cs" />
+    <Compile Include="Funciones\FImprimir.cs" />
     <Compile Include="Funciones\FLlamadaArreglo.cs" />
     <Compile Include="Funciones\FLlamadaMetodo.cs" />
     <Compile Include="Funciones\FLlamadaMetodoArrelgoTree.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Funciones\FSi.cs" />
     <Compile Include="Funciones\FSino.cs" />
     <Compile Include="Funciones\FSinoSi.cs" />
+    <Compile Include="Funciones\FSuper.cs" />
     <Compile Include="Funciones\Nodo3D.cs" />
     <Compile Include="Gramaticas\Constante.cs" />
     <Compile Include="Gramaticas\Ejecutar3DC.cs" />

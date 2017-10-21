@@ -162,11 +162,11 @@ namespace C3DCombiner
             var DECLARACION = new NonTerminal(Constante.DECLARACION);
             var ASIGNACION = new NonTerminal(Constante.ASIGNACION);
             var TIPO = new NonTerminal(Constante.TIPO);
+            var LISTA_DIMENSIONES = new NonTerminal(Constante.LISTA_DIMENSIONES);
             var LISTA_EXPS = new NonTerminal(Constante.LISTA_EXPS);
             var LISTA_EXP = new NonTerminal(Constante.LISTA_EXP);
             var EXP = new NonTerminal(Constante.EXP);
             var LISTA_ID = new NonTerminal(Constante.LISTA_ID);
-            var LISTA_DIMENSIONES = new NonTerminal(Constante.LISTA_DIMENSIONES);
             var DIMENSION = new NonTerminal(Constante.DIMENSION);
             var OBJETO = new NonTerminal(Constante.OBJETO);
             var HIJO = new NonTerminal(Constante.HIJO);
@@ -269,13 +269,12 @@ namespace C3DCombiner
 
             LISTA_INSTRUCCION.Rule = MakePlusRule(LISTA_INSTRUCCION, INSTRUCCION);
 
-            INSTRUCCION.Rule = ASIGNACION + Eos
+            INSTRUCCION.Rule = LLAMADA + Eos
                 | DECLARACION + Eos
+                | ASIGNACION + Eos
                 | TRetorno + EXP + Eos
-                | TContinuar + Eos
                 | TSalir + Eos
                 | TContinuar + Eos
-                | LLAMADA + Eos
                 | SI
                 | ELEGIR
                 | MIENTRAS
@@ -313,12 +312,12 @@ namespace C3DCombiner
                 | TParentesis_Izq + EXP + TDecremento + TParentesis_Der
                 ;
 
-            LLAMADA.Rule = OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
-                | OBJETO + Id + LISTA_DIMENSIONES
-                | Id + LISTA_DIMENSIONES
-                | TOutString + TCorchete_Izq + EXP + TCorchete_Der
-                | TSuper + TCorchete_Izq + LISTA_EXPS + TCorchete_Der
+            LLAMADA.Rule = OBJETO + Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der//3
+                | Id + TCorchete_Izq + LISTA_EXPS + TCorchete_Der//2
+                | OBJETO + Id + LISTA_DIMENSIONES//3
+                | Id + LISTA_DIMENSIONES//2
+                | TOutString + TCorchete_Izq + EXP + TCorchete_Der//2
+                | TSuper + TCorchete_Izq + LISTA_EXPS + TCorchete_Der//2
                 ;
 
             SI.Rule = TSi + EXP + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent + LISTA_SINOSIS + SINO;

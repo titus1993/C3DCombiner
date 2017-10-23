@@ -9,13 +9,14 @@ namespace C3DCombiner.Funciones
 {
     class FSuper
     {
-        List<FNodoExpresion> Parametros;
+        public List<FNodoExpresion> Parametros;
 
-        Simbolo Padre;
+        public Simbolo Padre;
 
         public FSuper(List<FNodoExpresion> Parametros)
         {
             this.Parametros = Parametros;
+            this.Padre = null;
         }
     }
 }

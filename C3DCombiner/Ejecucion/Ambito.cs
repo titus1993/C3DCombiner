@@ -16,9 +16,12 @@ namespace C3DCombiner.Ejecucion
             this.TablaSimbolo = tablasimbolo;
             this.Nombre = nombre;
 
-            foreach (Simbolo sim in TablaSimbolo)
+            Simbolo Hermano = null;
+
+            foreach (Simbolo s in tablasimbolo)
             {
-                this.Tamaño += sim.Tamaño;
+                s.Hermano = Hermano;
+                Hermano = s;
             }
 
 

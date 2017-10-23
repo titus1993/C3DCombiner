@@ -42,6 +42,7 @@
             this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.herramientasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diagramaUMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ejecutarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TabsNotificaciones = new System.Windows.Forms.TabControl();
@@ -50,7 +51,7 @@
             this.TabOptimizacion = new System.Windows.Forms.TabPage();
             this.Tab3d = new System.Windows.Forms.TabPage();
             this.Tab3dOptimizado = new System.Windows.Forms.TabPage();
-            this.ejecutarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TabSimbolos = new System.Windows.Forms.TabPage();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -103,7 +104,7 @@
             this.oCLToolStripMenuItem.Name = "oCLToolStripMenuItem";
             this.oCLToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.oCLToolStripMenuItem.Text = "OCL++";
-            this.oCLToolStripMenuItem.Click += new System.EventHandler(this.oCLToolStripMenuItem_Click);
+            this.oCLToolStripMenuItem.Click += new System.EventHandler(this.OCLToolStripMenuItem_Click);
             // 
             // treeToolStripMenuItem
             // 
@@ -111,7 +112,7 @@
             this.treeToolStripMenuItem.Name = "treeToolStripMenuItem";
             this.treeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.treeToolStripMenuItem.Text = "Tree";
-            this.treeToolStripMenuItem.Click += new System.EventHandler(this.treeToolStripMenuItem_Click);
+            this.treeToolStripMenuItem.Click += new System.EventHandler(this.TreeToolStripMenuItem_Click);
             // 
             // dToolStripMenuItem
             // 
@@ -119,7 +120,7 @@
             this.dToolStripMenuItem.Name = "dToolStripMenuItem";
             this.dToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.dToolStripMenuItem.Text = "3D";
-            this.dToolStripMenuItem.Click += new System.EventHandler(this.dToolStripMenuItem_Click);
+            this.dToolStripMenuItem.Click += new System.EventHandler(this.DToolStripMenuItem_Click);
             // 
             // abrirToolStripMenuItem
             // 
@@ -127,7 +128,7 @@
             this.abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
             this.abrirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.abrirToolStripMenuItem.Text = "Abrir";
-            this.abrirToolStripMenuItem.Click += new System.EventHandler(this.abrirToolStripMenuItem_Click);
+            this.abrirToolStripMenuItem.Click += new System.EventHandler(this.AbrirToolStripMenuItem_Click);
             // 
             // abrirCarpetaToolStripMenuItem
             // 
@@ -135,7 +136,7 @@
             this.abrirCarpetaToolStripMenuItem.Name = "abrirCarpetaToolStripMenuItem";
             this.abrirCarpetaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.abrirCarpetaToolStripMenuItem.Text = "Abrir carpeta";
-            this.abrirCarpetaToolStripMenuItem.Click += new System.EventHandler(this.abrirCarpetaToolStripMenuItem_Click);
+            this.abrirCarpetaToolStripMenuItem.Click += new System.EventHandler(this.AbrirCarpetaToolStripMenuItem_Click);
             // 
             // guardarToolStripMenuItem
             // 
@@ -143,7 +144,7 @@
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
             this.guardarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.guardarToolStripMenuItem.Text = "Guardar";
-            this.guardarToolStripMenuItem.Click += new System.EventHandler(this.guardarToolStripMenuItem_Click);
+            this.guardarToolStripMenuItem.Click += new System.EventHandler(this.GuardarToolStripMenuItem_Click);
             // 
             // guardarComoToolStripMenuItem
             // 
@@ -151,7 +152,7 @@
             this.guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
             this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.guardarComoToolStripMenuItem.Text = "Guardar Como";
-            this.guardarComoToolStripMenuItem.Click += new System.EventHandler(this.guardarComoToolStripMenuItem_Click);
+            this.guardarComoToolStripMenuItem.Click += new System.EventHandler(this.GuardarComoToolStripMenuItem_Click);
             // 
             // salirToolStripMenuItem
             // 
@@ -159,7 +160,7 @@
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
             this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.salirToolStripMenuItem.Text = "Salir";
-            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
+            this.salirToolStripMenuItem.Click += new System.EventHandler(this.SalirToolStripMenuItem_Click);
             // 
             // herramientasToolStripMenuItem
             // 
@@ -174,7 +175,14 @@
             this.diagramaUMLToolStripMenuItem.Name = "diagramaUMLToolStripMenuItem";
             this.diagramaUMLToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.diagramaUMLToolStripMenuItem.Text = "Diagrama UML";
-            this.diagramaUMLToolStripMenuItem.Click += new System.EventHandler(this.diagramaUMLToolStripMenuItem_Click);
+            this.diagramaUMLToolStripMenuItem.Click += new System.EventHandler(this.DiagramaUMLToolStripMenuItem_Click);
+            // 
+            // ejecutarToolStripMenuItem
+            // 
+            this.ejecutarToolStripMenuItem.Name = "ejecutarToolStripMenuItem";
+            this.ejecutarToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.ejecutarToolStripMenuItem.Text = "Ejecutar";
+            this.ejecutarToolStripMenuItem.Click += new System.EventHandler(this.EjecutarToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -211,6 +219,7 @@
             this.TabsNotificaciones.Controls.Add(this.TabOptimizacion);
             this.TabsNotificaciones.Controls.Add(this.Tab3d);
             this.TabsNotificaciones.Controls.Add(this.Tab3dOptimizado);
+            this.TabsNotificaciones.Controls.Add(this.TabSimbolos);
             this.TabsNotificaciones.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabsNotificaciones.Location = new System.Drawing.Point(0, 0);
             this.TabsNotificaciones.Name = "TabsNotificaciones";
@@ -268,12 +277,15 @@
             this.Tab3dOptimizado.Text = "Codigo 3D Optimizado";
             this.Tab3dOptimizado.UseVisualStyleBackColor = true;
             // 
-            // ejecutarToolStripMenuItem
+            // TabSimbolos
             // 
-            this.ejecutarToolStripMenuItem.Name = "ejecutarToolStripMenuItem";
-            this.ejecutarToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.ejecutarToolStripMenuItem.Text = "Ejecutar";
-            this.ejecutarToolStripMenuItem.Click += new System.EventHandler(this.ejecutarToolStripMenuItem_Click);
+            this.TabSimbolos.Location = new System.Drawing.Point(4, 4);
+            this.TabSimbolos.Name = "TabSimbolos";
+            this.TabSimbolos.Padding = new System.Windows.Forms.Padding(3);
+            this.TabSimbolos.Size = new System.Drawing.Size(948, 175);
+            this.TabSimbolos.TabIndex = 5;
+            this.TabSimbolos.Text = "Tabla de Simbolos";
+            this.TabSimbolos.UseVisualStyleBackColor = true;
             // 
             // FMain
             // 
@@ -325,6 +337,7 @@
         private System.Windows.Forms.ToolStripMenuItem herramientasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem diagramaUMLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ejecutarToolStripMenuItem;
+        private System.Windows.Forms.TabPage TabSimbolos;
     }
 }
 

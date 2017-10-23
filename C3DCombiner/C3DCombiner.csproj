@@ -127,10 +127,12 @@
     <Compile Include="Funciones\FLlamadaMetodoArrelgoTree.cs" />
     <Compile Include="Funciones\FLlamadaObjeto.cs" />
     <Compile Include="Funciones\FLoop.cs" />
+    <Compile Include="Funciones\FMetodo.cs" />
     <Compile Include="Funciones\FMientras.cs" />
     <Compile Include="Funciones\FNodoExpresion.cs" />
     <Compile Include="Funciones\FNuevo.cs" />
     <Compile Include="Funciones\FPara.cs" />
+    <Compile Include="Funciones\FParametro.cs" />
     <Compile Include="Funciones\FRepetir.cs" />
     <Compile Include="Funciones\FSi.cs" />
     <Compile Include="Funciones\FSino.cs" />
@@ -166,8 +168,6 @@
     <Compile Include="Tree\TitusTree.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UML\Atributo.cs" />
-    <Compile Include="UML\Clase.cs" />
     <EmbeddedResource Include="Forms\FAddClase.resx">
       <DependentUpon>FAddClase.cs</DependentUpon>
     </EmbeddedResource>

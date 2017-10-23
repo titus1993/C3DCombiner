@@ -71,7 +71,7 @@ namespace C3DCombiner
                             default:
                                 TitusTab TTaux = (TitusTab)this.SelectedPage;
                                 //preguntamos si ha sido modificado el contenido para preguntar si desea guardar
-                                if (TTaux.esModificado())
+                                if (TTaux.EsModificado())
                                 {
                                     switch (MessageBox.Show("Desea guardar el archivo", "Guardar archivo", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk))
                                     {
@@ -145,7 +145,7 @@ namespace C3DCombiner
             TitusTab TTaux = (TitusTab)this.SelectedPage;
             if (TTaux != null)
             {
-                TTaux.guardarArchivo();
+                TTaux.GuardarArchivo();
                 this.Refresh();
                 this.UpdateLayout();
             }
@@ -156,7 +156,7 @@ namespace C3DCombiner
             TitusTab TTaux = (TitusTab)this.SelectedPage;
             if (TTaux != null)
             {
-                TTaux.guardarComoArchivo();
+                TTaux.GuardarComoArchivo();
                 this.Refresh();
                 this.UpdateLayout();
             }

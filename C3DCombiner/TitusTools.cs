@@ -29,7 +29,9 @@ namespace C3DCombiner
 
         public static DataGridView Errores = new DataGridView();
 
-        public static ArbolSintactico Arbol = null;
+        public static DataGridView TablaSimbolos = new DataGridView();
+
+        public static List<Archivo> Archivos_Importados = new List<Archivo>();
 
         public static void IniciarEstaticos()
         {
@@ -46,6 +48,8 @@ namespace C3DCombiner
             IniciarConsola();
 
             IniciarErrores();
+
+            IniciarTablaSimbolos();
         }
 
         public static void IniciarConsola()
@@ -97,11 +101,7 @@ namespace C3DCombiner
             }
 
         }
-
-        public static DataGridView getErrores()
-        {
-            return Errores;
-        }
+        
         
 
         public static void InsertarError(String Tipo, String Descripcion, String Ruta, int Fila, int Columna)
@@ -114,10 +114,49 @@ namespace C3DCombiner
             Errores.Rows.Clear();
         }
 
+        public static void IniciarTablaSimbolos()
+        {
+            TablaSimbolos.Columns.Add("Rol", "Rol");
+            TablaSimbolos.Columns.Add("Tipo", "Tipo");
+            TablaSimbolos.Columns.Add("Ambito", "Ambito");
+            TablaSimbolos.Columns.Add("Nombre", "Nombre");
+            TablaSimbolos.Columns.Add("Tamaño", "Tamaño");
+            TablaSimbolos.Columns.Add("Posicion", "Posicion");
+            TablaSimbolos.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            TablaSimbolos.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Dock = DockStyle.Fill;
+            TablaSimbolos.ReadOnly = true;
+            TablaSimbolos.ScrollBars = ScrollBars.Both;
+            TablaSimbolos.AutoGenerateColumns = true;
+            TablaSimbolos.RowsDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            foreach (DataGridViewColumn col in TablaSimbolos.Columns)
+            {
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.HeaderCell.Style.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            }
+
+        }
+
+        public static void LimpiarDatosTablaSimbolos()
+        {
+            TablaSimbolos.Rows.Clear();
+        }
+
+
+        public static void LimpiarArchivos()
+        {
+            Archivos_Importados.Clear();
+        }
         public static void Limpiar()
         {
             LimpiarConsola();
             LimpiarDatosErrores();
+            LimpiarDatosTablaSimbolos();
+            LimpiarArchivos();
         }
     }
 }

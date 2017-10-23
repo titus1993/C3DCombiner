@@ -20,8 +20,8 @@ namespace C3DCombiner
             this.Paths = new List<string>();
             PathSeparator = @"\";
             this.Dock = DockStyle.Fill;
-            setImageIco();
-            setMenuContext();
+            SetImageIco();
+            SetMenuContext();
             //setRutaRaiz();
             //Refrescar();
 
@@ -48,7 +48,7 @@ namespace C3DCombiner
             }
         }
 
-        private void setRutaRaiz(String raiz)
+        private void SetRutaRaiz(String raiz)
         {
             int contador = 0;
             int i = raiz.Length - 1;
@@ -89,7 +89,7 @@ namespace C3DCombiner
             }
 
         }
-        private void setImageIco()
+        private void SetImageIco()
         {
             ImageList lista = new ImageList();
             lista.Images.Add("Carpeta", Image.FromFile(@"carpeta.ico"));
@@ -99,7 +99,7 @@ namespace C3DCombiner
             this.ImageList = lista;
         }
 
-        private void setMenuContext()
+        private void SetMenuContext()
         {
             ContextMenuStrip docMenu = new ContextMenuStrip();
 
@@ -205,10 +205,12 @@ namespace C3DCombiner
         }
         private void CrearArchivo(string ruta)
         {
-            SaveFileDialog dialogo = new SaveFileDialog();
-            dialogo.Filter = "Tree File|*.tree|OLC++ File|*.olc|3D File|*.ddd";
-            dialogo.Title = "Crear Archivo";
-            dialogo.InitialDirectory = ruta;
+            SaveFileDialog dialogo = new SaveFileDialog()
+            {
+                Filter = "Tree File|*.tree|OLC++ File|*.olc|3D File|*.ddd",
+                Title = "Crear Archivo",
+                InitialDirectory = ruta
+            };
             dialogo.ShowDialog();
 
             if (dialogo.FileName != "")

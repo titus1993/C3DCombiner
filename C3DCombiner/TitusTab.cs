@@ -51,20 +51,20 @@ namespace C3DCombiner
             //inicializamos la variable que tendra la ruta del archivo
             this.Ruta = ruta;
             this.Tipo = tipo;
-            initComponent(texto);
+            InitComponent(texto);
         }
 
 
         public void Analizar()
         {
-            if (guardarArchivo())
+            if (GuardarArchivo())
             {
                 TitusTools.Limpiar();
                 ParseTree arbol = parser.Parse(TBContenido.Text);
 
                 if (arbol.Root != null && arbol.ParserMessages.Count == 0)
                 {                    
-                    TitusTools.Arbol = new ArbolSintactico(arbol.Root, this.Tipo, this.Ruta);
+                    ArbolSintactico Arbol = new ArbolSintactico(arbol.Root, this.Tipo, this.Ruta);
                 }
                 else
                 {
@@ -85,11 +85,12 @@ namespace C3DCombiner
 
                     }
                 }
+                MessageBox.Show("Se encontraron errores", "Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
 
-        private void initComponent(String texto)
+        private void InitComponent(String texto)
         {
             //iniciamos la bandera para saber si ha sido guardado los datos
             this.modificado = false;
@@ -104,8 +105,10 @@ namespace C3DCombiner
                         parser = new Parser(language);
 
                         //creamos el textbox
-                        TBContenido = new IronyFCTB();
-                        TBContenido.Grammar = GramaticaOLC;
+                        TBContenido = new IronyFCTB()
+                        {
+                            Grammar = GramaticaOLC
+                        };
                     }
                     break;
 
@@ -117,8 +120,10 @@ namespace C3DCombiner
                         parser = new Parser(language);
 
                         //creamos el textbox
-                        TBContenido = new IronyFCTB();
-                        TBContenido.Grammar = GramaticaTree;
+                        TBContenido = new IronyFCTB()
+                        {
+                            Grammar = GramaticaTree
+                        };
                     }
                     break;
 
@@ -146,10 +151,12 @@ namespace C3DCombiner
             TBContenido.Dock = DockStyle.Fill;
 
             //configuramos el label
-            panel = new Label();
-            panel.Dock = DockStyle.Bottom;
-            panel.Text = "Linea: 1, Columna: 1";
-            panel.TextAlign = ContentAlignment.MiddleRight;
+            panel = new Label()
+            {
+                Dock = DockStyle.Bottom,
+                Text = "Linea: 1, Columna: 1",
+                TextAlign = ContentAlignment.MiddleRight
+            };
 
 
             //agregamos los eventos
@@ -161,9 +168,11 @@ namespace C3DCombiner
             this.Controls.Add(panel);
 
             //creamos el boton cerrar
-            LidorSystems.IntegralUI.Controls.CommandButton closeButton = new LidorSystems.IntegralUI.Controls.CommandButton();
-            closeButton.ImageIndex = 0;
-            closeButton.Key = "TAB_CLOSE";
+            LidorSystems.IntegralUI.Controls.CommandButton closeButton = new LidorSystems.IntegralUI.Controls.CommandButton()
+            {
+                ImageIndex = 0,
+                Key = "TAB_CLOSE"
+            };
 
             //agreagamos el boton al tab
             this.Buttons.Add(closeButton);
@@ -180,12 +189,12 @@ namespace C3DCombiner
             modificado = true;
         }
 
-        public bool esModificado()
+        public bool EsModificado()
         {
             return modificado;
         }
 
-        public Boolean guardarArchivo()
+        public Boolean GuardarArchivo()
         {
             Boolean estado = false;
             if (String.IsNullOrWhiteSpace(Ruta))
@@ -215,7 +224,7 @@ namespace C3DCombiner
             return estado;
         }
 
-        public void guardarComoArchivo()
+        public void GuardarComoArchivo()
         {
             TitusTools.FDGuardarArchivo.FilterIndex = Tipo + 1;
 

@@ -18,12 +18,19 @@ namespace C3DCombiner.Ejecucion
             }else if (tipo == 1)
             {
                 GenerarTablaSimboloTree.Rutas.Add(ruta);
-                GenerarTablaSimboloTree.RecorrerArbol(arbol);
+                Archivo archivo = (Archivo)GenerarTablaSimboloTree.RecorrerArbol(arbol);
                 GenerarTablaSimboloTree.Rutas.RemoveAt(GenerarTablaSimboloTree.Rutas.Count - 1);
             }else if (tipo == 3)
             {
 
             }
+        }
+
+
+
+        public void GenerarTablaSimbolo()
+        {
+
         }
     }
 }

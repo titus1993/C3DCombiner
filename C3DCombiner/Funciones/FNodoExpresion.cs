@@ -10,6 +10,7 @@ namespace C3DCombiner.Funciones
     class FNodoExpresion
     {
         public Simbolo Padre;
+        public FNodoExpresion Hermano;
 
         public FNodoExpresion Izquierda, Derecha;
         public String Tipo, Nombre;

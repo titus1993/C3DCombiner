@@ -232,8 +232,7 @@ namespace C3DCombiner
             SENTENCIA.Rule = FUNCION
                 | VISIBILIDAD + DECLARACION + Eos;
 
-
-            FUNCION.Rule = TSobrescribirTree + Eos + VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
+          FUNCION.Rule = TSobrescribirTree + Eos + VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
                 | VISIBILIDAD + TMetodo + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
                 | TSobrescribirTree + Eos + VISIBILIDAD + TFuncion + TIPO + DIMENSIONES_METODO + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent
                 | VISIBILIDAD + TFuncion + TIPO + DIMENSIONES_METODO + Id + TCorchete_Izq + LISTA_PARAMETROS + TCorchete_Der + TDosPuntos + Eos + Indent + LISTA_INSTRUCCIONES + Dedent

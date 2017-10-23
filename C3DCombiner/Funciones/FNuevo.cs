@@ -13,7 +13,7 @@ namespace C3DCombiner.Funciones
         public int Fila, Columna;
         public List<FNodoExpresion> Parametros;
 
-        Simbolo Padre;
+        public Simbolo Padre;
 
         public FNuevo(String nombre, List<FNodoExpresion> parametros, int fila, int columna)
         {
@@ -21,6 +21,7 @@ namespace C3DCombiner.Funciones
             this.Parametros = parametros;
             this.Fila = fila;
             this.Columna = columna;
+            this.Padre = null;
         }
     }
 }

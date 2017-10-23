@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C3DCombiner.Ejecucion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,18 @@ namespace C3DCombiner.Funciones
 {
     class FClase
     {
-        List<String> Imports = new List<String>();
+        public String Herencia = "";
+        public Ambito Ambito;
+        public String Nombre = "";
+
+        public Simbolo Padre;
+
+        public FClase(String Nombre, String Herencia, Ambito Ambito)
+        {
+            this.Nombre = Nombre;
+            this.Herencia = Herencia;
+            this.Ambito = Ambito;
+            this.Padre = null;
+        }
     }
 }

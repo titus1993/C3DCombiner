@@ -21,6 +21,7 @@ namespace C3DCombiner.Funciones
             this.Parametros = parametros;
             this.Fila = fila;
             this.Columna = columna;
+            this.Padre = null;
         }
     }
 }

@@ -9,8 +9,8 @@ namespace C3DCombiner.Funciones
 {
     class FImprimir
     {
-        FNodoExpresion Valor;
-        Simbolo Padre;
+        public FNodoExpresion Valor;
+        public Simbolo Padre;
 
         public FImprimir(FNodoExpresion Valor)
         {

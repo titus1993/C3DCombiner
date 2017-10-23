@@ -28,7 +28,7 @@ namespace C3DCombiner.Funciones
             this.LlamadaArreglo = null;
             this.Padre = null;
 
-            
+
             if (Tipo.Equals(Constante.LLAMADA_ARREGLO))
             {
                 this.LlamadaArreglo = (FLlamadaArreglo)valor;
@@ -36,7 +36,8 @@ namespace C3DCombiner.Funciones
             else if (Tipo.Equals(Constante.LLAMADA_METODO))
             {
                 this.LlamadaMetodo = (FLlamadaMetodo)valor;
-            }else if (Tipo.Equals(Constante.LLAMADA_METODO_ARREGLO))
+            }
+            else if (Tipo.Equals(Constante.LLAMADA_METODO_ARREGLO))
             {
                 this.LlamadaMetodoArreglo = (FLlamadaMetodoArrelgoTree)valor;
             }
@@ -55,6 +56,32 @@ namespace C3DCombiner.Funciones
                 this.Hijo.InsertarHijo(hijo);
             }
         }
-        
+
+
+        public void SetPadre(Simbolo simbolo)
+        {
+            this.Padre = simbolo;
+            switch (this.Tipo)
+            {
+                case Constante.LLAMADA_ARREGLO:
+                    this.LlamadaArreglo.setPadre(simbolo);
+                    break;
+
+                case Constante.LLAMADA_METODO:
+                    this.LlamadaMetodo.setPadre(simbolo);
+                    break;
+
+                case Constante.LLAMADA_METODO_ARREGLO:
+                    this.LlamadaMetodoArreglo.setPadre(simbolo);
+                    break;
+
+            }
+
+            if (this.Hijo != null)
+            {
+                this.Hijo.SetPadre(simbolo);
+            }
+        }
+
     }
 }

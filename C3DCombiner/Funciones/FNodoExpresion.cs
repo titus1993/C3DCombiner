@@ -40,6 +40,37 @@ namespace C3DCombiner.Funciones
             this.Nuevo = nodo.Nuevo;
         }
 
+
+        public void SetPadre(Simbolo simbolo)
+        {
+            this.Padre = simbolo;
+            if (this.Izquierda != null)
+            {
+                this.Izquierda.SetPadre(simbolo);
+            }
+
+            if (Derecha != null)
+            {
+                this.Derecha.SetPadre(simbolo);
+            }
+
+            switch (this.Tipo)
+            {                
+
+                case Constante.LLAMADA_OBJETO:
+                    {
+                        this.LlamadaObjeto.SetPadre(simbolo);
+                    }
+                    break;
+
+                case Constante.TNuevo:
+                    {
+                        this.Nuevo.setPadre(simbolo);
+                    }
+                    break;
+            }
+
+        }
         public FNodoExpresion(FNodoExpresion izq, FNodoExpresion der, String tipo, String nombre, int fila, int columna, Object valor)
         {
             this.Izquierda = izq;
@@ -98,26 +129,6 @@ namespace C3DCombiner.Funciones
                         this.Nuevo = (FNuevo)valor;
                     }
                     break;
-
-                /*case Constante.TAls:
-                    this.Objeto = (FLlamadaObjeto)valor;
-                    break;
-
-                case Constante.TObjeto:
-                    this.Obj = (Objeto)valor;
-                    break;
-
-                case Constante.TArreglo:
-                    this.Arreglo = (FNodoArreglo)valor;
-                    break;
-
-                case Constante.TVariableArreglo:
-                    this.ArregloResuelto = (Arreglo)valor;
-                    break;
-
-                case Constante.TColumna:
-                    this.Col = (FNodoExpresion)valor;
-                    break;*/
             }
         }
 

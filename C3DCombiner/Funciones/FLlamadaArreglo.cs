@@ -23,5 +23,14 @@ namespace C3DCombiner.Funciones
             this.Columna = columna;
             this.Padre = null;
         }
+
+        public void setPadre(Simbolo simbolo)
+        {
+            this.Padre = simbolo;
+            foreach (FNodoExpresion nodo in Dimensiones)
+            {
+                nodo.SetPadre(simbolo);
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace C3DCombiner.Ejecucion
                 GenerarTablaSimboloTree.Rutas.Add(ruta);
                 Archivo archivo = (Archivo)GenerarTablaSimboloTree.RecorrerArbol(arbol);
                 GenerarTablaSimboloTree.Rutas.RemoveAt(GenerarTablaSimboloTree.Rutas.Count - 1);
+                archivo.Ejecutar();
             }else if (tipo == 3)
             {
 

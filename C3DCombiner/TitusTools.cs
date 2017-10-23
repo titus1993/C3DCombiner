@@ -118,14 +118,14 @@ namespace C3DCombiner
         {
             TablaSimbolos.Columns.Add("Rol", "Rol");
             TablaSimbolos.Columns.Add("Tipo", "Tipo");
-            TablaSimbolos.Columns.Add("Ambito", "Ambito");
             TablaSimbolos.Columns.Add("Nombre", "Nombre");
+            TablaSimbolos.Columns.Add("Ambito", "Ambito");
             TablaSimbolos.Columns.Add("Tamaño", "Tamaño");
             TablaSimbolos.Columns.Add("Posicion", "Posicion");
             TablaSimbolos.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             TablaSimbolos.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            TablaSimbolos.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            TablaSimbolos.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            TablaSimbolos.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             TablaSimbolos.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             TablaSimbolos.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             TablaSimbolos.Dock = DockStyle.Fill;
@@ -139,6 +139,14 @@ namespace C3DCombiner
                 col.HeaderCell.Style.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             }
 
+        }
+
+        public static void InsertarTablaSimbolos(DataTable tabla)
+        {
+            foreach (DataRow fila in tabla.Rows)
+            {
+                TablaSimbolos.Rows.Add(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5]);
+            }
         }
 
         public static void LimpiarDatosTablaSimbolos()

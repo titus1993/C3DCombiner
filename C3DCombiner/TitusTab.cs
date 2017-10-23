@@ -84,8 +84,9 @@ namespace C3DCombiner
                         }
 
                     }
+                    MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                MessageBox.Show("Se encontraron errores", "Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
             }
 
         }

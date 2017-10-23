@@ -11,6 +11,135 @@ namespace C3DCombiner
 {
     static class GenerarTablaSimboloTree
     {
+
+        public static int SetPosicion(Simbolo simbolo, int pos)
+        {
+            switch (simbolo.Rol)
+            {
+                case Constante.TClase:
+                    foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
+                    {
+                        if (sim.Rol.Equals(Constante.DECLARACION))
+                        {
+                            pos++;
+                            sim.Posicion = pos;
+                        }
+                        else
+                        {
+                            if (simbolo.Tamaño > 0)
+                            {
+                                SetPosicion(sim, -1);
+                            }
+                        }
+                    }
+                    simbolo.Tamaño = pos++;
+                    break;
+
+                case Constante.TMetodo:
+                    foreach (Simbolo sim in ((FMetodo)simbolo.Valor).Parametros)
+                    {
+                        pos++;
+                        sim.Posicion = pos;
+                    }
+
+                    foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
+                    {
+                        pos = SetPosicion(sim, pos);
+                    }
+                    break;
+
+
+                case Constante.TConstructor:
+                    foreach (Simbolo sim in ((FMetodo)simbolo.Valor).Parametros)
+                    {
+                        pos++;
+                        sim.Posicion = pos++;
+                    }
+
+                    foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
+                    {
+                        pos = SetPosicion(sim, pos);
+                    }
+                    break;
+
+                case Constante.TPara:
+                    FPara p = (FPara)simbolo.Valor;
+                    if (p.AccionAnterior.Rol.Equals(Constante.DECLARACION))
+                    {
+                        pos++;
+                        p.AccionAnterior.Posicion = pos;
+                    }
+
+                    foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
+                    {
+                        pos =SetPosicion(sim, pos);
+                    }
+                    break;
+
+                case Constante.TSi:
+                    FSi si = (FSi)simbolo.Valor;
+
+                    foreach (Simbolo sim in si.Ambito.TablaSimbolo)
+                    {
+                        pos = SetPosicion(sim, pos);
+                    }
+
+                    foreach (FSinoSi sinosi in si.SinoSi)
+                    {
+                        foreach (Simbolo sim in sinosi.Ambito.TablaSimbolo)
+                        {
+                            pos = SetPosicion(sim, pos);
+                        }
+                    }
+
+                    if (si.Sino != null)
+                    {
+                        foreach (Simbolo sim in si.Sino.Ambito.TablaSimbolo)
+                        {
+                            pos = SetPosicion(sim, pos);
+                        }
+                    }                   
+
+                    break;
+
+                case Constante.TElegir:
+                    FElegir elegir = (FElegir)simbolo.Valor;
+                    foreach (FCaso caso in elegir.Casos)
+                    {
+                        foreach (Simbolo sim in caso.Ambito.TablaSimbolo)
+                        {
+                            pos = SetPosicion(sim, pos);
+                        }
+                    }
+
+                    if (elegir.Defecto != null)
+                    {
+                        foreach (Simbolo sim in elegir.Defecto.Ambito.TablaSimbolo)
+                        {
+                            pos = SetPosicion(sim, pos);
+                        }
+                    }
+                    break;
+
+                case Constante.DECLARACION:
+                    pos++;
+                    simbolo.Posicion = pos;
+                    break;
+
+                default:
+                    if (simbolo.Tamaño > 0)
+                    {
+                        foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
+                        {
+                            pos = SetPosicion(sim, pos);
+                        }
+                    }
+                    break;
+            }
+
+            return pos;
+        }
+
         public static List<String> Rutas = new List<String>();
         public static Object RecorrerArbol(ParseTreeNode Nodo)
         {
@@ -22,6 +151,12 @@ namespace C3DCombiner
                         List<String> importar = (List<String>)RecorrerArbol(Nodo.ChildNodes[0]);
                         List<Simbolo> clases = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[1]);
                         Ambito ambito = new Ambito(Constante.ARCHIVO, clases);
+
+                        //asignamos la posicion de P en cada simbolo
+                        foreach (Simbolo sim in clases)
+                        {
+                            SetPosicion(sim, -1);
+                        }
 
                         Archivo archivo = new Archivo(importar, ambito, GenerarTablaSimboloTree.Rutas[GenerarTablaSimboloTree.Rutas.Count - 1]);
                         return archivo;
@@ -426,6 +561,7 @@ namespace C3DCombiner
                         int dimensiones = (int)RecorrerArbol(Nodo.ChildNodes[1]);
                         FParametro p = new FParametro(tipo, Nodo.ChildNodes[2].Token.ValueString, dimensiones, Nodo.ChildNodes[2].Token.Location.Line + 1, Nodo.ChildNodes[2].Token.Location.Column + 1);
                         Simbolo s = new Simbolo(Constante.TProtegido, p.Tipo, p.Nombre, Constante.PARAMETRO, Nodo.ChildNodes[2].Token.Location.Line + 1, Nodo.ChildNodes[2].Token.Location.Column + 1, new Ambito(Constante.PARAMETRO), p);
+                        s.Tamaño = 1;
                         p.Padre = s;
                         return s;
                     }
@@ -588,7 +724,14 @@ namespace C3DCombiner
                         Simbolo sim = new Simbolo(Constante.TProtegido, "", "", Constante.ASIGNACION, Fila, Columna, asigna.Ambito, asigna);
 
                         asigna.Padre = sim;
-                        asigna.Operacion.Padre = sim;
+                        if (asigna.Operacion != null)
+                        {
+                            asigna.Operacion.Padre = sim;
+                        }
+                        else
+                        {
+                            asigna.Nombre.Padre = sim;
+                        }
                         asigna.Valor.Padre = sim;
 
                         List<Simbolo> list = new List<Simbolo>
@@ -725,11 +868,15 @@ namespace C3DCombiner
                             }
                         }
 
-                        foreach (Simbolo s in sino.Ambito.TablaSimbolo)
+                        if (sino != null)
                         {
-                            sino.Padre = sim;
-                            s.Padre = sim;
+                            foreach (Simbolo s in sino.Ambito.TablaSimbolo)
+                            {
+                                sino.Padre = sim;
+                                s.Padre = sim;
+                            }
                         }
+                        
 
                         return list;
 
@@ -761,10 +908,14 @@ namespace C3DCombiner
 
                 case Constante.SINO:
                     {
-                        List<Simbolo> tablasimbolo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[1]);
+                        if (Nodo.ChildNodes.Count != 0)
+                        {
+                            List<Simbolo> tablasimbolo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[1]);
 
-                        FSino sino = new FSino(new Ambito(Constante.TSinoSi, tablasimbolo));
-                        return sino;
+                            FSino sino = new FSino(new Ambito(Constante.TSinoSi, tablasimbolo));
+                            return sino;
+                        }
+                        return null;
                     }
 
                 case Constante.ELEGIR:
@@ -912,42 +1063,38 @@ namespace C3DCombiner
 
                         List<Simbolo> tablasimbolo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[4]);
 
-                        FPara para = new FPara(accionanterior[0], condicion, accionposterior, new Ambito(Constante.TRepetir, tablasimbolo));
+                        FPara para = new FPara(accionanterior[0], condicion, accionposterior, new Ambito(Constante.TPara, tablasimbolo));
                         Simbolo sim = new Simbolo("", "", "", Constante.TPara, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, para.Ambito, para);
 
 
-
+                        
                         para.AccionAnterior.Padre = sim;
-                        condicion.Padre = para.AccionAnterior;
-                        accionposterior.Padre = para.AccionAnterior;
+                        condicion.Padre = sim;
+                        accionposterior.Padre = sim;
 
                         para.Padre = sim;
+
+
+                        
                         List<Simbolo> list = new List<Simbolo>
                         {
                             sim
                         };
+
+                        Simbolo Hermano = para.AccionAnterior;
+
                         foreach (Simbolo s in tablasimbolo)
                         {
-                            s.Padre = para.AccionAnterior;
+                            s.Hermano = Hermano;
+                            Hermano = s;
+                            s.Padre = sim;
                         }
 
                         if (para.AccionAnterior.Rol.Equals(Constante.DECLARACION))
                         {
                             para.AccionAnterior.Tamaño = 1;
-                            para.AccionAnterior.Posicion = 0;
                             para.Ambito.Tamaño++;
-                            sim.Tamaño++;
-
-                            Simbolo Hermano = para.AccionAnterior;
-                            foreach (Simbolo s in para.Ambito.TablaSimbolo)
-                            {
-                                s.Hermano = Hermano;
-                                Hermano = s;
-                                if (s.Posicion > -1)
-                                {
-                                    s.Posicion++;
-                                }
-                            }
+                            sim.Tamaño++;                            
                         }
 
                         return list;
@@ -965,6 +1112,7 @@ namespace C3DCombiner
                         {
                             sim
                         };
+
                         foreach (Simbolo s in tablasimbolo)
                         {
                             s.Padre = sim;

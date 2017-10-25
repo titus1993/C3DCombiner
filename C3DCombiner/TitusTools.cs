@@ -1,4 +1,5 @@
 ﻿using C3DCombiner.Ejecucion;
+using FastColoredTextBoxNS;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +12,9 @@ namespace C3DCombiner
 {
     static class TitusTools
     {
+        public static int Temporal = 0;
+        public static int Etiqueta = 0;
+
         //Filtro para abrir y guardar
         public static String DialogFilter = "OLC++ File|*.olc|Tree File|*.tree|3D File|*.ddd";
 
@@ -33,6 +37,23 @@ namespace C3DCombiner
 
         public static List<Archivo> Archivos_Importados = new List<Archivo>();
 
+        public static List<String> Rutas = new List<String>();
+
+        public static IronyFCTB Codigo3D = new IronyFCTB();
+        
+
+        public static String GetRuta()
+        {
+            String ruta = "";
+
+            if (Rutas.Count > 0)
+            {
+                ruta = Rutas[Rutas.Count - 1];
+            }
+
+            return ruta;
+        }
+
         public static void IniciarEstaticos()
         {
             //iniciamos el openfiledialog
@@ -50,6 +71,9 @@ namespace C3DCombiner
             IniciarErrores();
 
             IniciarTablaSimbolos();
+
+            Codigo3D.Dock = DockStyle.Fill;
+           
         }
 
         public static void IniciarConsola()
@@ -114,6 +138,11 @@ namespace C3DCombiner
             Errores.Rows.Clear();
         }
 
+        public static bool HayErrores()
+        {
+            return Errores.Rows.Count - 1 > 0;
+        }
+
         public static void IniciarTablaSimbolos()
         {
             TablaSimbolos.Columns.Add("Rol", "Rol");
@@ -165,6 +194,21 @@ namespace C3DCombiner
             LimpiarDatosErrores();
             LimpiarDatosTablaSimbolos();
             LimpiarArchivos();
+            Temporal = 0;
+            Etiqueta = 0;
+            Codigo3D.Text = "";
+        }
+
+        public static String GetEtq()
+        {
+            Etiqueta++;
+            return "L" + (Etiqueta-1).ToString();
+        }
+
+        public static String GetTemp()
+        {
+            Temporal++;
+            return "t" + (Temporal - 1).ToString();
         }
     }
 }

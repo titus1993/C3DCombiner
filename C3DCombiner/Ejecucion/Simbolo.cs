@@ -30,5 +30,13 @@ namespace C3DCombiner.Ejecucion
             this.Posicion = -1;
 
         }
+
+
+        public Nodo3D GenerarCodigo3D()
+        {
+
+
+            return null;
+        }
     }
 }

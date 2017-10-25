@@ -20,9 +20,11 @@ namespace C3DCombiner
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
+        
         private void FMain_Load(object sender, EventArgs e)
         {
             TitusTools.IniciarEstaticos();
+            IniciarComponentes();
             //Agregamos el arbol de directorios al panel superior izquierdo           
             splitContainer2.Panel1.Controls.Add(TitusTools.tree);
             //Agregamos el administrador de pesta;as al panel superior derecho
@@ -31,9 +33,29 @@ namespace C3DCombiner
             TabConsola.Controls.Add(TitusTools.Consola);
             TabErrores.Controls.Add(TitusTools.Errores);
             TabSimbolos.Controls.Add(TitusTools.TablaSimbolos);
+            Tab3d.Controls.Add(TitusTools.Codigo3D);
+            Tab3d.Controls.Add(panel);
+            //configuramos el label
+            
 
-            TitusTools.Tabs.agregarNewTab(0);
 
+            TitusTools.Tabs.agregarNewTab(0);            
+
+        }
+
+        Label panel;
+        private void IniciarComponentes()
+        {
+            panel = new Label()
+            {
+                Dock = DockStyle.Bottom,
+                Text = "Linea: 1, Columna: 1",
+                TextAlign = ContentAlignment.MiddleRight,
+                BackColor = Color.LightGray
+            };
+
+            //agregamos los eventos
+            TitusTools.Codigo3D.SelectionChanged += TBContenido_SelectionChanged;
         }
 
         private void AbrirCarpetaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -48,6 +70,11 @@ namespace C3DCombiner
                 TitusTools.tree.AgregarDirectorio(directorio);
                 TitusTools.FBAbrirCarpeta.SelectedPath = "";
             }
+        }
+
+        private void TBContenido_SelectionChanged(object sender, EventArgs e)
+        {
+            panel.Text = "Linea: " + (TitusTools.Codigo3D.Selection.Start.iLine + 1).ToString() + ", Columna: " + (TitusTools.Codigo3D.Selection.Start.iChar + 1).ToString();
         }
 
         private void AbrirToolStripMenuItem_Click(object sender, EventArgs e)

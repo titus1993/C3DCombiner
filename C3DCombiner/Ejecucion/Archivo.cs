@@ -184,6 +184,44 @@ namespace C3DCombiner.Ejecucion
         public void Ejecutar()
         {
             GenerarTablaSimbolos();
+            TitusTools.Codigo3D.Text = Generar3D();
+        }
+
+        public String Generar3D()
+        {
+            String cadena = "";
+            foreach (Simbolo sim in Clases.TablaSimbolo)
+            {
+                cadena += Generar3D(sim);
+            }
+            return cadena;
+        }
+
+
+        private String Generar3D(Simbolo simbolo)
+        {
+            String cadena = "";
+            switch (simbolo.Rol)
+            {
+                case Constante.TClase:
+                    {
+                        foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
+                        {
+                            cadena += Generar3D(sim);
+                        }
+                        break;
+                    }
+                case Constante.DECLARACION:
+                    {
+                        FDeclaracion declaracion = (FDeclaracion)simbolo.Valor;
+                        cadena += declaracion.Generar3D();                        
+                    }
+                    break;
+            }
+            
+
+
+            return cadena;
         }
 
     }

@@ -11,7 +11,7 @@ namespace C3DCombiner
 {
     static class GenerarTablaSimboloTree
     {
-
+        
         public static int SetPosicion(Simbolo simbolo, int pos)
         {
             switch (simbolo.Rol)
@@ -20,7 +20,7 @@ namespace C3DCombiner
                     foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
                     {
                         if (sim.Rol.Equals(Constante.DECLARACION))
-                        {                            
+                        {
                             sim.Posicion = pos;
                             pos++;
                         }
@@ -73,7 +73,7 @@ namespace C3DCombiner
 
                     foreach (Simbolo sim in simbolo.Ambito.TablaSimbolo)
                     {
-                        pos =SetPosicion(sim, pos);
+                        pos = SetPosicion(sim, pos);
                     }
                     break;
 
@@ -99,7 +99,7 @@ namespace C3DCombiner
                         {
                             pos = SetPosicion(sim, pos);
                         }
-                    }                   
+                    }
 
                     break;
 
@@ -141,7 +141,6 @@ namespace C3DCombiner
             return pos;
         }
 
-        public static List<String> Rutas = new List<String>();
         public static Object RecorrerArbol(ParseTreeNode Nodo)
         {
             switch (Nodo.Term.Name)
@@ -159,7 +158,7 @@ namespace C3DCombiner
                             SetPosicion(sim, 0);
                         }
 
-                        Archivo archivo = new Archivo(importar, ambito, GenerarTablaSimboloTree.Rutas[GenerarTablaSimboloTree.Rutas.Count - 1]);
+                        Archivo archivo = new Archivo(importar, ambito, TitusTools.GetRuta());
                         return archivo;
                     }
 
@@ -651,16 +650,16 @@ namespace C3DCombiner
                                 return Constante.TEntero;
 
                             case Constante.TDecimal:
-                                return Constante.TEntero;
+                                return Constante.TDecimal;
 
                             case Constante.TCaracter:
-                                return Constante.TEntero;
+                                return Constante.TCaracter;
 
                             case Constante.TCadena:
-                                return Constante.TEntero;
+                                return Constante.TCadena;
 
                             case Constante.TBooleano:
-                                return Constante.TEntero;
+                                return Constante.TBooleano;
 
                             default:
                                 return Nodo.ChildNodes[0].Token.ValueString;
@@ -754,9 +753,7 @@ namespace C3DCombiner
                             //++ o --
                             FNodoExpresion objeto = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
 
-                            FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[1]);
-
-                            asigna = new FAsignacion(Nodo.ChildNodes[1].Term.Name, new Ambito(Constante.ASIGNACION), val, val);
+                            asigna = new FAsignacion(Nodo.ChildNodes[1].Term.Name, new Ambito(Constante.ASIGNACION), null, objeto);
                         }
 
                         Simbolo sim = new Simbolo(Constante.TProtegido, "", "", Constante.ASIGNACION, Fila, Columna, asigna.Ambito, asigna);
@@ -770,8 +767,11 @@ namespace C3DCombiner
                         {
                             asigna.Nombre.SetPadre(sim);
                         }
-                        asigna.Valor.SetPadre(sim);
-                        
+                        if (asigna.Valor != null)
+                        {
+                            asigna.Valor.SetPadre(sim);
+                        }
+
                         List<Simbolo> list = new List<Simbolo>
                         {
                             sim
@@ -805,7 +805,7 @@ namespace C3DCombiner
                                 }
                                 else
                                 {
-                                    TitusTools.InsertarError(Constante.TErrorSintactico, "No se puede llamar a un arreglo", GenerarTablaSimboloTree.Rutas[GenerarTablaSimboloTree.Rutas.Count - 1].ToString(), Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                    TitusTools.InsertarError(Constante.TErrorSintactico, "No se puede llamar a un arreglo", TitusTools.GetRuta(), Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
                                 }
                             }
                         }
@@ -838,7 +838,7 @@ namespace C3DCombiner
                                 }
                                 else
                                 {
-                                    TitusTools.InsertarError(Constante.TErrorSintactico, "No se puede llamar a un arreglo", GenerarTablaSimboloTree.Rutas[GenerarTablaSimboloTree.Rutas.Count - 1].ToString(), Nodo.ChildNodes[0].Token.Location.Line, Nodo.ChildNodes[0].Token.Location.Column);
+                                    TitusTools.InsertarError(Constante.TErrorSintactico, "No se puede llamar a un arreglo", TitusTools.GetRuta(), Nodo.ChildNodes[0].Token.Location.Line, Nodo.ChildNodes[0].Token.Location.Column);
                                 }
                             }
                         }
@@ -1136,7 +1136,7 @@ namespace C3DCombiner
                         Simbolo sim = new Simbolo("", "", "", Constante.TPara, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, para.Ambito, para);
 
 
-                        
+
                         para.AccionAnterior.Padre = sim;
                         condicion.Padre = sim;
                         accionposterior.Padre = sim;
@@ -1146,7 +1146,7 @@ namespace C3DCombiner
                         //asignamos el simbolo para de las expresiones
                         condicion.SetPadre(sim);
                         accionposterior.SetPadre(sim);
-                        
+
                         List<Simbolo> list = new List<Simbolo>
                         {
                             sim

@@ -29,5 +29,16 @@ namespace C3DCombiner.Funciones
             this.Columna = columna;
             this.Valor = (FNodoExpresion)valor;
         }
+
+
+        public String Generar3D()
+        {
+            String cadena = "";
+            if (Valor != null)
+            {
+                cadena += Valor.Generar3D().Codigo;
+            }
+            return cadena;
+        }
     }
 }

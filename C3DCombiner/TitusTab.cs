@@ -65,6 +65,14 @@ namespace C3DCombiner
                 if (arbol.Root != null && arbol.ParserMessages.Count == 0)
                 {                    
                     ArbolSintactico Arbol = new ArbolSintactico(arbol.Root, this.Tipo, this.Ruta);
+                    if (TitusTools.HayErrores())
+                    {
+                        MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Generacion de codigo 3D finalizada con exito.", "Codigo 3D", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {

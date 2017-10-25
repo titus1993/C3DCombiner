@@ -17,21 +17,15 @@ namespace C3DCombiner.Ejecucion
 
             }else if (tipo == 1)
             {
-                GenerarTablaSimboloTree.Rutas.Add(ruta);
+                TitusTools.Rutas.Add(ruta);
                 Archivo archivo = (Archivo)GenerarTablaSimboloTree.RecorrerArbol(arbol);
-                GenerarTablaSimboloTree.Rutas.RemoveAt(GenerarTablaSimboloTree.Rutas.Count - 1);
+                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
                 archivo.Ejecutar();
             }else if (tipo == 3)
             {
 
             }
         }
-
-
-
-        public void GenerarTablaSimbolo()
-        {
-
-        }
+        
     }
 }

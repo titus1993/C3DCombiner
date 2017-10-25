@@ -96,6 +96,7 @@
     <Compile Include="Ejecucion\Ambito.cs" />
     <Compile Include="Ejecucion\ArbolSintactico.cs" />
     <Compile Include="Ejecucion\Archivo.cs" />
+    <Compile Include="Ejecucion\Generar3D.cs" />
     <Compile Include="Ejecucion\Simbolo.cs" />
     <Compile Include="Forms\FAddClase.cs">
       <SubType>Form</SubType>
@@ -117,6 +118,7 @@
     </Compile>
     <Compile Include="Funciones\FAsignacion.cs" />
     <Compile Include="Funciones\FCaso.cs" />
+    <Compile Include="Funciones\FCasteo.cs" />
     <Compile Include="Funciones\FClase.cs" />
     <Compile Include="Funciones\FDeclaracion.cs" />
     <Compile Include="Funciones\FElegir.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="Funciones\FSino.cs" />
     <Compile Include="Funciones\FSinoSi.cs" />
     <Compile Include="Funciones\FSuper.cs" />
-    <Compile Include="Funciones\Nodo3D.cs" />
+    <Compile Include="Ejecucion\Nodo3D.cs" />
     <Compile Include="Gramaticas\Constante.cs" />
     <Compile Include="Gramaticas\Ejecutar3DC.cs" />
     <Compile Include="Gramaticas\GenerarTablaSimboloTree.cs" />

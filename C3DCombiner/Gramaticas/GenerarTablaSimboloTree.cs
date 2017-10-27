@@ -1128,7 +1128,7 @@ namespace C3DCombiner
                     {
                         List<Simbolo> accionanterior = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[1]);
                         FNodoExpresion condicion = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[2]);
-                        FNodoExpresion accionposterior = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[3]);
+                        Simbolo accionposterior = ((List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[3]))[0];
 
                         List<Simbolo> tablasimbolo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[4]);
 
@@ -1145,14 +1145,16 @@ namespace C3DCombiner
 
                         //asignamos el simbolo para de las expresiones
                         condicion.SetPadre(sim);
-                        accionposterior.SetPadre(sim);
+                        accionposterior.Padre = sim;
 
                         List<Simbolo> list = new List<Simbolo>
                         {
                             sim
                         };
 
-                        Simbolo Hermano = para.AccionAnterior;
+                        para.AccionSiguiente.Hermano = para.AccionAnterior;
+
+                        Simbolo Hermano = para.AccionSiguiente;
 
                         foreach (Simbolo s in tablasimbolo)
                         {

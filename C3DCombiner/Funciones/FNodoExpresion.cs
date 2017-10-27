@@ -147,69 +147,69 @@ namespace C3DCombiner.Funciones
             switch (nodo.Tipo)
             {
                 case Constante.TMas:
-                    codigo3d = GenerarSuma(nodo.Izquierda, nodo.Derecha);
+                    codigo3d = Suma3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
-                /*case Constante.TMenos:
+                case Constante.TMenos:
                     if (nodo.Izquierda != null)
                     {
-                        codigo3d = GenerarResta(izq, der);
+                        codigo3d = Resta3D(nodo.Izquierda, nodo.Derecha);
                     }
                     else
                     {
-                        codigo3d = GenerarResta(der);
+                        codigo3d = Resta3D(nodo.Derecha);
                     }
                     break;
 
                 case Constante.TPor:
-                    codigo3d = Multiplicacion(izq, der);
+                    codigo3d = Multiplicacion3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TDivision:
-                    codigo3d = Division(izq, der);
+                    codigo3d = Division3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TPotencia:
-                    codigo3d = Potencia(izq, der);
+                    codigo3d = Potencia3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TPotenciaOCL:
-                    codigo3d = Potencia(izq, der);
+                    codigo3d = Potencia3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
-                case Constante.TAumento:
+                /*case Constante.TAumento:
                     codigo3d = Aumento(izq);
                     break;
 
                 case Constante.TDecremento:
                     codigo3d = Disminucion(izq);
-                    break;
+                    break;*/
 
                 case Constante.TMayor:
-                    codigo3d = Mayor(izq, der);
+                    codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TMenor:
-                    codigo3d = Menor(izq, der);
+                    codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TMayorIgual:
-                    codigo3d = MayorIgual(izq, der);
+                    codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TMenorIgual:
-                    codigo3d = MenorIgual(izq, der);
+                    codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TIgualacion:
-                    codigo3d = Igual(izq, der);
+                    codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TDiferenciacion:
-                    codigo3d = Diferente(izq, der);
+                    codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
-                case Constante.TOr:
+                /*case Constante.TOr:
                     codigo3d = Or(izq, der);
                     break;
 
@@ -229,7 +229,7 @@ namespace C3DCombiner.Funciones
                     {
                         String cad = "";
                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-                        cad = "\t" + codigo3d.Valor + " = " + nodo.Entero.ToString() + ";//entero " + nodo.Entero.ToString() + "\n";//asignamos el valor al temporal
+                        cad = "\t\t" + codigo3d.Valor + " = " + nodo.Entero.ToString() + ";//entero " + nodo.Entero.ToString() + "\n";//asignamos el valor al temporal
                         codigo3d.Codigo = cad;//asignamos la cadena al nodo de retorno
                         codigo3d.Tipo = nodo.Tipo;//asignamos el tipo de dato
                     }
@@ -239,7 +239,7 @@ namespace C3DCombiner.Funciones
                     {
                         String cad = "";
                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-                        cad = "\t" + codigo3d.Valor + " = " + nodo.Decimal.ToString() + ";//decimal " + nodo.Decimal.ToString() + "\n";//asignamos el valor al temporal
+                        cad = "\t\t" + codigo3d.Valor + " = " + nodo.Decimal.ToString() + ";//decimal " + nodo.Decimal.ToString() + "\n";//asignamos el valor al temporal
                         codigo3d.Codigo = cad;//asignamos la cadena al nodo de retorno
                         codigo3d.Tipo = nodo.Tipo;//asignamos el tipo de dato
                     }
@@ -250,7 +250,7 @@ namespace C3DCombiner.Funciones
                         String cad = "";
                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
                         int ascii = nodo.Caracter;
-                        cad += "\t" + codigo3d.Valor + " = " + ascii.ToString() + ";//caracter " + nodo.Caracter.ToString() + "\n";//asignamos el valor al temporal
+                        cad += "\t\t" + codigo3d.Valor + " = " + ascii.ToString() + ";//caracter " + nodo.Caracter.ToString() + "\n";//asignamos el valor al temporal
                         codigo3d.Codigo = cad;//asignamos la cadena al nodo de retorno
                         codigo3d.Tipo = nodo.Tipo;//asignamos el tipo de dato
                     }
@@ -260,17 +260,17 @@ namespace C3DCombiner.Funciones
                     {
                         var cad = "";
                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-                        cad += "\t" + codigo3d.Valor + " = H;//cadena " + nodo.Cadena + "\n";//obtenemos el valor del heap donde guardaremos la cadena
+                        cad += "\t\t" + codigo3d.Valor + " = H;//cadena " + nodo.Cadena + "\n";//obtenemos el valor del heap donde guardaremos la cadena
 
                         for (int i = 0; i < nodo.Cadena.Length; i++)
                         {
                             int ascii = nodo.Cadena[i];
-                            cad += "\t" + "Heap[H] = " + ascii.ToString() + ";\n";//asignamos el valor de cada caracter al temporal
-                            cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                            cad += "\t\t" + "Heap[H] = " + ascii.ToString() + ";\n";//asignamos el valor de cada caracter al temporal
+                            cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
                         }
                         int asc = ("\0")[0];
-                        cad += "\t" + "Heap[H] = " + asc.ToString() + ";\n";
-                        cad += "\t" + "H = H + 1;\n";
+                        cad += "\t\t" + "Heap[H] = " + asc.ToString() + ";\n";
+                        cad += "\t\t" + "H = H + 1;\n";
                         codigo3d.Codigo = cad;//asignamos la cadena al nodo de retorno
                         codigo3d.Tipo = nodo.Tipo;//asignamos el tipo de dato
                     }
@@ -284,11 +284,11 @@ namespace C3DCombiner.Funciones
                         codigo3d.Tipo = nodo.Tipo;//asignamos el tipo de dato
                         if (nodo.Bool)
                         {
-                            cad = "\t" + codigo3d.Valor + " = 1;//booleano " + nodo.Bool.ToString() + "\n";
+                            cad = "\t\t" + codigo3d.Valor + " = 1;//booleano " + nodo.Bool.ToString() + "\n";
                         }
                         else
                         {
-                            cad = "\t" + codigo3d.Valor + " = 0;//booleano " + nodo.Bool.ToString() + "\n";
+                            cad = "\t\t" + codigo3d.Valor + " = 0;//booleano " + nodo.Bool.ToString() + "\n";
                         }
                         codigo3d.Codigo = cad;
                         codigo3d.Tipo = nodo.Tipo;
@@ -327,64 +327,64 @@ namespace C3DCombiner.Funciones
             String e12 = TitusTools.GetEtq();
 
             //codigo 3d
-            cadena += "\t" + t0 + " = " + tnum + ";//Convirtiendo entero a cadena\n"; // temporal que guarda el numero a convertir en cadena
-            cadena += "\t" + t1 + " = " + "1;\n"; //temporal que guardara si es negativo o positivo
-            cadena += "\t" + "if " + t0 + " >= 0 goto " + e1 + ";\n"; // si es negativo guardamos el -1
-            cadena += "\t" + t1 + " = -1;\n";
-            cadena += "\t" + t0 + " = " + t0 + " * -1;\n";
+            cadena += "\t\t" + t0 + " = " + tnum + ";//Convirtiendo entero a cadena\n"; // temporal que guarda el numero a convertir en cadena
+            cadena += "\t\t" + t1 + " = " + "1;\n"; //temporal que guardara si es negativo o positivo
+            cadena += "\t\t" + "if " + t0 + " >= 0 goto " + e1 + ";\n"; // si es negativo guardamos el -1
+            cadena += "\t\t" + t1 + " = -1;\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " * -1;\n";
             cadena += "\t" + e1 + ":\n";
-            cadena += "\t" + t2 + " = 1;\n"; // temporal con el que sabremos el tamaño del numero  
+            cadena += "\t\t" + t2 + " = 1;\n"; // temporal con el que sabremos el tamaño del numero  
             cadena += "\t" + e3 + ":\n";
-            cadena += "\t" + t3 + " = 1;\n"; // temporal que llevara el contador de 9
+            cadena += "\t\t" + t3 + " = 1;\n"; // temporal que llevara el contador de 9
             cadena += "\t" + e4 + ":\n";
-            cadena += "\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
-            cadena += "\t" + "if " + t3 + " > 10 goto " + e5 + ";\n";
-            cadena += "\t" + "if " + t0 + " < " + t4 + " goto " + e2 + ";\n";
-            cadena += "\t" + t3 + " = " + t3 + " + 1;\n";
-            cadena += "\t" + "goto " + e4 + ";\n";
+            cadena += "\t\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
+            cadena += "\t\t" + "if " + t3 + " > 10 goto " + e5 + ";\n";
+            cadena += "\t\t" + "if " + t0 + " < " + t4 + " goto " + e2 + ";\n";
+            cadena += "\t\t" + t3 + " = " + t3 + " + 1;\n";
+            cadena += "\t\t" + "goto " + e4 + ";\n";
             cadena += "\t" + e5 + ":\n";
-            cadena += "\t" + t2 + " = " + t2 + " * 10;\n";
-            cadena += "\t" + "goto " + e3 + ";\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " * 10;\n";
+            cadena += "\t\t" + "goto " + e3 + ";\n";
             ////////////////////////////////////////////////////////////////
             cadena += "\t" + e2 + "://comenzamos a guardar el numero en el heap\n";
-            cadena += "\t" + t5 + " = H;\n"; // temporal que guardara la posicion del heap donde creamos el numero
-            cadena += "\t" + "if " + t1 + " == 1 goto " + e6 + ";\n";
-            cadena += "\t" + "Heap[H] = 45;\n";
-            cadena += "\t" + "H = H + 1;\n";
+            cadena += "\t\t" + t5 + " = H;\n"; // temporal que guardara la posicion del heap donde creamos el numero
+            cadena += "\t\t" + "if " + t1 + " == 1 goto " + e6 + ";\n";
+            cadena += "\t\t" + "Heap[H] = 45;\n";
+            cadena += "\t\t" + "H = H + 1;\n";
             cadena += "\t" + e6 + ":\n";
-            cadena += "\t" + t3 + " = " + t3 + " - 1;\n";
-            cadena += "\t" + t6 + " = 0;\n";
-            cadena += "\t" + t7 + "= 48;\n";
+            cadena += "\t\t" + t3 + " = " + t3 + " - 1;\n";
+            cadena += "\t\t" + t6 + " = 0;\n";
+            cadena += "\t\t" + t7 + "= 48;\n";
             cadena += "\t" + e7 + ":\n";
-            cadena += "\t" + "if " + t6 + " == " + t3 + " goto " + e8 + ";\n";
-            cadena += "\t" + t6 + " = " + t6 + " + 1;\n";
-            cadena += "\t" + t7 + " = " + t7 + " + 1;\n";
-            cadena += "\t" + "goto " + e7 + ";\n";
+            cadena += "\t\t" + "if " + t6 + " == " + t3 + " goto " + e8 + ";\n";
+            cadena += "\t\t" + t6 + " = " + t6 + " + 1;\n";
+            cadena += "\t\t" + t7 + " = " + t7 + " + 1;\n";
+            cadena += "\t\t" + "goto " + e7 + ";\n";
 
             cadena += "\t" + e8 + ":\n";//aqui guarda ascii
-            cadena += "\t" + "Heap[H] = " + t7 + ";\n";
-            cadena += "\t" + "H = H + 1;\n";
+            cadena += "\t\t" + "Heap[H] = " + t7 + ";\n";
+            cadena += "\t\t" + "H = H + 1;\n";
 
 
-            cadena += "\t" + "if " + t2 + " == 1 goto " + e9 + ";\n";
-            cadena += "\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
-            cadena += "\t" + t0 + " = " + t0 + " - " + t4 + ";\n";
-            cadena += "\t" + t2 + " = " + t2 + " / 10;\n";
+            cadena += "\t\t" + "if " + t2 + " == 1 goto " + e9 + ";\n";
+            cadena += "\t\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " - " + t4 + ";\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " / 10;\n";
 
             cadena += "\t" + e10 + ":\n";
-            cadena += "\t" + t3 + " = 1;\n"; // temporal que llevara el contador de 9
+            cadena += "\t\t" + t3 + " = 1;\n"; // temporal que llevara el contador de 9
             cadena += "\t" + e11 + ":\n";
-            cadena += "\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
-            cadena += "\t" + "if " + t3 + " > 10 goto " + e12 + ";\n";
-            cadena += "\t" + "if " + t0 + " < " + t4 + " goto " + e6 + ";\n";
-            cadena += "\t" + t3 + " = " + t3 + " + 1;\n";
-            cadena += "\t" + "goto " + e11 + ";\n";
+            cadena += "\t\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
+            cadena += "\t\t" + "if " + t3 + " > 10 goto " + e12 + ";\n";
+            cadena += "\t\t" + "if " + t0 + " < " + t4 + " goto " + e6 + ";\n";
+            cadena += "\t\t" + t3 + " = " + t3 + " + 1;\n";
+            cadena += "\t\t" + "goto " + e11 + ";\n";
             cadena += "\t" + e12 + ":\n";
-            cadena += "\t" + t2 + " = " + t2 + " * 10;\n";
-            cadena += "\t" + "goto " + e10 + ";\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " * 10;\n";
+            cadena += "\t\t" + "goto " + e10 + ";\n";
 
             cadena += "\t" + e9 + ":\n";
-            cadena += "\t" + "Heap[H] = 0;\n";
+            cadena += "\t\t" + "Heap[H] = 0;\n";
 
             codigo3d.Codigo = cadena;
             codigo3d.Tipo = Constante.TCadena;
@@ -392,7 +392,7 @@ namespace C3DCombiner.Funciones
             return codigo3d;
         }
 
-        private Nodo3D GenerarSuma(FNodoExpresion izq, FNodoExpresion der)
+        private Nodo3D Suma3D(FNodoExpresion izq, FNodoExpresion der)
         {
             Nodo3D codigo3d = new Nodo3D();
             Nodo3D auxizq = izq.Generar3D();
@@ -411,7 +411,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TEntero;
                                     }
@@ -421,7 +421,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TDecimal;
                                     }
@@ -431,7 +431,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TEntero;
                                     }
@@ -445,7 +445,7 @@ namespace C3DCombiner.Funciones
 
                                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
 
-                                        cad += "\t" + codigo3d.Valor + " = H;//entero + cadena\n";//obtenemos el valor del heap donde guardaremos la concatenacion
+                                        cad += "\t\t" + codigo3d.Valor + " = H;//entero + cadena\n";//obtenemos el valor del heap donde guardaremos la concatenacion
 
                                         //cadena 1
                                         String auxpool = TitusTools.GetTemp();
@@ -455,15 +455,15 @@ namespace C3DCombiner.Funciones
 
                                         String auxpool2 = TitusTools.GetTemp();
 
-                                        cad += "\t" + auxpool + " = " + toString.Valor + ";\n";
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + auxpool + " = " + toString.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t" + auxetqif + ":\n";
-                                        cad += "\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
-                                        cad += "\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                                        cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
-                                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
-                                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
 
                                         //cadena2
@@ -474,18 +474,18 @@ namespace C3DCombiner.Funciones
 
                                         auxpool2 = TitusTools.GetTemp();
 
-                                        cad += "\t" + auxpool + " = " + auxder.Valor + ";\n";
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + auxpool + " = " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t" + auxetqif + ":\n";
-                                        cad += "\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
-                                        cad += "\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                                        cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
-                                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
-                                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                                        cad += "\t" + "Heap[H] = 0;\n";
-                                        cad += "\t" + "H = H + 1;\n";
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + toString.Codigo + cad;//asignamos la cadena al nodo de retorno
                                         codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato
@@ -498,7 +498,7 @@ namespace C3DCombiner.Funciones
                                         {//si trae etiquetas viene de una relacional si no es un bool nativo
                                             var cad = "";
                                             codigo3d.Valor = TitusTools.GetTemp();
-                                            cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                             codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                             codigo3d.Tipo = Constante.TEntero;
                                         }
@@ -510,14 +510,14 @@ namespace C3DCombiner.Funciones
                                             var salida = TitusTools.GetEtq();
 
                                             cad += "\t" + auxder.V + ":\n";
-                                            cad += "\t" + auxtemp + " = 1;\n";
-                                            cad += "\t" + "goto " + salida + ";\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
                                             cad += "\t" + auxder.F + ":\n";
-                                            cad += "\t" + auxtemp + " = 0;\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
                                             cad += "\t" + salida + ":\n";
 
                                             codigo3d.Valor = TitusTools.GetTemp();
-                                            cad += "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxtemp + ";\n";
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxtemp + ";\n";
                                             codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                             codigo3d.Tipo = Constante.TEntero;
                                         }
@@ -541,7 +541,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TDecimal;
                                     }
@@ -551,7 +551,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TDecimal;
                                     }
@@ -561,7 +561,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TDecimal;
                                     }
@@ -579,7 +579,7 @@ namespace C3DCombiner.Funciones
                                         {//si trae etiquetas viene de una relacional si no es un bool nativo
                                             String cad = "";
                                             codigo3d.Valor = TitusTools.GetTemp();
-                                            cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                             codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                             codigo3d.Tipo = Constante.TDecimal;
                                         }
@@ -591,14 +591,14 @@ namespace C3DCombiner.Funciones
                                             String salida = TitusTools.GetEtq();
 
                                             cad += "\t" + auxder.V + ":\n";
-                                            cad += "\t" + auxtemp + " = 1;\n";
-                                            cad += "\t" + "goto " + salida + ";\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
                                             cad += "\t" + auxder.F + ":\n";
-                                            cad += "\t" + auxtemp + " = 0;\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
                                             cad += "\t" + salida + ":\n";
 
                                             codigo3d.Valor = TitusTools.GetTemp();
-                                            cad += "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxtemp + ";\n";
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxtemp + ";\n";
                                             codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                             codigo3d.Tipo = Constante.TDecimal;
                                         }
@@ -622,7 +622,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TEntero;
                                     }
@@ -632,7 +632,7 @@ namespace C3DCombiner.Funciones
                                     {
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();
-                                        cad = "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
                                         codigo3d.Tipo = Constante.TDecimal;
                                     }
@@ -643,7 +643,7 @@ namespace C3DCombiner.Funciones
                                         String cad = "";
                                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
 
-                                        cad += "\t" + codigo3d.Valor + " = H;//caracter + cadena\n";//obtenemos el valor del heap donde guardaremos la concatenacion
+                                        cad += "\t\t" + codigo3d.Valor + " = H;//caracter + cadena\n";//obtenemos el valor del heap donde guardaremos la concatenacion
 
                                         //cadena 1
                                         String auxpool = TitusTools.GetTemp();
@@ -652,24 +652,24 @@ namespace C3DCombiner.Funciones
                                         String auxetqifsalida = TitusTools.GetEtq();
 
                                         String auxpool2 = TitusTools.GetTemp();
-                                        
-                                        cad += "\t" + "Heap[H] = " + auxizq.Valor + ";\n";//asignamos el valor de cada caracter al temporal
-                                        cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
-                                        
+
+                                        cad += "\t\t" + "Heap[H] = " + auxizq.Valor + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+
                                         //cadena2
 
-                                        cad += "\t" + auxpool + " = " + auxder.Valor + ";\n";
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + auxpool + " = " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t" + auxetqif + ":\n";
-                                        cad += "\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
-                                        cad += "\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                                        cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
-                                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
-                                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                                        cad += "\t" + "Heap[H] = 0;\n";
-                                        cad += "\t" + "H = H + 1;\n";
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
                                         codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato                                        
@@ -696,7 +696,7 @@ namespace C3DCombiner.Funciones
                                         codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
 
                                         cad += "\t" + codigo3d.Valor + " = H;//cadena + entero\n";//obtenemos el valor del heap donde guardaremos la concatenacion
-                                       
+
                                         //cadena 1
                                         String auxpool = TitusTools.GetTemp();
 
@@ -705,23 +705,23 @@ namespace C3DCombiner.Funciones
 
                                         String auxpool2 = TitusTools.GetTemp();
 
-                                        cad += "\t" + auxpool + " = " + auxizq.Valor + ";\n";
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + auxpool + " = " + auxizq.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t" + auxetqif + ":\n";
-                                        cad += "\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
-                                        cad += "\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                                        cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
-                                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
-                                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                                        cad += "\t" + "Heap[H] = 0;\n";
-                                        cad += "\t" + "H = H + 1;\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
 
 
 
                                         //cadena2
-                                        
+
 
                                         auxpool = TitusTools.GetTemp();
 
@@ -730,15 +730,15 @@ namespace C3DCombiner.Funciones
 
                                         auxpool2 = TitusTools.GetTemp();
 
-                                        cad += "\t" + auxpool + " = " + toString.Valor + ";\n";
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + auxpool + " = " + toString.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t" + auxetqif + ":\n";
-                                        cad += "\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
-                                        cad += "\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                                        cad += "\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
-                                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                                        cad += "\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
-                                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + toString.Codigo + cad;//asignamos la cadena al nodo de retorno
@@ -754,13 +754,96 @@ namespace C3DCombiner.Funciones
 
                                 case Constante.TCaracter:
                                     {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
 
+                                        cad += "\t\t" + codigo3d.Valor + " = H;//cadena + caracter\n";//obtenemos el valor del heap donde guardaremos la concatenacion
+
+                                        //cadena 1
+                                        String auxpool = TitusTools.GetTemp();
+
+                                        String auxetqif = TitusTools.GetEtq();
+                                        String auxetqifsalida = TitusTools.GetEtq();
+
+                                        String auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + auxizq.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+
+                                        //cadena2
+
+
+
+                                        cad += "\t\t" + "Heap[H] = " + auxder.Valor + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
+                                        codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato   
                                     }
                                     break;
 
                                 case Constante.TCadena:
                                     {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
 
+                                        cad += "\t\t" + codigo3d.Valor + " = H;//cadena + cadena\n";//obtenemos el valor del heap donde guardaremos la concatenacion
+
+                                        //cadena 1
+                                        String auxpool = TitusTools.GetTemp();
+
+                                        String auxetqif = TitusTools.GetEtq();
+                                        String auxetqifsalida = TitusTools.GetEtq();
+
+                                        String auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + auxizq.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
+
+
+
+                                        //cadena2
+
+
+                                        auxpool = TitusTools.GetTemp();
+
+                                        auxetqif = TitusTools.GetEtq();
+                                        auxetqifsalida = TitusTools.GetEtq();
+
+                                        auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
+                                        codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato
                                     }
                                     break;
 
@@ -791,17 +874,17 @@ namespace C3DCombiner.Funciones
 
                                             cad += auxizq.Codigo;
                                             cad += "\t" + auxizq.V + ":\n";
-                                            cad += "\t" + auxtemp + " = 1;\n";
-                                            cad += "\t" + "goto " + salida + ";\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
                                             cad += "\t" + auxizq.F + ":\n";
-                                            cad += "\t" + auxtemp + " = 0;\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
                                             cad += "\t" + salida + ":\n";
 
                                             auxizq.Valor = auxtemp;
                                         }
                                         codigo3d.Valor = TitusTools.GetTemp();
                                         cad += auxder.Codigo;
-                                        cad += "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = cad;
                                         codigo3d.Tipo = Constante.TEntero;
                                     }
@@ -821,17 +904,17 @@ namespace C3DCombiner.Funciones
 
                                             cad += auxizq.Codigo;
                                             cad += "\t" + auxizq.V + ":\n";
-                                            cad += "\t" + auxtemp + " = 1;\n";
-                                            cad += "\t" + "goto " + salida + ";\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
                                             cad += "\t" + auxizq.F + ":\n";
-                                            cad += "\t" + auxtemp + " = 0;\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
                                             cad += "\t" + salida + ":\n";
 
                                             auxizq.Valor = auxtemp;
                                         }
                                         codigo3d.Valor = TitusTools.GetTemp();
                                         cad += auxder.Codigo;
-                                        cad += "\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
                                         codigo3d.Codigo = cad;
                                         codigo3d.Tipo = Constante.TDecimal;
                                     }
@@ -852,10 +935,10 @@ namespace C3DCombiner.Funciones
 
                                             cad += auxizq.Codigo;
                                             cad += "\t" + auxizq.V + ":\n";
-                                            cad += "\t" + auxtemp + " = 1;\n";
-                                            cad += "\t" + "goto " + salida + ";\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
                                             cad += "\t" + auxizq.F + ":\n";
-                                            cad += "\t" + auxtemp + " = 0;\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
                                             cad += "\t" + salida + ":\n";
 
                                             auxizq.Valor = auxtemp;
@@ -871,10 +954,10 @@ namespace C3DCombiner.Funciones
 
                                             cad += auxder.Codigo;
                                             cad += "\t" + auxder.V + ":\n";
-                                            cad += "\t" + auxtemp + " = 1;\n";
-                                            cad += "\t" + "goto " + salida + ";\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
                                             cad += "\t" + auxder.F + ":\n";
-                                            cad += "\t" + auxtemp + " = 0;\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
                                             cad += "\t" + salida + ":\n";
 
                                             auxder.Valor = auxtemp;
@@ -884,10 +967,10 @@ namespace C3DCombiner.Funciones
                                         String auxtemp2 = TitusTools.GetTemp();
                                         codigo3d.Valor = TitusTools.GetTemp();
                                         String auxetq = TitusTools.GetEtq();
-                                        cad += "\t" + auxtemp2 + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
-                                        cad += "\t" + codigo3d.Valor + " = 1\n";
-                                        cad += "\tif " + auxtemp2 + " > 0 then goto " + auxetq + "\n";
-                                        cad += "\t" + codigo3d.Valor + " = 0\n";
+                                        cad += "\t\t" + auxtemp2 + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 1\n";
+                                        cad += "\t\tif " + auxtemp2 + " > 0 then goto " + auxetq + "\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 0\n";
                                         cad += "\t" + auxetq + ":\n";
                                         codigo3d.Codigo = cad;
                                         codigo3d.Tipo = Constante.TBooleano;
@@ -909,327 +992,1451 @@ namespace C3DCombiner.Funciones
                         }
                         break;
                 }
-
-                /*if (auxizq.Tipo == "num")
-                {
-                    if (auxder.Tipo == "num")
-                    {
-                        
-                    }
-                    else if (auxder.Tipo == "bool")
-                    {
-                        
-
-                    }
-                    else if (auxder.Tipo == "str")
-                    {
-                        var cad = "";
-                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-                        cad += "\t" + codigo3d.Valor + " = H;\n";//obtenemos el valor del heap donde guardaremos la concatenacion
-                        cad += "\t" + "H = H + 1;\n";// aumentamos el apuntador de heap para su siguiente uso
-                        cad += "\t" + "Heap[" + codigo3d.Valor + "] = S;\n";// asignamos al heap la posicion del pool string
-
-                        //uevo
-                        cad += "\t" + "Pool[S] = -1;\n"; //asignamos bandera que es numero
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero de S
-                        cad += "\t" + "Pool[S] = " + auxizq.Valor + ";\n";//pasamos el valor del temporal al SP
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero
-                        cad += "\t" + "Pool[S] = -2;\n";//indicamos que terminan los numero
-                        cad += "\t" + "S = S + 1;\n";//aumento del puntero
-
-                        var auxpool = TitusTools.GetTemp();
-
-                        var auxetqif = TitusTools.GetEtq();
-                        var auxetqifsalida = TitusTools.GetEtq();
-
-                        var auxpool2 = TitusTools.GetTemp();
-
-                        cad += "\t" + auxpool + " = " + "Heap[" + auxder.Valor + "];\n";
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + auxetqif + ":\n";
-                        cad += "\t" + "if (" + auxpool2 + " == 0) goto " + auxetqifsalida + ";\n";
-                        cad += "\t" + "Pool[S] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                        cad += "\t" + "S = S + 1;\n";//asignamos la siguiente posicion del pool
-                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                        cad += "\t" + "Pool[S] = 0;\n";
-                        cad += "\t" + "S = S + 1;\n";
-
-                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
-                        codigo3d.Tipo = "str";//asignamos el tipo de dato
-                    }
-                    else
-                    {
-                        insertarError("Semantico", "No se puede " + auxizq.Tipo + " + " + auxder.Tipo, this.Fila, this.Columna);
-                    }
-                }
-                else if (auxizq.Tipo == "bool")
-                {
-                    if (auxder.Tipo == "num")
-                    {
-                        
-                    }
-                    else if (auxder.Tipo == "bool")
-                    {
-                        
-                    }
-                    else if (auxder.Tipo == "str")
-                    {
-                        var cad = "";
-                        if (auxizq.V == "" && auxizq.F == "")
-                        {
-                            cad += auxizq.Codigo;
-                        }
-                        else
-                        {
-                            var auxtemp = TitusTools.GetTemp();
-                            var salida = TitusTools.GetEtq();
-
-                            cad += auxizq.Codigo;
-                            cad += "\t" + auxizq.V + ":\n";
-                            cad += "\t" + auxtemp + " = 1;\n";
-                            cad += "\t" + "goto " + salida + ";\n";
-                            cad += "\t" + auxizq.F + ":\n";
-                            cad += "\t" + auxtemp + " = 0;\n";
-                            cad += "\t" + salida + ":\n";
-
-                            auxizq.Valor = auxtemp;
-                        }
-
-                        cad += auxder.Codigo;
-
-                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-
-                        cad += "\t" + codigo3d.Valor + " = H;\n";//obtenemos el valor del heap donde guardaremos la concatenacion
-                        cad += "\t" + "H = H + 1;\n";// aumentamos el apuntador de heap para su siguiente uso
-                        cad += "\t" + "Heap[" + codigo3d.Valor + "] = S;\n";// asignamos al heap la posicion del pool string
-
-                        //bool
-                        cad += "\t" + "Pool[S] = -1;\n"; //asignamos bandera que es numero
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero de S
-                        cad += "\t" + "Pool[S] = " + auxizq.Valor + ";\n";//pasamos el valor del temporal al SP
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero
-                        cad += "\t" + "Pool[S] = -2;\n";//indicamos que terminan los numero
-                        cad += "\t" + "S = S + 1;\n";//aumento del puntero
-                                                     //cadena
-                        var auxpool = TitusTools.GetTemp();
-
-                        var auxetqif = TitusTools.GetEtq();
-                        var auxetqifsalida = TitusTools.GetEtq();
-
-                        var auxpool2 = TitusTools.GetTemp();
-
-                        cad += "\t" + auxpool + " = " + "Heap[" + auxder.Valor + "];\n";
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + auxetqif + ":\n";
-                        cad += "\t" + "if (" + auxpool2 + " == 0) goto " + auxetqifsalida + ";\n";
-                        cad += "\t" + "Pool[S] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                        cad += "\t" + "S = S + 1;\n";//asignamos la siguiente posicion del pool
-                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                        cad += "\t" + "Pool[S] = 0;\n";
-                        cad += "\t" + "S = S + 1;\n";
-
-                        codigo3d.Codigo = cad;//asignamos la cadena al nodo de retorno
-                        codigo3d.Tipo = "str";//asignamos el tipo de dato
-                    }
-                    else
-                    {
-                        insertarError("Semantico", "No se puede " + auxizq.Tipo + " + " + auxder.Tipo, this.Fila, this.Columna);
-                    }
-                }
-                else if (auxizq.Tipo == "str")
-                {
-                    if (auxder.Tipo == "num")
-                    {
-                        var cad = "";
-                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-
-                        cad += "\t" + codigo3d.Valor + " = H;\n";//obtenemos el valor del heap donde guardaremos la concatenacion
-                        cad += "\t" + "H = H + 1;\n";// aumentamos el apuntador de heap para su siguiente uso
-                        cad += "\t" + "Heap[" + codigo3d.Valor + "] = S;\n";// asignamos al heap la posicion del pool string
-
-                        //cadena 1
-                        var auxpool = TitusTools.GetTemp();
-
-                        var auxetqif = TitusTools.GetEtq();
-                        var auxetqifsalida = TitusTools.GetEtq();
-
-                        var auxpool2 = TitusTools.GetTemp();
-
-                        cad += "\t" + auxpool + " = " + "Heap[" + auxizq.Valor + "];\n";
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + auxetqif + ":\n";
-                        cad += "\t" + "if (" + auxpool2 + " == 0) goto " + auxetqifsalida + ";\n";
-                        cad += "\t" + "Pool[S] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                        cad += "\t" + "S = S + 1;\n";//asignamos la siguiente posicion del pool
-                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-
-                        //numero
-                        cad += "\t" + "Pool[S] = -1;\n"; //asignamos bandera que es numero
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero de S
-                        cad += "\t" + "Pool[S] = " + auxder.Valor + ";\n";//pasamos el valor del temporal al SP
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero
-                        cad += "\t" + "Pool[S] = -2;\n";//indicamos que terminan los numero
-                        cad += "\t" + "S = S + 1;\n";//aumento del puntero
-
-                        cad += "\t" + "Pool[S] = 0;\n";
-                        cad += "\t" + "S = S + 1;\n";
-
-                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
-                        codigo3d.Tipo = "str";//asignamos el tipo de dato
-                    }
-                    else if (auxder.Tipo == "bool")
-                    {
-                        var cad = "";
-                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-
-                        cad += "\t" + codigo3d.Valor + " = H;\n";//obtenemos el valor del heap donde guardaremos la concatenacion
-                        cad += "\t" + "H = H + 1;\n";// aumentamos el apuntador de heap para su siguiente uso
-                        cad += "\t" + "Heap[" + codigo3d.Valor + "] = S;\n";// asignamos al heap la posicion del pool string
-
-                        var cad = "";
-                        if (auxder.V == "" && auxder.F == "")
-                        {
-                            cad += auxder.Codigo;
-                        }
-                        else
-                        {
-                            var auxtemp = TitusTools.GetTemp();
-                            var salida = TitusTools.GetEtq();
-
-                            cad += auxder.Codigo;
-                            cad += "\t" + auxder.V + ":\n";
-                            cad += "\t" + auxtemp + " = 1;\n";
-                            cad += "\t" + "goto " + salida + ";\n";
-                            cad += "\t" + auxder.F + ":\n";
-                            cad += "\t" + auxtemp + " = 0;\n";
-                            cad += "\t" + salida + ":\n";
-
-                            auxder.Valor = auxtemp;
-                        }
-
-                        //cadena 1
-                        var auxpool = TitusTools.GetTemp();
-
-                        var auxetqif = TitusTools.GetEtq();
-                        var auxetqifsalida = TitusTools.GetEtq();
-
-                        var auxpool2 = TitusTools.GetTemp();
-
-                        cad += "\t" + auxpool + " = " + "Heap[" + auxizq.Valor + "];\n";
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + auxetqif + ":\n";
-                        cad += "\t" + "if (" + auxpool2 + " == 0) goto " + auxetqifsalida + ";\n";
-                        cad += "\t" + "Pool[S] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                        cad += "\t" + "S = S + 1;\n";//asignamos la siguiente posicion del pool
-                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-
-                        //bool
-                        cad += "\t" + "Pool[S] = -1;\n"; //asignamos bandera que es numero
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero de S
-                        cad += "\t" + "Pool[S] = " + auxder.Valor + ";\n";//pasamos el valor del temporal al SP
-                        cad += "\t" + "S = S + 1;\n";//aumentamos el puntero
-                        cad += "\t" + "Pool[S] = -2;\n";//indicamos que terminan los numero
-                        cad += "\t" + "S = S + 1;\n";//aumento del puntero
-
-                        cad += "\t" + "Pool[S] = 0;\n";
-                        cad += "\t" + "S = S + 1;\n";
-
-                        codigo3d.Codigo = auxizq.Codigo + cad;//asignamos la cadena al nodo de retorno
-                        codigo3d.Tipo = "str";//asignamos el tipo de dato
-                    }
-                    else if (auxder.Tipo == "str")
-                    {
-                        var cad = "";
-                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
-
-                        cad += "\t" + codigo3d.Valor + " = H;\n";//obtenemos el valor del heap donde guardaremos la concatenacion
-                        cad += "\t" + "H = H + 1;\n";// aumentamos el apuntador de heap para su siguiente uso
-                        cad += "\t" + "Heap[" + codigo3d.Valor + "] = S;\n";// asignamos al heap la posicion del pool string
-
-                        //cadena 1
-                        var auxpool = TitusTools.GetTemp();
-
-                        var auxetqif = TitusTools.GetEtq();
-                        var auxetqifsalida = TitusTools.GetEtq();
-
-                        var auxpool2 = TitusTools.GetTemp();
-
-                        cad += "\t" + auxpool + " = " + "Heap[" + auxizq.Valor + "];\n";
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + auxetqif + ":\n";
-                        cad += "\t" + "if (" + auxpool2 + " == 0) goto " + auxetqifsalida + ";\n";
-                        cad += "\t" + "Pool[S] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                        cad += "\t" + "S = S + 1;\n";//asignamos la siguiente posicion del pool
-                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-
-                        //cadena2
-                        auxpool = TitusTools.GetTemp();
-
-                        auxetqif = TitusTools.GetEtq();
-                        auxetqifsalida = TitusTools.GetEtq();
-
-                        auxpool2 = TitusTools.GetTemp();
-
-                        cad += "\t" + auxpool + " = " + "Heap[" + auxder.Valor + "];\n";
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + auxetqif + ":\n";
-                        cad += "\t" + "if (" + auxpool2 + " == 0) goto " + auxetqifsalida + ";\n";
-                        cad += "\t" + "Pool[S] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
-                        cad += "\t" + "S = S + 1;\n";//asignamos la siguiente posicion del pool
-                        cad += "\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
-                        cad += "\t" + auxpool2 + " = " + "Pool[" + auxpool + "];\n";
-                        cad += "\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
-                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                        cad += "\t" + "Pool[S] = 0;\n";
-                        cad += "\t" + "S = S + 1;\n";
-
-                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
-                        codigo3d.Tipo = "str";//asignamos el tipo de dato
-                    }
-                    else
-                    {
-                        insertarError("Semantico", "No se puede " + auxizq.Tipo + " + " + auxder.Tipo, this.Fila, this.Columna);
-                    }
-                }
-                else
-                {
-                    insertarError("Semantico", "No se puede " + auxizq.Tipo + " + " + auxder.Tipo, this.Fila, this.Columna);
-                }*/
             }
             return codigo3d;
         }
 
+        private Nodo3D Resta3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+
+                switch (auxizq.Tipo)
+                {
+                    case Constante.TEntero:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
 
 
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            var cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TEntero;
+                                        }
+                                        else
+                                        {
+                                            var cad = "";
+
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TEntero;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " - " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            String cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                        else
+                                        {
+                                            String cad = "";
+
+                                            String auxtemp = TitusTools.GetTemp();
+                                            String salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " - " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TCaracter:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
 
 
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " - " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TBooleano:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad += auxder.Codigo;
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad += auxder.Codigo;
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " - " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " - " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    default:
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " - " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+                        break;
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Resta3D(FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+                switch (auxder.Tipo)
+                {
+                    case Constante.TEntero:
+                        {
+                            String cad = "";
+                            codigo3d.Valor = TitusTools.GetTemp();
+                            cad = "\t\t" + codigo3d.Valor + " =  - " + auxder.Valor + ";\n";
+                            codigo3d.Codigo = auxder.Codigo + cad;
+                            codigo3d.Tipo = Constante.TEntero;
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        {
+                            String cad = "";
+                            codigo3d.Valor = TitusTools.GetTemp();
+                            cad = "\t\t" + codigo3d.Valor + " =  - " + auxder.Valor + ";\n";
+                            codigo3d.Codigo = auxder.Codigo + cad;
+                            codigo3d.Tipo = Constante.TDecimal;
+                        }
+                        break;
+
+                    case Constante.TCaracter:
+                        {
+                            String cad = "";
+                            codigo3d.Valor = TitusTools.GetTemp();
+                            cad = "\t\t" + codigo3d.Valor + " =  - " + auxder.Valor + ";\n";
+                            codigo3d.Codigo = auxder.Codigo + cad;
+                            codigo3d.Tipo = Constante.TEntero;
+                        }
+                        break;
 
 
+                    case Constante.TBooleano:
+                        {
+                            if (auxder.V == "" && auxder.F == "")
+                            {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                var cad = "";
+                                codigo3d.Valor = TitusTools.GetTemp();
+                                cad = "\t\t" + codigo3d.Valor + " =  - " + auxder.Valor + ";\n";
+                                codigo3d.Codigo = auxder.Codigo + cad;
+                                codigo3d.Tipo = Constante.TEntero;
+                            }
+                            else
+                            {
+                                var cad = "";
+
+                                var auxtemp = TitusTools.GetTemp();
+                                var salida = TitusTools.GetEtq();
+
+                                cad += "\t" + auxder.V + ":\n";
+                                cad += "\t\t" + auxtemp + " = 1;\n";
+                                cad += "\t\t" + "goto " + salida + ";\n";
+                                cad += "\t" + auxder.F + ":\n";
+                                cad += "\t\t" + auxtemp + " = 0;\n";
+                                cad += "\t" + salida + ":\n";
+
+                                codigo3d.Valor = TitusTools.GetTemp();
+                                cad += "\t\t" + codigo3d.Valor + " =  - " + auxtemp + ";\n";
+                                codigo3d.Codigo = auxder.Codigo + cad;
+                                codigo3d.Tipo = Constante.TEntero;
+                            }
+                        }
+                        break;
+
+                    default:
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede  - " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+                        break;
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Multiplicacion3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+
+                switch (auxizq.Tipo)
+                {
+                    case Constante.TEntero:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            var cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TEntero;
+                                        }
+                                        else
+                                        {
+                                            var cad = "";
+
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TEntero;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " * " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            String cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                        else
+                                        {
+                                            String cad = "";
+
+                                            String auxtemp = TitusTools.GetTemp();
+                                            String salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " * " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TCaracter:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
 
 
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " * " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TBooleano:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad += auxder.Codigo;
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad += auxder.Codigo;
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " * " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        var cad = "";
+
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {
+                                            cad += auxder.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += auxder.Codigo;
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            auxder.Valor = auxtemp;
+                                        }
+
+                                        //agregar codigo para
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        String auxetq = TitusTools.GetEtq();
+                                        cad += "\t\t" + codigo3d.Valor + " = 1\n";
+                                        cad += "\t\tif " + auxizq.Valor + " > " + auxder.Valor + " then goto " + auxetq + "\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 0\n";
+                                        cad += "\t" + auxetq + ":\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " * " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    default:
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " * " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+                        break;
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Division3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+
+                switch (auxizq.Tipo)
+                {
+                    case Constante.TEntero:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            var cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                        else
+                                        {
+                                            var cad = "";
+
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " / " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            String cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                        else
+                                        {
+                                            String cad = "";
+
+                                            String auxtemp = TitusTools.GetTemp();
+                                            String salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " / " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TCaracter:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
 
 
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " / " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
 
+                    case Constante.TBooleano:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
 
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
 
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad += auxder.Codigo;
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
 
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        if (auxizq.V == "" && auxizq.F == "")
+                                        {
+                                            cad += auxizq.Codigo;
+                                        }
+                                        else
+                                        {
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
 
+                                            cad += auxizq.Codigo;
+                                            cad += "\t" + auxizq.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxizq.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
 
+                                            auxizq.Valor = auxtemp;
+                                        }
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad += auxder.Codigo;
+                                        cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " / " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " / " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    default:
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " / " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+                        break;
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Potencia3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+
+                switch (auxizq.Tipo)
+                {
+                    case Constante.TEntero:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TEntero;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            var cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TEntero;
+                                        }
+                                        else
+                                        {
+                                            var cad = "";
+
+                                            var auxtemp = TitusTools.GetTemp();
+                                            var salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TEntero;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " ^ " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+                                        codigo3d.Valor = TitusTools.GetTemp();
+                                        cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TDecimal;
+                                    }
+                                    break;
+
+                                case Constante.TBooleano:
+                                    {
+                                        if (auxder.V == "" && auxder.F == "")
+                                        {//si trae etiquetas viene de una relacional si no es un bool nativo
+                                            String cad = "";
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad = "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxder.Valor + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                        else
+                                        {
+                                            String cad = "";
+
+                                            String auxtemp = TitusTools.GetTemp();
+                                            String salida = TitusTools.GetEtq();
+
+                                            cad += "\t" + auxder.V + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 1;\n";
+                                            cad += "\t\t" + "goto " + salida + ";\n";
+                                            cad += "\t" + auxder.F + ":\n";
+                                            cad += "\t\t" + auxtemp + " = 0;\n";
+                                            cad += "\t" + salida + ":\n";
+
+                                            codigo3d.Valor = TitusTools.GetTemp();
+                                            cad += "\t\t" + codigo3d.Valor + " = " + auxizq.Valor + " ^ " + auxtemp + ";\n";
+                                            codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                            codigo3d.Tipo = Constante.TDecimal;
+                                        }
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " ^ " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+
+                    default:
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " ^ " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+                        break;
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Relacional3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            var codigo3d = new Nodo3D();
+            var auxizq = izq.Generar3D();
+            var auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+                switch (auxizq.Tipo)
+                {
+                    case Constante.TEntero:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                default:
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                default:
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TCaracter:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TEntero:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TDecimal:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TCadena:
+                                    {
+                                        String cad = "";
+
+                                        String etqcad1 = TitusTools.GetEtq();
+                                        String etqcad2 = TitusTools.GetEtq();
+
+                                        String tempascii2 = TitusTools.GetTemp();
+                                        String tempcad2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + tempascii2 + " = 0 ;\n";
+                                        cad += "\t" + etqcad1 + ":\n";
+                                        cad += "\t\t" + tempcad2 + " = Heap[" + auxder.Valor + "];\n";
+                                        cad += "\t\t" + "if " + tempcad2 + " == 0 goto " + etqcad2 + ";\n";
+                                        cad += "\t\t" + tempascii2 + " = " + tempascii2 + " + " + tempcad2 + ";\n";
+                                        cad += "\t\t" + auxder.Valor + " = " + auxder.Valor + " + 1;\n";
+                                        cad += "\t\t" + "goto " + etqcad1 + ";\n";
+                                        cad += "\t" + etqcad2 + ":\n";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + auxizq.Valor + " " + this.Tipo + " " + tempascii2 + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                default:
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case Constante.TCadena:
+                        {
+                            switch (auxder.Tipo)
+                            {
+                                case Constante.TCaracter:
+                                    {
+                                        String cad = "";
+
+                                        String tempascii1 = TitusTools.GetTemp();
+                                        String tempcad1 = TitusTools.GetTemp();
+                                        String etqcad1 = TitusTools.GetEtq();
+                                        String etqcad2 = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + tempascii1 + " = 0 ;\n";
+                                        cad += "\t" + etqcad1 + ":\n";
+                                        cad += "\t\t" + tempcad1 + " = Heap[" + auxizq.Valor + "];\n";
+                                        cad += "\t\t" + "if " + tempcad1 + " == 0 goto " + etqcad2 + ";\n";
+                                        cad += "\t\t" + tempascii1 + " = " + tempascii1 + " + " + tempcad1 + ";\n";
+                                        cad += "\t\t" + auxizq.Valor + " = " + auxizq.Valor + " + 1;\n";
+                                        cad += "\t\t" + "goto " + etqcad1 + ";\n";
+                                        cad += "\t" + etqcad2 + ":\n";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + tempascii1 + " " + this.Tipo + " " + auxder.Valor + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                case Constante.TCadena:
+                                    {
+                                        String cad = "";
+
+                                        String tempascii1 = TitusTools.GetTemp();
+                                        String tempcad1 = TitusTools.GetTemp();
+                                        String etqcad1 = TitusTools.GetEtq();
+                                        String etqcad2 = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + tempascii1 + " = 0 ;\n";
+                                        cad += "\t" + etqcad1 + ":\n";
+                                        cad += "\t\t" + tempcad1 + " = Heap[" + auxizq.Valor + "];\n";
+                                        cad += "\t\t" + "if " + tempcad1 + " == 0 goto " + etqcad2 + ";\n";
+                                        cad += "\t\t" + tempascii1 + " = " + tempascii1 + " + " + tempcad1 + ";\n";
+                                        cad += "\t\t" + auxizq.Valor + " = " + auxizq.Valor + " + 1;\n";
+                                        cad += "\t\t" + "goto " + etqcad1 + ";\n";
+                                        cad += "\t" + etqcad2 + ":\n";
+
+                                        String tempascii2 = TitusTools.GetTemp();
+                                        String tempcad2 = TitusTools.GetTemp();
+                                        etqcad1 = TitusTools.GetEtq();
+                                        etqcad2 = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + tempascii2 + " = 0 ;\n";
+                                        cad += "\t" + etqcad1 + ":\n";
+                                        cad += "\t\t" + tempcad2 + " = Heap[" + auxder.Valor + "];\n";
+                                        cad += "\t\t" + "if " + tempcad2 + " == 0 goto " + etqcad2 + ";\n";
+                                        cad += "\t\t" + tempascii2 + " = " + tempascii2 + " + " + tempcad2 + ";\n";
+                                        cad += "\t\t" + auxder.Valor + " = " + auxder.Valor + " + 1;\n";
+                                        cad += "\t\t" + "goto " + etqcad1 + ";\n";
+                                        cad += "\t" + etqcad2 + ":\n";
+
+                                        codigo3d.V = TitusTools.GetEtq();
+                                        codigo3d.F = TitusTools.GetEtq();
+
+                                        cad += "\t\t" + "if " + tempascii1 + " " + this.Tipo + " " + tempascii2 + " goto " + codigo3d.V + ";\n";
+                                        cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        codigo3d.Tipo = Constante.TBooleano;
+                                    }
+                                    break;
+
+                                default:
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+            }
+            return codigo3d;
+        }
 
 
         public FNodoExpresion ResolverExpresion()

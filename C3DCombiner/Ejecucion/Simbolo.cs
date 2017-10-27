@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C3DCombiner.Funciones;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,11 +33,90 @@ namespace C3DCombiner.Ejecucion
         }
 
 
-        public Nodo3D GenerarCodigo3D()
+        public String Generar3D()
         {
+            String cadena = "";
+            switch (Rol)
+            {
+                case Constante.TClase:
+                    cadena = GenerarClase();
+                    break;
+                case Constante.DECLARACION:
+                    cadena = GenerarDeclaracion();
+                    break;
+                case Constante.TMetodo:
+                    cadena = GenerarMetodo();
+                    break;
 
+                case Constante.MIENTRAS:
+                    cadena = GenerarMientras();
+                    break;
 
-            return null;
+                case Constante.HACER:
+                    cadena = GenerarHacer();
+                    break;
+
+                case Constante.TRepetir:
+                    cadena = GenerarRepetir();
+                    break;
+            }
+            return cadena;
         }
+
+        private String GenerarClase()
+        {
+            String cadena = "";
+            foreach (Simbolo sim in Ambito.TablaSimbolo)
+            {
+                if (!sim.Rol.Equals(Constante.DECLARACION))
+                {
+                    cadena += sim.Generar3D();
+                }
+            }
+            return cadena;
+        }
+
+        private String GenerarMetodo()
+        {
+            String cadena = "";
+            FMetodo metodo = (FMetodo)Valor;
+            cadena += metodo.Generar3D();
+            return cadena;
+        }
+
+        private String GenerarDeclaracion()
+        {
+            String cadena = "";
+            FDeclaracion declaracion = (FDeclaracion)Valor;
+            cadena += declaracion.Generar3D();
+            return cadena;
+        }
+
+
+        //ciclos
+        private String GenerarMientras()
+        {
+            String cadena = "";
+            FMientras mientras = (FMientras)Valor;
+            cadena += mientras.Generar3D();
+            return cadena;
+        }
+
+        private String GenerarHacer()
+        {
+            String cadena = "";
+            FHacer hacer = (FHacer)Valor;
+            cadena += hacer.Generar3D();
+            return cadena;
+        }
+
+        private String GenerarRepetir()
+        {
+            String cadena = "";
+            FRepetir repetir = (FRepetir)Valor;
+            cadena += repetir.Generar3D();
+            return cadena;
+        }
+
     }
 }

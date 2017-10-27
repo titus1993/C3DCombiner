@@ -40,5 +40,36 @@ namespace C3DCombiner.Funciones
             this.Tipo = tipo;
             this.Nombre = nombre;
         }
+
+
+        public String Generar3D()
+        {
+            String cadena = "";
+
+            cadena += "void " + GetNombre3D() + "(){\n";
+
+            foreach (Simbolo simbolo in Ambito.TablaSimbolo)
+            {
+                cadena += simbolo.Generar3D();
+            }
+
+            cadena += "}\n";
+            return cadena;
+        }
+
+        public String GetNombre3D()
+        {
+            String cadena = "";
+
+            cadena += this.Padre.Padre.Nombre + "_" + this.Nombre + "_" + this.Tipo;
+
+            foreach (Simbolo s in Parametros)
+            {
+                FParametro d = (FParametro)s.Valor;
+                cadena += "_" + s.Tipo + d.Dimensiones.ToString();
+            }
+
+            return cadena;
+        }
     }
 }

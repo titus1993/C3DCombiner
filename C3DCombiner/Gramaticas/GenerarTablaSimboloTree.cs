@@ -234,13 +234,23 @@ namespace C3DCombiner
                         {
                             List<Simbolo> lista = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[2]);
                             FClase clase = new FClase(Nodo.ChildNodes[1].Token.ValueString, "", new Ambito(Nodo.ChildNodes[1].Token.ValueString, lista));
-                            return new Simbolo(Constante.TPublico, Constante.TVoid, clase.Nombre, Constante.TClase, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, clase.Ambito, clase);
+                            Simbolo s = new Simbolo(Constante.TPublico, Constante.TVoid, clase.Nombre, Constante.TClase, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, clase.Ambito, clase);
+                            foreach (Simbolo sim in lista)
+                            {
+                                sim.Padre = s;
+                            }
+                            return s;
                         }
                         else
                         {
                             List<Simbolo> lista = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[3]);
                             FClase clase = new FClase(Nodo.ChildNodes[1].Token.ValueString, Nodo.ChildNodes[2].Token.ValueString, new Ambito(Nodo.ChildNodes[1].Token.ValueString, lista));
-                            return new Simbolo(Constante.TPublico, Constante.TVoid, clase.Nombre, Constante.TClase, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, clase.Ambito, clase);
+                            Simbolo s = new Simbolo(Constante.TPublico, Constante.TVoid, clase.Nombre, Constante.TClase, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, clase.Ambito, clase);
+                            foreach (Simbolo sim in lista)
+                            {
+                                sim.Padre = s;
+                            }
+                            return s;
                         }
                     }
 

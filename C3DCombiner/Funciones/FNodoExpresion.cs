@@ -209,21 +209,21 @@ namespace C3DCombiner.Funciones
                     codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
-                /*case Constante.TOr:
-                    codigo3d = Or(izq, der);
+                case Constante.TOr:
+                    codigo3d = Or3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TXor:
-                    codigo3d = Xor(izq, der);
+                    codigo3d = Xor3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TAnd:
-                    codigo3d = And(izq, der);
+                    codigo3d = And3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
                 case Constante.TNot:
-                    codigo3d = Not(der);
-                    break;*/
+                    codigo3d = Not3D(nodo.Derecha);
+                    break;
 
                 case Constante.TEntero:
                     {
@@ -2164,6 +2164,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2179,6 +2180,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2194,6 +2196,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2220,6 +2223,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2235,6 +2239,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2250,6 +2255,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2276,6 +2282,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2291,6 +2298,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2306,6 +2314,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2336,6 +2345,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2376,6 +2386,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2419,6 +2430,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
+                                        
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2438,6 +2450,239 @@ namespace C3DCombiner.Funciones
             return codigo3d;
         }
 
+        private Nodo3D Or3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+                if (auxizq.Tipo == Constante.TBooleano && auxder.Tipo == Constante.TBooleano)
+                {
+                    var cad = "";
+
+                    if (auxizq.V == "" && auxizq.F == "")
+                    {
+                        auxizq.V = TitusTools.GetEtq();
+                        auxizq.F = TitusTools.GetEtq();
+
+                        cad += auxizq.Codigo;
+
+                        cad += "\t\t" + "if " + auxizq.Valor + " == 1 goto " + auxizq.V + ";\n";
+                        cad += "\t\t" + "goto " + auxizq.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxizq.Codigo;
+                    }
+
+                    cad += "\t" + auxizq.F + ":\n";
+
+
+                    if (auxder.V == "" && auxder.F == "")
+                    {
+                        auxder.V = TitusTools.GetEtq();
+                        auxder.F = TitusTools.GetEtq();
+
+                        cad += auxder.Codigo;
+                        cad += "\t\t" + "if " + auxder.Valor + " == 1 goto " + auxder.V + ";\n";
+                        cad += "\t\t" + "goto " + auxder.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxder.Codigo;
+                    }
+
+                    codigo3d.V = auxizq.V + ":\n\t" + auxder.V;
+                    codigo3d.F = auxder.F;
+
+                    codigo3d.Codigo = cad;
+                    codigo3d.Tipo = Constante.TBooleano;
+                }
+                else
+                {
+                    TitusTools.InsertarError("Semantico", "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }            
+            return codigo3d;
+        }
+
+        private Nodo3D And3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+                if (auxizq.Tipo == Constante.TBooleano && auxder.Tipo == Constante.TBooleano)
+                {
+                    var cad = "";
+
+                    if (auxizq.V == "" && auxizq.F == "")
+                    {
+                        auxizq.V = TitusTools.GetEtq();
+                        auxizq.F = TitusTools.GetEtq();
+
+                        cad += auxizq.Codigo;
+
+                        cad += "\t\t" + "if " + auxizq.Valor + " == 1 goto " + auxizq.V + ";\n";
+                        cad += "\t\t" + "goto " + auxizq.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxizq.Codigo;
+                    }
+
+                    cad += "\t" + auxizq.V + ":\n";
+
+
+                    if (auxder.V == "" && auxder.F == "")
+                    {
+                        auxder.V = TitusTools.GetEtq();
+                        auxder.F = TitusTools.GetEtq();
+
+                        cad += auxder.Codigo;
+                        cad += "\t\t" + "if " + auxder.Valor + " == 1 goto " + auxder.V + ";\n";
+                        cad += "\t\t" + "goto " + auxder.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxder.Codigo;
+                    }
+
+                    codigo3d.V = auxder.V;
+                    codigo3d.F = auxizq.F + ":\n\t" + auxder.F;
+
+                    codigo3d.Codigo = cad;
+                    codigo3d.Tipo = Constante.TBooleano;
+                }
+                else
+                {
+                    TitusTools.InsertarError("Semantico", "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Not3D(FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+                if (auxder.Tipo == Constante.TBooleano)
+                {
+                    String cad = "";
+                    
+                    if (auxder.V == "" && auxder.F == "")
+                    {
+                        auxder.V = TitusTools.GetEtq();
+                        auxder.F = TitusTools.GetEtq();
+
+                        cad += auxder.Codigo;
+                        cad += "\t\t" + "if " + auxder.Valor + " == 1 goto " + auxder.V + ";\n";
+                        cad += "\t\t" + "goto " + auxder.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxder.Codigo;
+                    }
+
+                    codigo3d.V = auxder.F;
+                    codigo3d.F = auxder.V;
+
+                    codigo3d.Codigo = cad;
+                    codigo3d.Tipo = Constante.TBooleano;
+                }
+                else
+                {
+                    TitusTools.InsertarError("Semantico", "No se puede " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+            return codigo3d;
+        }
+
+        private Nodo3D Xor3D(FNodoExpresion izq, FNodoExpresion der)
+        {
+            Nodo3D codigo3d = new Nodo3D();
+            Nodo3D auxizq = izq.Generar3D();
+            Nodo3D auxder = der.Generar3D();
+
+            if (!TitusTools.HayErrores())
+            {
+                if (auxizq.Tipo == Constante.TBooleano && auxder.Tipo == Constante.TBooleano)
+                {
+                    String cad = "";
+                    String etq1v = TitusTools.GetEtq();
+                    String etq1f = TitusTools.GetEtq();
+                    codigo3d.V = TitusTools.GetEtq();
+                    codigo3d.F = TitusTools.GetEtq();
+                    String etq2f = TitusTools.GetEtq();
+                    String temp1 = TitusTools.GetTemp();
+                    String temp2 = TitusTools.GetTemp();
+
+                    if (auxizq.V == "" && auxizq.F == "")
+                    {
+                        auxizq.V = TitusTools.GetEtq();
+                        auxizq.F = TitusTools.GetEtq();
+
+                        cad += auxizq.Codigo;
+                        cad += "\t\t" + "if " + auxizq.Valor + " == 1 goto " + auxizq.V + ";\n";
+                        cad += "\t\t" + "goto " + auxizq.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxizq.Codigo;
+                    }
+
+                    cad += "\t\t" + auxizq.V + ":\n";
+                    cad += "\t\t" + temp1 + " = 1;\n";
+                    cad += "\t\t" + "goto " + etq1v + ";\n";
+                    cad += "\t\t" + auxizq.F + ":\n";
+                    cad += "\t\t" + temp1 + " = 0;\n";
+                    cad += "\t" + etq1v + ":\n";
+
+
+
+
+                    if (auxder.V == "" && auxder.F == "")
+                    {
+                        auxder.V = TitusTools.GetEtq();
+                        auxder.F = TitusTools.GetEtq();
+
+                        cad += auxder.Codigo;
+                        cad += "\t\t" + "if " + auxder.Valor + " == 1 goto " + auxder.V + ";\n";
+                        cad += "\t\t" + "goto " + auxder.F + ";\n";
+                    }
+                    else
+                    {
+                        cad += auxder.Codigo;
+                    }
+
+                    cad += "\t\t" + auxder.V + ":\n";
+                    cad += "\t\t" + temp2 + " = 1;\n";
+                    cad += "\t\t" + "goto " + etq1f + ";\n";
+                    cad += "\t\t" + auxder.F + ":\n";
+                    cad += "\t\t" + temp2 + " = 0;\n";
+                    cad += "\t" + etq1f + ":\n";
+
+                    cad += "\t\t" + "if " + temp1 + " != " + temp2 + " goto " + codigo3d.V + ";\n";
+                    cad += "\t\t" + "goto " + codigo3d.F + ";\n";
+
+                    codigo3d.Codigo = cad;
+                    codigo3d.Tipo = Constante.TBooleano;
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+            
+            return codigo3d;
+        }
 
         public FNodoExpresion ResolverExpresion()
         {

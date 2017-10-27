@@ -10,7 +10,6 @@ namespace C3DCombiner.Ejecucion
     {
         public String Valor = "";
         public String Codigo = "";
-        public String CodigoFalse = "";
         public String V = "";
         public String F = "";
         public String Tipo = "";

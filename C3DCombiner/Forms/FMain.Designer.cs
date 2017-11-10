@@ -56,6 +56,8 @@
             this.Tab3d = new System.Windows.Forms.TabPage();
             this.Tab3dOptimizado = new System.Windows.Forms.TabPage();
             this.TabSimbolos = new System.Windows.Forms.TabPage();
+            this.modulosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reporteASTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -72,7 +74,8 @@
             this.archivoToolStripMenuItem,
             this.herramientasToolStripMenuItem,
             this.ejecutarToolStripMenuItem,
-            this.codigoCompartidoToolStripMenuItem});
+            this.codigoCompartidoToolStripMenuItem,
+            this.modulosToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(956, 24);
@@ -323,6 +326,21 @@
             this.TabSimbolos.Text = "Tabla de Simbolos";
             this.TabSimbolos.UseVisualStyleBackColor = true;
             // 
+            // modulosToolStripMenuItem
+            // 
+            this.modulosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reporteASTToolStripMenuItem});
+            this.modulosToolStripMenuItem.Name = "modulosToolStripMenuItem";
+            this.modulosToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.modulosToolStripMenuItem.Text = "Reportes";
+            // 
+            // reporteASTToolStripMenuItem
+            // 
+            this.reporteASTToolStripMenuItem.Name = "reporteASTToolStripMenuItem";
+            this.reporteASTToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.reporteASTToolStripMenuItem.Text = "Reporte AST";
+            this.reporteASTToolStripMenuItem.Click += new System.EventHandler(this.reporteASTToolStripMenuItem_Click);
+            // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -378,6 +396,8 @@
         private System.Windows.Forms.ToolStripMenuItem iniciarSesionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compartirClaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem modulosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reporteASTToolStripMenuItem;
     }
 }
 

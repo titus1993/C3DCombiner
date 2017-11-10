@@ -103,6 +103,12 @@
     <Compile Include="Ejecucion\Simbolo.cs" />
     <Compile Include="Ejecucion\Tabla3D.cs" />
     <Compile Include="Ejecucion\Variable.cs" />
+    <Compile Include="Forms\Ast.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ast.Designer.cs">
+      <DependentUpon>Ast.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Compartir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +133,7 @@
     <Compile Include="Forms\FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GraficarAST.cs" />
     <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,7 +174,9 @@
     <Compile Include="Gramaticas\GenerarTablaSimbolo3D.cs" />
     <Compile Include="Gramaticas\GenerarTablaSimboloOLC.cs" />
     <Compile Include="Gramaticas\GenerarTablaSimboloTree.cs" />
+    <Compile Include="Gramaticas\OLCGrammarAST.cs" />
     <Compile Include="Gramaticas\OLCGrammar.cs" />
+    <Compile Include="Gramaticas\TreeGrammarAST.cs" />
     <Compile Include="Gramaticas\TreeGrammar.cs" />
     <Compile Include="IronyFCTB.cs">
       <SubType>UserControl</SubType>
@@ -193,6 +202,9 @@
     <Compile Include="Tree\TitusTree.cs">
       <SubType>Component</SubType>
     </Compile>
+    <EmbeddedResource Include="Forms\Ast.resx">
+      <DependentUpon>Ast.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Compartir.resx">
       <DependentUpon>Compartir.cs</DependentUpon>
     </EmbeddedResource>

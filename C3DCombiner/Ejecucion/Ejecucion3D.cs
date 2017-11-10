@@ -50,10 +50,14 @@ namespace C3DCombiner.Ejecucion
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "Exite mas de un metodo main", "", 1, 1);
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "Exite mas de un metodo main", TitusTools.GetRuta(), 1, 1);
                     }
                 }
-                else
+            }
+
+            foreach (Simbolo sim in Codigo3D.TablaSimbolo)
+            {                
+                if(!sim.Rol.Equals(Constante.TMain))
                 {
                     Tabla3D.Tabla.Add(new Variable(sim.Nombre, sim.Rol, sim.Fila, sim.Columna, sim.Ambito, sim.Valor));
                 }
@@ -65,7 +69,7 @@ namespace C3DCombiner.Ejecucion
                 {
                     if (!Tabla3D.Tabla[0].Rol.Equals(Constante.TMain))
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro un metodo main", "", 1, 1);
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro un metodo main", TitusTools.GetRuta(), 1, 1);
                     }
                     else
                     {

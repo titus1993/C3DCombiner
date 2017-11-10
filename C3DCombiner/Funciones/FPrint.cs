@@ -57,22 +57,22 @@ namespace C3DCombiner.Funciones
                         }
                         else
                         {
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se pueden imprimir un caracter con un ascii negativo en el temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se pueden imprimir un caracter con un ascii negativo en el temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                         }
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede imprimir un caracter porque el valor no es entero del temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede imprimir un caracter porque el valor no es entero del temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                     }
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se ha asignado ningun valor al temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se ha asignado ningun valor al temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                 }
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No existe el temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No existe el temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
             }
         }
 
@@ -91,17 +91,17 @@ namespace C3DCombiner.Funciones
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede imprimir un entero porque el valor no es entero del temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede imprimir un entero porque el valor no es entero del temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                     }
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se ha asignado ningun valor al temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se ha asignado ningun valor al temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                 }
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No existe el temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No existe el temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
             }
         }
 
@@ -120,17 +120,17 @@ namespace C3DCombiner.Funciones
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede imprimir un decimal porque el valor no es decimal del temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede imprimir un decimal porque el valor no es decimal del temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                     }
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se ha asignado ningun valor al temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se ha asignado ningun valor al temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                 }
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No existe el temporal " + Temporal, "", Padre.Fila, Padre.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No existe el temporal " + Temporal, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
             }
         }
     }

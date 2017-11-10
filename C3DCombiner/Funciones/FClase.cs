@@ -29,8 +29,8 @@ namespace C3DCombiner.Funciones
             String cadena = "";
             String temp = TitusTools.GetTemp();
             String init = "void init_" + this.Nombre + "(){\n";
-            init += "\t\t" + temp + " = H;\n";
-            init += "\t\t" + "H = H + " + Ambito.Tamaño.ToString() + ";\n";
+            //init += "\t\t" + temp + " = H;\n";
+            //init += "\t\t" + "H = H + " + Ambito.Tamaño.ToString() + ";\n";
             foreach (Simbolo sim in Ambito.TablaSimbolo)
             {
                 if (!sim.Rol.Equals(Constante.DECLARACION))

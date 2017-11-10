@@ -2783,12 +2783,12 @@ namespace C3DCombiner.Funciones
                         }
                         else
                         {
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se le ha asignado ningun valor al temporal " + this.Nombre, "", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se le ha asignado ningun valor al temporal " + this.Nombre, TitusTools.GetRuta(), Fila, Columna);
                         }
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el temporal " + this.Nombre, "", Fila, Columna);                        
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el temporal " + this.Nombre, TitusTools.GetRuta(), Fila, Columna);                        
                     }
                     break;
 
@@ -2815,17 +2815,17 @@ namespace C3DCombiner.Funciones
                                 }
                                 else
                                 {
-                                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso a puntero nulo del heap" + this.Nombre, "", Fila, Columna);
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso a puntero nulo del heap" + this.Nombre, TitusTools.GetRuta(), Fila, Columna);
                                 }
                             }
                             else
                             {
-                                TitusTools.InsertarError(Constante.TErrorSemantico, "Indices del heap fuera de rango ", "", Fila, Columna);
+                                TitusTools.InsertarError(Constante.TErrorSemantico, "Indices del heap fuera de rango ", TitusTools.GetRuta(), Fila, Columna);
                             }
                         }
                         else
                         {
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "Solo se puede acceder al heap con un valor entero no un valor " + acceso.Tipo, "", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "Solo se puede acceder al heap con un valor entero no un valor " + acceso.Tipo, TitusTools.GetRuta(), Fila, Columna);
                         }
                     }
                     break;
@@ -2845,17 +2845,17 @@ namespace C3DCombiner.Funciones
                                 }
                                 else
                                 {
-                                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso a puntero nulo del stack" + this.Nombre, "", Fila, Columna);
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso a puntero nulo del stack" + this.Nombre, TitusTools.GetRuta(), Fila, Columna);
                                 }
                             }
                             else
                             {
-                                TitusTools.InsertarError(Constante.TErrorSemantico, "Indices del stack fuera de rango ", "", Fila, Columna);
+                                TitusTools.InsertarError(Constante.TErrorSemantico, "Indices del stack fuera de rango ", TitusTools.GetRuta(), Fila, Columna);
                             }
                         }
                         else
                         {
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "Solo se puede acceder al stack con un valor entero no un valor " + acceso.Tipo, "", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "Solo se puede acceder al stack con un valor entero no un valor " + acceso.Tipo, TitusTools.GetRuta(), Fila, Columna);
                         }
                     }
                     break;
@@ -2882,7 +2882,7 @@ namespace C3DCombiner.Funciones
                             break;
                             
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -2900,13 +2900,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -2931,7 +2931,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -2949,13 +2949,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -2977,7 +2977,7 @@ namespace C3DCombiner.Funciones
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -3002,7 +3002,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3020,13 +3020,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -3051,7 +3051,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3069,13 +3069,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -3103,7 +3103,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3121,13 +3121,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -3163,7 +3163,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3191,7 +3191,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3214,7 +3214,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3237,7 +3237,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3265,7 +3265,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3283,13 +3283,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
 
             }
@@ -3315,7 +3315,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3333,13 +3333,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
 
             }
@@ -3365,7 +3365,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
@@ -3383,13 +3383,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
 
             }
@@ -3413,13 +3413,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;
@@ -3442,13 +3442,13 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;
                     }
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                     break;
             }
             return aux;

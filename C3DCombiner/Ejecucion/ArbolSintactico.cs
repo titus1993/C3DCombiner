@@ -17,32 +17,36 @@ namespace C3DCombiner.Ejecucion
             {
                 TitusTools.Rutas.Add(ruta);
                 Archivo archivo = (Archivo)GenerarTablaSimboloOLC.RecorrerArbol(arbol);
-                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
+                
                 if (archivo != null)
                 {
                     TitusTools.Archivos_Importados.Add(archivo);
                     archivo.GenerarImports();
                 }
+                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
             }
             else if (tipo == 1)
             {
                 TitusTools.Rutas.Add(ruta);
                 Archivo archivo = (Archivo)GenerarTablaSimboloTree.RecorrerArbol(arbol);
-                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
+               
                 if (archivo != null)
                 {
                     TitusTools.Archivos_Importados.Add(archivo);
                     archivo.GenerarImports();
                 }
-            }else if (tipo == 2)
+                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
+            }
+            else if (tipo == 2)
             {
                 TitusTools.Rutas.Add(ruta);
                 Ejecucion3D Ejecucion = (Ejecucion3D)GenerarTablaSimbolo3D.RecorrerArbol(arbol);
-                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
+                
                 if (Ejecucion != null)
                 {
                     Ejecucion.Ejecutar();
                 }
+                TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
             }
         }
     }

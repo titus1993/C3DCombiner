@@ -148,7 +148,7 @@ namespace C3DCombiner.Funciones
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el metodo " + sim.Nombre, "", sim.Fila, sim.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el metodo " + sim.Nombre, TitusTools.GetRuta(), sim.Fila, sim.Columna);
             }
         }
 
@@ -193,7 +193,7 @@ namespace C3DCombiner.Funciones
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No se econtro la etiqueta " + sim.Nombre, "", sim.Fila, sim.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se econtro la etiqueta " + sim.Nombre, TitusTools.GetRuta(), sim.Fila, sim.Columna);
                 return 0;
             }
         }

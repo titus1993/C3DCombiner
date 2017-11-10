@@ -65,13 +65,13 @@ namespace C3DCombiner.Funciones
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor numerico." , "", this.Valor.Fila, this.Valor.Columna);
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor numerico." , TitusTools.GetRuta(), this.Valor.Fila, this.Valor.Columna);
                     }
                 }
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontroo el temporal " + this.Acceso.Nombre, "", this.Acceso.Fila, this.Acceso.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontroo el temporal " + this.Acceso.Nombre, TitusTools.GetRuta(), this.Acceso.Fila, this.Acceso.Columna);
             }
         }
 
@@ -86,7 +86,7 @@ namespace C3DCombiner.Funciones
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor numerico.", "", this.Valor.Fila, this.Valor.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor numerico.", TitusTools.GetRuta(), this.Valor.Fila, this.Valor.Columna);
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace C3DCombiner.Funciones
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor numerico.", "", this.Valor.Fila, this.Valor.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor numerico.", TitusTools.GetRuta(), this.Valor.Fila, this.Valor.Columna);
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace C3DCombiner.Funciones
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor entero para acceder al heap.", "", this.Acceso.Fila, this.Acceso.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor entero para acceder al heap.", TitusTools.GetRuta(), this.Acceso.Fila, this.Acceso.Columna);
                 }
             }
         }
@@ -138,7 +138,7 @@ namespace C3DCombiner.Funciones
                 }
                 else
                 {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor entero para acceder al heap.", "", this.Acceso.Fila, this.Acceso.Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "Se esperaba un valor entero para acceder al heap.", TitusTools.GetRuta(), this.Acceso.Fila, this.Acceso.Columna);
                 }
             }
         }

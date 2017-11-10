@@ -161,5 +161,11 @@ namespace C3DCombiner
                 MessageBox.Show("No se ha iniciado ninguna sesion", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void reporteASTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Ast a = new Ast();
+            a.Show();
+        }
     }
 }

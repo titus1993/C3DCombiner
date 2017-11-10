@@ -15,6 +15,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using Irony.Parsing;
+using C3DCombiner;
 
 namespace FastColoredTextBoxNS
 {
@@ -45,7 +46,7 @@ namespace FastColoredTextBoxNS
                     return parser.Language.Grammar;
                 return null;
             }
-            set 
+            set
             {
                 SetParser(value);
             }
@@ -108,7 +109,7 @@ namespace FastColoredTextBoxNS
 
         protected virtual void DoHighlighting()
         {
-            if(parser == null)
+            if (parser == null)
                 return;
 
             //parse text
@@ -127,7 +128,7 @@ namespace FastColoredTextBoxNS
             //highlight errors
             if (tree.Status == ParseTreeStatus.Error)
             {
-                ClearStyle(GetStyleIndexMask(new Style[] {WavyStyle}));
+                ClearStyle(GetStyleIndexMask(new Style[] { WavyStyle }));
                 foreach (var msg in tree.ParserMessages)
                 {
                     var loc = msg.Location;
@@ -149,7 +150,7 @@ namespace FastColoredTextBoxNS
                 if (arg.Cancel)
                     continue;
 
-                if(arg.Style != null)
+                if (arg.Style != null)
                 {
                     GetTokenRange(t).SetStyle(arg.Style);
                     continue;
@@ -159,7 +160,7 @@ namespace FastColoredTextBoxNS
                 {
                     case "KeyTerm":
                         if ((t.Terminal.Flags & TermFlags.IsKeyword) != 0) //keywords are highlighted only
-                            GetTokenRange(t).SetStyle(SyntaxHighlighter.KeywordStyle);                            
+                            GetTokenRange(t).SetStyle(SyntaxHighlighter.KeywordStyle);
                         break;
                     case "NumberLiteral":
                         GetTokenRange(t).SetStyle(purpleStyle);
@@ -169,6 +170,13 @@ namespace FastColoredTextBoxNS
                         break;
                     case "CommentTerminal":
                         GetTokenRange(t).SetStyle(SyntaxHighlighter.GrayStyle);
+                        break;
+                        //estes default no viene por defecto se puede utilizar para pintar id, u otros terminales
+                    default:
+                        if (t.Terminal.Name.Equals(Constante.Etiqueta))
+                        {
+                            GetTokenRange(t).SetStyle(SyntaxHighlighter.GreenStyle);
+                        }
                         break;
                 }
             }

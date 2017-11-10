@@ -22,6 +22,51 @@ namespace C3DCombiner.Funciones
             this.Defecto = defecto;
             this.Ambito = ambito;
             this.Condicion = condicion;
+
+            FNodoExpresion aux = null;
+            foreach (FCaso caso in Casos)
+            {
+                if (aux != null)
+                {
+                    if (aux.Tipo != caso.Valor.Tipo)
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "Los valores de los casos de la sentencia elegir deben ser iguales", TitusTools.GetRuta(), caso.Valor.Fila, caso.Valor.Columna);
+                    }
+                }
+                else
+                {
+                    aux = caso.Valor;
+                }
+            }
         }
+
+
+        public String Generar3D()
+        {
+            String cadena = "\t\t//Comienza elegir\n";
+
+            String salida = TitusTools.GetEtq();
+
+
+            Nodo3D cond = Condicion.Generar3D();
+
+            cadena += cond.Codigo;
+
+            foreach (FCaso caso in Casos)
+            {
+                cadena += caso.Generar3D(cond);
+            }
+
+            if (Defecto != null)
+            {
+                cadena += Defecto.Generar3D();
+            }
+
+            cadena += "\t" + salida + "://termina elegir\n";
+
+            return cadena;
+        }
+
+        
     }
 }

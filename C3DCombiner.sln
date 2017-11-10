@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DCombiner", "C3DCombiner\C3DCombiner.csproj", "{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Repositorio", "Repositorio\Repositorio.njsproj", "{47906612-58C2-4730-B84C-1D790DE6AA97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D3E2298-299F-4C58-A7F0-DCE955E60CC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47906612-58C2-4730-B84C-1D790DE6AA97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47906612-58C2-4730-B84C-1D790DE6AA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47906612-58C2-4730-B84C-1D790DE6AA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47906612-58C2-4730-B84C-1D790DE6AA97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

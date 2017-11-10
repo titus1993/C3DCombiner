@@ -22,5 +22,31 @@ namespace C3DCombiner.Funciones
             this.Ambito = Ambito;
             this.Padre = null;
         }
+
+
+        public String Generar3D()
+        {
+            String cadena = "";
+            String temp = TitusTools.GetTemp();
+            String init = "void init_" + this.Nombre + "(){\n";
+            init += "\t\t" + temp + " = H;\n";
+            init += "\t\t" + "H = H + " + Ambito.Tamaño.ToString() + ";\n";
+            foreach (Simbolo sim in Ambito.TablaSimbolo)
+            {
+                if (!sim.Rol.Equals(Constante.DECLARACION))
+                {
+                    cadena += sim.Generar3D();
+                }
+                else
+                {
+                    FDeclaracion decla = (FDeclaracion)sim.Valor;
+                    init += decla.Generar3DInit(temp);
+                }
+            }
+
+            init += "}\n\n";
+            init += cadena;
+            return init;
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace C3DCombiner.Funciones
                     cond.V = TitusTools.GetEtq();
                     cond.F = TitusTools.GetEtq();
 
-                    cadena += "\t" + cond.V + ":\n";
+                    cadena += "\t" + cond.F + ":\n";
                     foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
                     {
                         cadena += sim.Generar3D();

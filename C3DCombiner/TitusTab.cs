@@ -8,21 +8,22 @@ using System.Windows.Forms;
 using Irony.Parsing;
 using FastColoredTextBoxNS;
 using C3DCombiner.Ejecucion;
+using C3DCombiner.Gramaticas;
 //using _Compi2_Practica_201213587.Ejecucion;
 namespace C3DCombiner
 {
     class TitusTab : LidorSystems.IntegralUI.Containers.TabPage
     {
-        IronyFCTB TBContenido;
+        public IronyFCTB TBContenido;
         Label panel;
         bool modificado;
-        string Ruta;
-        int Tipo; // 0 ocl, 1 tree, 2 ddd
+        public string Ruta;
+        public int Tipo; // 0 ocl, 1 tree, 2 ddd
 
         //Variables para usar Irony
         TreeGrammar GramaticaTree;
         OLCGrammar GramaticaOLC;
-
+        _3DGrammar Gramatica3D;
         LanguageData language;
         Parser parser;
 
@@ -35,7 +36,7 @@ namespace C3DCombiner
                 switch (tipo)
                 {
                     case 0:
-                        this.Text += ".ocl";
+                        this.Text += ".olc";
                         break;
 
                     case 1:
@@ -64,15 +65,29 @@ namespace C3DCombiner
 
                 if (arbol.Root != null && arbol.ParserMessages.Count == 0)
                 {                    
+                    //generacion de la escructura del archivo ejecutad y sus imports
                     ArbolSintactico Arbol = new ArbolSintactico(arbol.Root, this.Tipo, this.Ruta);
-                    if (TitusTools.HayErrores())
+
+                    //generamos el 3d si no es una archivo de 3d
+                    if (this.Tipo != 2)
                     {
-                        MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //ejecucion del primer archivo en la lista
+                        if (TitusTools.Archivos_Importados.Count > 0 && !TitusTools.HayErrores())
+                        {
+                            TitusTools.Archivos_Importados[0].Ejecutar();
+                        }
+                        if (TitusTools.HayErrores())
+                        {
+                            MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Generacion de codigo 3D finalizada con exito.", "Codigo 3D", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Generacion de codigo 3D finalizada con exito.", "Codigo 3D", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                    
+
+                    
                 }
                 else
                 {
@@ -139,13 +154,15 @@ namespace C3DCombiner
                 case 2:
                     {
                         //Inicializamos la gramatica y su lenguage para tener el parse
-                        /*Gramatica = new TreeGrammar();
-                        language = new LanguageData(Gramatica);
-                        parser = new Parser(language);*/
+                        Gramatica3D = new _3DGrammar();
+                        language = new LanguageData(Gramatica3D);
+                        parser = new Parser(language);
 
                         //creamos el textbox
-                        TBContenido = new IronyFCTB();
-                        //TBContenido.Grammar = Gramatica;
+                        TBContenido = new IronyFCTB()
+                        {
+                            Grammar = Gramatica3D
+                        };
                     }
                     break;
             }

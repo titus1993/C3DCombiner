@@ -1,4 +1,6 @@
-﻿using C3DCombiner.Ejecucion;
+﻿using C3DCombiner.BD;
+using C3DCombiner.Ejecucion;
+using C3DCombiner.Gramaticas;
 using FastColoredTextBoxNS;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,11 @@ namespace C3DCombiner
 {
     static class TitusTools
     {
+        public static Usuario Usuario = new Usuario();
+
+
         public static int Temporal = 0;
+
         public static int Etiqueta = 0;
 
         //Filtro para abrir y guardar
@@ -28,7 +34,7 @@ namespace C3DCombiner
         public static TitusTree tree = new TitusTree();
         //Administrador de pestañas
         public static TitusTabControl Tabs = new TitusTabControl();
-
+        
         public static RichTextBox Consola = new RichTextBox();
 
         public static DataGridView Errores = new DataGridView();
@@ -41,6 +47,17 @@ namespace C3DCombiner
 
         public static IronyFCTB Codigo3D = new IronyFCTB();
         
+        public static Boolean ExisteArchivo(String ruta)
+        {
+            foreach (Archivo archivo in Archivos_Importados)
+            {
+                if (archivo.Ruta.Equals(ruta))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public static String GetRuta()
         {
@@ -73,11 +90,12 @@ namespace C3DCombiner
             IniciarTablaSimbolos();
 
             Codigo3D.Dock = DockStyle.Fill;
+            Codigo3D.Grammar = new _3DGrammar();
            
         }
 
         public static void IniciarConsola()
-        {
+        {            
             Consola.Multiline = true;
             Consola.ScrollBars = RichTextBoxScrollBars.Both;
             Consola.WordWrap = false;
@@ -89,7 +107,7 @@ namespace C3DCombiner
 
         public static void ImprimirConsola(String mensaje)
         {
-            Consola.Text = Consola.Text + "> " + mensaje + "\n";
+            Consola.Text +=  mensaje;
             Consola.Select(Consola.Text.Length, 0);
             Consola.ScrollToCaret();
         }
@@ -190,6 +208,7 @@ namespace C3DCombiner
         }
         public static void Limpiar()
         {
+            
             LimpiarConsola();
             LimpiarDatosErrores();
             LimpiarDatosTablaSimbolos();

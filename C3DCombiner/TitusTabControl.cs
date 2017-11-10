@@ -148,6 +148,7 @@ namespace C3DCombiner
                 TTaux.GuardarArchivo();
                 this.Refresh();
                 this.UpdateLayout();
+                TitusTools.tree.Refrescar();
             }
         }
 
@@ -159,6 +160,7 @@ namespace C3DCombiner
                 TTaux.GuardarComoArchivo();
                 this.Refresh();
                 this.UpdateLayout();
+                TitusTools.tree.Refrescar();
             }
         }
 

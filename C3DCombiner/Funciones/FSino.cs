@@ -18,5 +18,21 @@ namespace C3DCombiner.Funciones
             this.Ambito = Ambito;
             this.Padre = null;
         }
+
+        public String Generar3D(String salida)
+        {
+            String cadena = "\t\t//Comienza sino\n";
+
+            if (!TitusTools.HayErrores())
+            {
+                foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
+                {
+                    cadena += sim.Generar3D();
+                }
+                cadena += "\t\t" + "//Termina sino\n";
+            }
+
+            return cadena;
+        }
     }
 }

@@ -184,6 +184,8 @@ namespace C3DCombiner
             var DIMENSION_METODO = new NonTerminal(Constante.DIMENSION_METODO);
             var LLAMADA = new NonTerminal(Constante.LLAMADA);
             var SI = new NonTerminal(Constante.SI);
+            var LISTA_SINOSIS = new NonTerminal(Constante.LISTA_SINOSIS);
+            var LISTA_SINOSI = new NonTerminal(Constante.LISTA_SINOSI);
             var SINO = new NonTerminal(Constante.SINO);
             var SINOSI = new NonTerminal(Constante.SINOSI);
             var ELEGIR = new NonTerminal(Constante.ELEGIR);
@@ -201,6 +203,7 @@ namespace C3DCombiner
             var LISTA_ARCHIVO = new NonTerminal(Constante.LISTA_ARCHIVO);
             var ARCHIVO = new NonTerminal(Constante.ARCHIVO);
             var X = new NonTerminal(Constante.X);
+            var LLAMADA_EXP = new NonTerminal(Constante.LLAMADA_EXP);
 
             INICIO.Rule = LISTA_IMPORTAR + LISTA_CLASE
                 | LISTA_CLASE;
@@ -227,12 +230,23 @@ namespace C3DCombiner
                 | VISIBILIDAD + DECLARACION + TPuntoComa
                 ;
 
-            FUNCION.Rule = TSobrescribirOLC + VISIBILIDAD + TIPO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | VISIBILIDAD + TIPO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | TSobrescribirOLC + VISIBILIDAD + TVoid + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | VISIBILIDAD + TVoid + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | TPrincipal + TParentesis_Izq + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | VISIBILIDAD + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+
+            LISTA_ID.Rule = this.MakeListRule(LISTA_ID, TComa, Id);
+
+
+            DECLARACION.Rule = TIPO + LISTA_ID + TIgual + EXP                
+                | TIPO + Id + LISTA_DIMENSIONES
+                | TIPO + Id + LISTA_DIMENSIONES + TIgual + EXP
+                | TIPO + LISTA_ID
+                ;
+
+            FUNCION.Rule = /*7*/TSobrescribirOLC + VISIBILIDAD + TIPO + DIMENSIONES_METODO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | /*6*/TSobrescribirOLC + VISIBILIDAD + TVoid + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | /*5*/VISIBILIDAD + TVoid + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | /*2*/TPrincipal + TParentesis_Izq + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | /*4*/VISIBILIDAD + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | /*6*/VISIBILIDAD + TIPO + DIMENSIONES_METODO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | /*5*/VISIBILIDAD + TIPO + Id + TParentesis_Izq + LISTA_PARAMETROS + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
                 ;
 
 
@@ -288,17 +302,9 @@ namespace C3DCombiner
                 | Id
                 ;
 
-            LISTA_ID.Rule = this.MakeListRule(LISTA_ID, TComa, Id);
-
             LISTA_DIMENSIONES.Rule = this.MakePlusRule(LISTA_DIMENSIONES, DIMENSION);
 
             DIMENSION.Rule = TCorchete_Izq + EXP + TCorchete_Der;
-
-            DECLARACION.Rule = TIPO + LISTA_ID + TIgual + EXP 
-                | TIPO + LISTA_ID 
-                | TIPO + Id + LISTA_DIMENSIONES 
-                | TIPO + Id + LISTA_DIMENSIONES + TIgual + EXP 
-                ;
 
 
             ASIGNACION.Rule = OBJETO + Id + LISTA_DIMENSIONES + TIgual + EXP
@@ -316,15 +322,12 @@ namespace C3DCombiner
 
             SI.Rule = TSi + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + SINOSI;
             
-                ;
-
             SINOSI.Rule = TSino + TSi + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + SINOSI
-                |SINO
-                |Empty
+                | SINO
+                | Empty
                 ;
 
             SINO.Rule = TSino + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | Empty
                 ;
 
             MIENTRAS.Rule = TMientras + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der;
@@ -335,8 +338,8 @@ namespace C3DCombiner
 
             REPETIR.Rule = TRepetir + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + TUntil + TParentesis_Izq + EXP + TParentesis_Der + TPuntoComa;
 
-            PARA.Rule = TPara + TParentesis_Izq + ASIGNACION + TPuntoComa + EXP + TPuntoComa + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
-                | TPara + TParentesis_Izq + DECLARACION + TPuntoComa + EXP + TPuntoComa + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+            PARA.Rule = TPara + TParentesis_Izq + ASIGNACION + TPuntoComa + EXP + TPuntoComa + ASIGNACION + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
+                | TPara + TParentesis_Izq + DECLARACION + TPuntoComa + EXP + TPuntoComa + ASIGNACION + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der
                 ;            
 
             LISTA_EXPS.Rule = LISTA_EXP
@@ -371,13 +374,16 @@ namespace C3DCombiner
                 | TTrue
                 | TFalse
                 | TEste
-                | OBJETO + Id
+                | LLAMADA_EXP
+                | TNew + Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
+                ;
+
+            LLAMADA_EXP.Rule = OBJETO + Id
                 | OBJETO + Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
                 | OBJETO + Id + LISTA_DIMENSIONES
                 | Id
                 | Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
                 | Id + LISTA_DIMENSIONES
-                | TNew + Id + TParentesis_Izq + LISTA_EXPS + TParentesis_Der
                 ;
 
             OBJETO.Rule = MakePlusRule(OBJETO, HIJO);

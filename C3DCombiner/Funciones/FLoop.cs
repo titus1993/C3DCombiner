@@ -18,5 +18,25 @@ namespace C3DCombiner.Funciones
             this.Ambito = Ambito;
             this.Padre = null;
         }
+
+        public String Generar3D()
+        {
+            String cadena = "\t\t//Comienza loop\n";
+
+
+            String V = TitusTools.GetEtq();
+            String F = TitusTools.GetEtq();
+
+            cadena += "\t" + V + ":\n";
+            foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
+            {
+                cadena += sim.Generar3D();
+            }            
+            cadena += "\t\t" + "goto " + V + ";\n";
+            
+            cadena += "\t" + F + "://Termina loop\n";
+            
+            return cadena;
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace C3DCombiner
                     {
                         if (sim.Rol.Equals(Constante.DECLARACION))
                         {
+                            sim.Ambito.Nombre = "§global§";
                             sim.Posicion = pos;
                             pos++;
                         }

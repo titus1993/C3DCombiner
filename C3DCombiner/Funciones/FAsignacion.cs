@@ -32,5 +32,11 @@ namespace C3DCombiner.Funciones
             }
             this.Padre = null;
         }
+
+        public String Generar3D()
+        {
+            String cadena = "";
+            return cadena;
+        }
     }
 }

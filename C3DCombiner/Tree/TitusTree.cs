@@ -115,7 +115,7 @@ namespace C3DCombiner
             ToolStripMenuItem LRuta = new ToolStripMenuItem("Ver ubicacion");
             LRuta.Click += LRuta_Click;
 
-            docMenu.Items.AddRange(new ToolStripMenuItem[] { nuevoacf, LCrearCarpeta, LEliminar, LRuta });
+            docMenu.Items.AddRange(new ToolStripMenuItem[] { nuevoacf, LCrearCarpeta/*, LEliminar*/, LRuta });
 
             this.ContextMenuStrip = docMenu;
         }
@@ -236,7 +236,7 @@ namespace C3DCombiner
             foreach (var file in DirectorioInfo.GetFiles())
             {
                 TreeNode nodo = null;
-                if (Path.GetExtension(file.ToString()).ToLower() == ".ocl")
+                if (Path.GetExtension(file.ToString()).ToLower() == ".olc")
                 {
                     nodo = new TreeNode(file.Name, 1, 1);
                 }

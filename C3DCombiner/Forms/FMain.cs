@@ -1,4 +1,6 @@
-﻿using System;
+﻿using C3DCombiner.Forms;
+using C3DCombiner.Funciones;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +14,7 @@ namespace C3DCombiner
 {
     public partial class FMain : Form
     {
-        
+
 
         public FMain()
         {
@@ -20,7 +22,7 @@ namespace C3DCombiner
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
-        
+
         private void FMain_Load(object sender, EventArgs e)
         {
             TitusTools.IniciarEstaticos();
@@ -36,11 +38,9 @@ namespace C3DCombiner
             Tab3d.Controls.Add(TitusTools.Codigo3D);
             Tab3d.Controls.Add(panel);
             //configuramos el label
-            
 
 
-            TitusTools.Tabs.agregarNewTab(0);            
-
+            TitusTools.Tabs.agregarNewTab(0);                        
         }
 
         Label panel;
@@ -60,7 +60,7 @@ namespace C3DCombiner
 
         private void AbrirCarpetaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             TitusTools.FBAbrirCarpeta.ShowDialog();
 
             String directorio = TitusTools.FBAbrirCarpeta.SelectedPath;
@@ -121,6 +121,45 @@ namespace C3DCombiner
         private void EjecutarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TitusTools.Tabs.Ejecutar();
+        }
+
+        private void iniciarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!TitusTools.Usuario.Estado)
+            {
+                Login login = new Login();
+                login.Show();
+            }
+            else
+            {
+                MessageBox.Show("Ya existe una sesion abierta, cierrela para iniciar sesion nuevamente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TitusTools.Usuario.Estado)
+            {
+                TitusTools.Usuario = new BD.Usuario();
+                MessageBox.Show("Ha cerrado su sesion exitosamente, si desea utilizar el modulo de codigo compartido inicie sesion nuevamente", "Sesion cerrada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No se ha iniciado ninguna sesion", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void compartirClaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TitusTools.Usuario.Estado)
+            {
+                Compartir compartir = new Compartir();
+                compartir.Show();
+            }
+            else
+            {
+                MessageBox.Show("No se ha iniciado ninguna sesion", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

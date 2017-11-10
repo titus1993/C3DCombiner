@@ -27,34 +27,36 @@ namespace C3DCombiner.Funciones
             String retorno = TitusTools.GetEtq();           
 
             Nodo3D cond = Condicion.Generar3D();
-
-            if (cond.Tipo == Constante.TBooleano)
+            if (!TitusTools.HayErrores())
             {
-                cadena += "\t" + retorno + ":\n";
-                cadena += cond.Codigo;
-                if (cond.V == "" && cond.F == "")
+                if (cond.Tipo == Constante.TBooleano)
                 {
-                    cond.V = TitusTools.GetEtq();
-                    cond.F = TitusTools.GetEtq();
+                    cadena += "\t" + retorno + ":\n";
+                    cadena += cond.Codigo;
+                    if (cond.V == "" && cond.F == "")
+                    {
+                        cond.V = TitusTools.GetEtq();
+                        cond.F = TitusTools.GetEtq();
 
-                    cadena += "\t\t" + "if " + cond.Valor + " == 1 goto " + cond.V + ";\n";
-                    cadena += "\t\t" + "goto " + cond.F + ";\n";
+                        cadena += "\t\t" + "if " + cond.Valor + " == 1 goto " + cond.V + ";\n";
+                        cadena += "\t\t" + "goto " + cond.F + ";\n";
 
+                    }
+                    cadena += "\t" + cond.V + ":\n";
+
+                    foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
+                    {
+                        cadena += sim.Generar3D();
+                    }
+
+                    cadena += "\t\t" + "goto " + retorno + ";\n";
+                    cadena += "\t" + cond.F + "://Termina mientras\n";
                 }
-                cadena += "\t" + cond.V + ":\n";
-
-                foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
+                else
                 {
-                    cadena += sim.Generar3D();
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "El ciclo while esperaba un tipo booleano no un tipo " + cond.Tipo, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
                 }
-
-                cadena += "\t\t" + "goto " + retorno + ";\n";
-                cadena += "\t" + cond.F + "://Termina mientras\n";
-            }
-            else
-            {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "El ciclo while esperaba un tipo booleano no un tipo " + cond.Tipo, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
-            }
+            }            
 
             return cadena;
         }

@@ -16,6 +16,8 @@ namespace C3DCombiner.Ejecucion
         public Simbolo Padre = null;
         public Object Valor = null;
 
+        public Simbolo Siguiente = null;
+        public Simbolo Anterior = null;
 
         public Simbolo(String visibilidad, String tipo, String nombre, String rol, int fila, int columna, Ambito ambito, Object valor)
         {
@@ -32,7 +34,6 @@ namespace C3DCombiner.Ejecucion
 
         }
 
-
         public String Generar3D()
         {
             String cadena = "";
@@ -41,9 +42,11 @@ namespace C3DCombiner.Ejecucion
                 case Constante.TClase:
                     cadena = GenerarClase();
                     break;
+
                 case Constante.DECLARACION:
                     cadena = GenerarDeclaracion();
                     break;
+
                 case Constante.TMetodo:
                     cadena = GenerarMetodo();
                     break;
@@ -59,6 +62,38 @@ namespace C3DCombiner.Ejecucion
                 case Constante.TRepetir:
                     cadena = GenerarRepetir();
                     break;
+
+                case Constante.TLoop:
+                    cadena = GenerarLoop();
+                    break;
+
+                case Constante.TSi:
+                    cadena = GenerarSi();
+                    break;
+
+                case Constante.TElegir:
+                    cadena = GenerarElegir();
+                    break;
+
+                case Constante.TPara:
+                    cadena = GenerarPara();
+                    break;
+
+                case Constante.TContinuar:
+                    cadena = GenerarContinuar();
+                    break;
+
+                case Constante.TSalir:
+                    cadena = GenerarSalir();
+                    break;
+
+                case Constante.TRetorno:
+                    cadena = GenerarRetornar();
+                    break;
+
+                case Constante.TImprimir:
+                    cadena = GenerarImprimir();
+                    break;
             }
             return cadena;
         }
@@ -66,14 +101,9 @@ namespace C3DCombiner.Ejecucion
         private String GenerarClase()
         {
             String cadena = "";
-            foreach (Simbolo sim in Ambito.TablaSimbolo)
-            {
-                if (!sim.Rol.Equals(Constante.DECLARACION))
-                {
-                    cadena += sim.Generar3D();
-                }
-            }
-            return cadena;
+            FClase clase = (FClase)Valor;
+            cadena += clase.Generar3D();
+            return cadena;            
         }
 
         private String GenerarMetodo()
@@ -88,7 +118,7 @@ namespace C3DCombiner.Ejecucion
         {
             String cadena = "";
             FDeclaracion declaracion = (FDeclaracion)Valor;
-            cadena += declaracion.Generar3D();
+            cadena += declaracion.Generar3D(2);//es le envia 2 para que se aparte la posicion del this y el retorno
             return cadena;
         }
 
@@ -118,5 +148,110 @@ namespace C3DCombiner.Ejecucion
             return cadena;
         }
 
+        private String GenerarLoop()
+        {
+            String cadena = "";
+            FLoop loop = (FLoop)Valor;
+            cadena += loop.Generar3D();
+            return cadena;
+        }
+
+        private String GenerarPara()
+        {
+            String cadena = "";
+            FPara para = (FPara)Valor;
+            cadena += para.Generar3D();
+            return cadena;
+        }
+
+        //sentencias
+        private String GenerarSi()
+        {
+            String cadena = "";
+            FSi si = (FSi)Valor;
+            cadena += si.Generar3D();
+            return cadena;
+        }
+
+        private String GenerarElegir()
+        {
+            String cadena = "";
+            FElegir elegir = (FElegir)Valor;
+            cadena += elegir.Generar3D();
+            return cadena;
+        }
+
+        //otros
+        private String GenerarContinuar()
+        {
+            String cadena = "";
+            cadena += "\t\t§continuar§;\n";
+            return cadena;
+        }
+
+        private String GenerarSalir()
+        {
+            String cadena = "";
+            cadena += "\t\t§salir§;\n";
+            return cadena;
+        }
+
+        private String GenerarRetornar()
+        {
+            String cadena = "";
+            cadena += "\t\t§retornar§;\n"; 
+            return cadena;
+        }
+
+        private String GenerarImprimir()
+        {
+            String cadena = "";
+            FImprimir imprimir = (FImprimir)Valor;
+            cadena += imprimir.Generar3D();
+            return cadena;
+        }
+
+
+
+
+        public Simbolo BuscarVariable(String nombre)
+        {
+            Simbolo sim = null;
+
+            Simbolo aux = Hermano;
+
+            if (Hermano != null)
+            {
+                aux = Hermano;
+            }else if (Padre != null)
+            {
+                aux = Padre.Hermano;
+            }
+            while (aux != null)
+            {
+                if ((aux.Rol.Equals(Constante.PARAMETRO) || aux.Rol.Equals(Constante.DECLARACION)) && aux.Nombre.Equals(nombre))
+                {
+                    sim = aux;
+                    break;
+                }
+                if (aux.Hermano == null)
+                {
+                    aux = aux.Padre;
+                }
+                else
+                {
+                    aux = aux.Hermano;
+                }                
+            }
+
+
+
+            return sim;
+        }
+
+        public void BuscarVariableHerencia()
+        {
+
+        }
     }
 }

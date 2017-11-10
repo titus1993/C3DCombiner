@@ -104,15 +104,14 @@ namespace C3DCombiner.Funciones
 
                 case Constante.TBooleano:
                     this.Cadena = valor.ToString();
-                    if (this.Cadena.Equals(Constante.TTrue))
+                    this.Bool = Boolean.Parse(this.Cadena);
+                    if (this.Bool)
                     {
-                        this.Bool = true;
                         this.Entero = 1;
                         this.Decimal = 1;
                     }
                     else
                     {
-                        this.Bool = false;
                         this.Entero = 0;
                         this.Decimal = 0;
                     }
@@ -295,6 +294,10 @@ namespace C3DCombiner.Funciones
                     }
                     break;
 
+                case Constante.LLAMADA_OBJETO:
+                    codigo3d = LlamadaObjeto.Generar3D();
+                    break;
+
             }
             return codigo3d;
         }
@@ -331,7 +334,7 @@ namespace C3DCombiner.Funciones
             cadena += "\t\t" + t1 + " = " + "1;\n"; //temporal que guardara si es negativo o positivo
             cadena += "\t\t" + "if " + t0 + " >= 0 goto " + e1 + ";\n"; // si es negativo guardamos el -1
             cadena += "\t\t" + t1 + " = -1;\n";
-            cadena += "\t\t" + t0 + " = " + t0 + " * -1;\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " * " + t1 + ";\n";
             cadena += "\t" + e1 + ":\n";
             cadena += "\t\t" + t2 + " = 1;\n"; // temporal con el que sabremos el tamaño del numero  
             cadena += "\t" + e3 + ":\n";
@@ -385,6 +388,7 @@ namespace C3DCombiner.Funciones
 
             cadena += "\t" + e9 + ":\n";
             cadena += "\t\t" + "Heap[H] = 0;\n";
+            cadena += "\t\t" + "H = H + 1;\n";
 
             codigo3d.Codigo = cadena;
             codigo3d.Tipo = Constante.TCadena;
@@ -715,10 +719,6 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                                        cad += "\t\t" + "Heap[H] = 0;\n";
-                                        cad += "\t\t" + "H = H + 1;\n";
-
-
 
                                         //cadena2
 
@@ -740,6 +740,8 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + toString.Codigo + cad;//asignamos la cadena al nodo de retorno
                                         codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato
@@ -816,9 +818,6 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
-                                        cad += "\t\t" + "Heap[H] = 0;\n";
-                                        cad += "\t\t" + "H = H + 1;\n";
-
 
 
                                         //cadena2
@@ -841,6 +840,8 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
                                         cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
                                         cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;//asignamos la cadena al nodo de retorno
                                         codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato
@@ -968,9 +969,9 @@ namespace C3DCombiner.Funciones
                                         codigo3d.Valor = TitusTools.GetTemp();
                                         String auxetq = TitusTools.GetEtq();
                                         cad += "\t\t" + auxtemp2 + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
-                                        cad += "\t\t" + codigo3d.Valor + " = 1\n";
-                                        cad += "\t\tif " + auxtemp2 + " > 0 then goto " + auxetq + "\n";
-                                        cad += "\t\t" + codigo3d.Valor + " = 0\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 1;\n";
+                                        cad += "\t\tif " + auxtemp2 + " > 0 goto " + auxetq + ";\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 0;\n";
                                         cad += "\t" + auxetq + ":\n";
                                         codigo3d.Codigo = cad;
                                         codigo3d.Tipo = Constante.TBooleano;
@@ -1660,11 +1661,13 @@ namespace C3DCombiner.Funciones
                                         }
 
                                         //agregar codigo para
+                                        String auxtemp2 = TitusTools.GetTemp();
                                         codigo3d.Valor = TitusTools.GetTemp();
                                         String auxetq = TitusTools.GetEtq();
-                                        cad += "\t\t" + codigo3d.Valor + " = 1\n";
-                                        cad += "\t\tif " + auxizq.Valor + " > " + auxder.Valor + " then goto " + auxetq + "\n";
-                                        cad += "\t\t" + codigo3d.Valor + " = 0\n";
+                                        cad += "\t\t" + auxtemp2 + " = " + auxizq.Valor + " + " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 1;\n";
+                                        cad += "\t\tif " + auxtemp2 + " == 2 goto " + auxetq + ";\n";
+                                        cad += "\t\t" + codigo3d.Valor + " = 0;\n";
                                         cad += "\t" + auxetq + ":\n";
                                         codigo3d.Codigo = cad;
                                         codigo3d.Tipo = Constante.TBooleano;
@@ -2164,7 +2167,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2223,7 +2226,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2239,7 +2242,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2255,7 +2258,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2282,7 +2285,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2298,7 +2301,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2314,7 +2317,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2345,7 +2348,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2386,7 +2389,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2430,7 +2433,7 @@ namespace C3DCombiner.Funciones
                                         cad += "\t\t" + "goto " + codigo3d.F + ";\n";
 
                                         codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + cad;
-                                        
+
                                         codigo3d.Tipo = Constante.TBooleano;
                                     }
                                     break;
@@ -2441,11 +2444,13 @@ namespace C3DCombiner.Funciones
                             }
                         }
                         break;
+
+                    default:
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+                        break;
                 }
-            }
-            else
-            {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
             }
             return codigo3d;
         }
@@ -2504,7 +2509,7 @@ namespace C3DCombiner.Funciones
                 {
                     TitusTools.InsertarError("Semantico", "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
                 }
-            }            
+            }
             return codigo3d;
         }
 
@@ -2576,7 +2581,7 @@ namespace C3DCombiner.Funciones
                 if (auxder.Tipo == Constante.TBooleano)
                 {
                     String cad = "";
-                    
+
                     if (auxder.V == "" && auxder.F == "")
                     {
                         auxder.V = TitusTools.GetEtq();
@@ -2680,7 +2685,7 @@ namespace C3DCombiner.Funciones
                     TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede " + auxizq.Tipo + " " + this.Tipo + " " + auxder.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
                 }
             }
-            
+
             return codigo3d;
         }
 
@@ -2735,14 +2740,6 @@ namespace C3DCombiner.Funciones
                     aux = Potencia(izq, der);
                     break;
 
-                case Constante.TAumento:
-                    aux = Aumento(izq);
-                    break;
-
-                case Constante.TDecremento:
-                    aux = Disminucion(izq);
-                    break;
-
                 case Constante.TMayor:
                     aux = Mayor(izq, der);
                     break;
@@ -2767,22 +2764,6 @@ namespace C3DCombiner.Funciones
                     aux = Diferente(izq, der);
                     break;
 
-                case Constante.TOr:
-                    aux = Or(izq, der);
-                    break;
-
-                case Constante.TXor:
-                    aux = Xor(izq, der);
-                    break;
-
-                case Constante.TAnd:
-                    aux = And(izq, der);
-                    break;
-
-                case Constante.TNot:
-                    aux = Not(der);
-                    break;
-
                 case Constante.TEntero:
                     aux = new FNodoExpresion(nodo);
                     break;
@@ -2791,18 +2772,93 @@ namespace C3DCombiner.Funciones
                     aux = new FNodoExpresion(nodo);
                     break;
 
-                case Constante.TCaracter:
-                    aux = new FNodoExpresion(nodo);
+                case Constante.Temporal:
+                    Variable variable = Tabla3D.BuscarVariable(this.Nombre);
+
+                    if (variable != null)
+                    {
+                        if (variable.Valor != null)
+                        {
+                            aux = (FNodoExpresion)variable.Valor;
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se le ha asignado ningun valor al temporal " + this.Nombre, "", Fila, Columna);
+                        }
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el temporal " + this.Nombre, "", Fila, Columna);                        
+                    }
                     break;
 
-                case Constante.TCadena:
-                    aux = new FNodoExpresion(nodo);
+                case Constante.TH:
+                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, this.Fila, this.Columna, Tabla3D.H);
                     break;
 
-                case Constante.TBooleano:
-                    aux = new FNodoExpresion(nodo);
+                case Constante.TP:
+                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, this.Fila, this.Columna, Tabla3D.P);
                     break;
 
+                case Constante.THeap:
+                    {
+                        FNodoExpresion acceso = this.Derecha.ResolverExpresion();
+                        if (acceso.Tipo.Equals(Constante.TEntero))
+                        {
+                            int tamanio = Tabla3D.Heap.Count - 1;
+                            if (acceso.Entero >= 0 && acceso.Entero <= tamanio)
+                            {
+                                FNodoExpresion val = Tabla3D.Heap.ElementAt(acceso.Entero);
+                                if (val != null)
+                                {
+                                    aux = new FNodoExpresion(val);
+                                }
+                                else
+                                {
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso a puntero nulo del heap" + this.Nombre, "", Fila, Columna);
+                                }
+                            }
+                            else
+                            {
+                                TitusTools.InsertarError(Constante.TErrorSemantico, "Indices del heap fuera de rango ", "", Fila, Columna);
+                            }
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "Solo se puede acceder al heap con un valor entero no un valor " + acceso.Tipo, "", Fila, Columna);
+                        }
+                    }
+                    break;
+
+                case Constante.TStack:
+                    {
+                        FNodoExpresion acceso = this.Derecha.ResolverExpresion();
+                        if (acceso.Tipo.Equals(Constante.TEntero))
+                        {
+                            int tamanio = Tabla3D.Stack.Count - 1;
+                            if (acceso.Entero >= 0 && acceso.Entero <= tamanio)
+                            {
+                                FNodoExpresion val = Tabla3D.Stack.ElementAt(acceso.Entero);
+                                if (val != null)
+                                {
+                                    aux = new FNodoExpresion(val);
+                                }
+                                else
+                                {
+                                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso a puntero nulo del stack" + this.Nombre, "", Fila, Columna);
+                                }
+                            }
+                            else
+                            {
+                                TitusTools.InsertarError(Constante.TErrorSemantico, "Indices del stack fuera de rango ", "", Fila, Columna);
+                            }
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "Solo se puede acceder al stack con un valor entero no un valor " + acceso.Tipo, "", Fila, Columna);
+                        }
+                    }
+                    break;
             }
             return aux;
         }
@@ -2824,22 +2880,7 @@ namespace C3DCombiner.Funciones
                             aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero + der.Decimal);
 
                             break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero + der.Caracter);
-
-                            break;
-
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Entero.ToString() + der.Cadena);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero + der.Entero);
-
-                            break;
-
+                            
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -2858,105 +2899,15 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal + der.Caracter);
-
-                            break;
-
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Decimal.ToString() + der.Cadena);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal + der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Caracter + der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Caracter + der.Decimal);
-
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Caracter.ToString() + der.Caracter.ToString());
-
-                            break;
-
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Caracter.ToString() + der.Cadena);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
-
-                case Constante.TCadena:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Cadena + der.Entero.ToString());
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Cadena + der.Decimal.ToString());
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Cadena + der.Caracter.ToString());
-
-                            break;
-
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TCadena, Constante.TCadena, Fila, Columna, izq.Cadena + der.Cadena);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero + der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero + der.Decimal);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Bool || der.Bool);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
             }
             return aux;
         }
@@ -2979,16 +2930,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero - der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero - der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3007,58 +2948,15 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal - der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal - der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Caracter - der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Caracter - der.Decimal);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero - der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero - der.Decimal);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede -, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
             }
             return aux;
         }
@@ -3076,15 +2974,6 @@ namespace C3DCombiner.Funciones
                 case Constante.TDecimal:
                     aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, -der.Decimal);
 
-                    break;
-
-                case Constante.TCaracter:
-                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, -der.Caracter);
-
-                    break;
-
-                case Constante.TBooleano:
-                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, -der.Entero);
                     break;
 
                 default:
@@ -3112,16 +3001,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero * der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero * der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3140,63 +3019,15 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal * der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal * der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Caracter * der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Caracter * der.Decimal);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero * der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero * der.Decimal);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Bool && der.Bool);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede *, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
             }
             return aux;
         }
@@ -3219,16 +3050,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero / der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero / der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3247,58 +3068,15 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal / der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal / der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Caracter / der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Caracter / der.Decimal);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero / der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero / der.Decimal);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede /, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
             }
             return aux;
         }
@@ -3324,19 +3102,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            double pc = Math.Pow(izq.Entero, der.Entero);
-                            int vc = (int)pc;
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, vc);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            double pb = Math.Pow(izq.Entero, der.Entero);
-                            int vb = (int)pb;
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, vb);
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3355,117 +3120,19 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, Math.Pow(izq.Decimal, der.Caracter));
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, Math.Pow(izq.Decimal, der.Entero));
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
-                    break;
-
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            double pe = Math.Pow(izq.Entero, der.Entero);
-                            int ve = (int)pe;
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, ve);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, Math.Pow(izq.Caracter, der.Decimal));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            double p = Math.Pow(izq.Entero, der.Entero);
-                            int v = (int)p;
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, v);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, Math.Pow(izq.Entero, der.Decimal));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-            }
-            return aux;
-        }
-
-        public FNodoExpresion Aumento(FNodoExpresion izq)
-        {
-            FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
-            switch (izq.Tipo)
-            {
-                case Constante.TEntero:
-                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero + 1);
-                    break;
-
-                case Constante.TDecimal:
-                    aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal + 1);
-                    break;
-
-                case Constante.TCaracter:
-                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Caracter + 1);
                     break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ++, " + izq.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
-
             }
             return aux;
         }
 
-        public FNodoExpresion Disminucion(FNodoExpresion izq)
-        {
-            FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
-            switch (izq.Tipo)
-            {
-                case Constante.TEntero:
-                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero - 1);
-                    break;
-
-                case Constante.TDecimal:
-                    aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal - 1);
-                    break;
-
-                case Constante.TCaracter:
-                    aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Caracter - 1);
-                    break;
-
-                default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ++, " + izq.Tipo, "Aqui va ruta", Fila, Columna);
-                    break;
-
-            }
-            return aux;
-        }
 
         public FNodoExpresion Mayor(FNodoExpresion izq, FNodoExpresion der)
         {
@@ -3597,16 +3264,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero < der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero < der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3625,66 +3282,14 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Decimal < der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Decimal < der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter < der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter < der.Decimal);
-
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter < der.Caracter);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero < der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero < der.Decimal);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero < der.Entero);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
 
             }
@@ -3709,16 +3314,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero == der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero == der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3737,89 +3332,14 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Decimal == der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Decimal == der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter == der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter == der.Decimal);
-
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter == der.Caracter);
-
-                            break;
-
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter.ToString().Equals(der.Cadena));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TCadena:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Cadena.Equals(der.Cadena));
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Cadena.Equals(der.Caracter.ToString()));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero == der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero == der.Decimal);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Bool == der.Bool);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
 
             }
@@ -3844,16 +3364,6 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero != der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Fila, Columna, izq.Entero != der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
@@ -3872,89 +3382,14 @@ namespace C3DCombiner.Funciones
 
                             break;
 
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Decimal != der.Caracter);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Decimal != der.Entero);
-
-                            break;
-
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                             break;
                     }
                     break;
 
-                case Constante.TCaracter:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter != der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter != der.Decimal);
-
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Caracter != der.Caracter);
-
-                            break;
-
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, !izq.Caracter.ToString().Equals(der.Cadena));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TCadena:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TCadena:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, !izq.Cadena.Equals(der.Cadena));
-                            break;
-
-                        case Constante.TCaracter:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, !izq.Cadena.Equals(der.Caracter.ToString()));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero != der.Entero);
-                            break;
-
-                        case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Entero != der.Decimal);
-
-                            break;
-
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Bool != der.Bool);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
 
             }
@@ -3982,6 +3417,10 @@ namespace C3DCombiner.Funciones
                             break;
                     }
                     break;
+
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    break;
             }
             return aux;
         }
@@ -4007,108 +3446,13 @@ namespace C3DCombiner.Funciones
                             break;
                     }
                     break;
-            }
-            return aux;
-        }
-
-        public FNodoExpresion Or(FNodoExpresion izq, FNodoExpresion der)
-        {
-            FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
-            switch (izq.Tipo)
-            {
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Bool || der.Bool);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ||, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
 
                 default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede ||, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
                     break;
             }
             return aux;
         }
 
-        public FNodoExpresion And(FNodoExpresion izq, FNodoExpresion der)
-        {
-            FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
-            switch (izq.Tipo)
-            {
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, izq.Bool && der.Bool);
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede &&, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede &&, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                    break;
-            }
-            return aux;
-        }
-
-        public FNodoExpresion Not(FNodoExpresion der)
-        {
-            FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
-            switch (der.Tipo)
-            {
-                case Constante.TBooleano:
-                    aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, !der.Bool);
-
-                    break;
-
-                default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede !, " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                    break;
-            }
-
-            return aux;
-        }
-
-        public FNodoExpresion Xor(FNodoExpresion izq, FNodoExpresion der)
-        {
-            FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
-            switch (izq.Tipo)
-            {
-                case Constante.TBooleano:
-                    switch (der.Tipo)
-                    {
-                        case Constante.TBooleano:
-                            aux = new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Fila, Columna, (!izq.Bool && der.Bool) || (izq.Bool && !der.Bool));
-
-                            break;
-
-                        default:
-                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede XOR/??, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                            break;
-                    }
-                    break;
-
-                default:
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede XOR/??, " + izq.Tipo + " con " + der.Tipo, "Aqui va ruta", Fila, Columna);
-                    break;
-            }
-            return aux;
-        }
     }
 }

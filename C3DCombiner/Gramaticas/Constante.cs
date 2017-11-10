@@ -171,5 +171,25 @@ namespace C3DCombiner
         public const String LLAMADA_OBJETO = "llamada_objeto";
         public const String LLAMADA_METODO_ARREGLO = "llamada_metodo_arreglo";
 
+
+        public const String RELACIONAL = "relacional";
+        public const String ARITMETICA = "aritmetica";
+        public const String Etiqueta = "etiqueta";
+        public const String Temporal = "temporal";
+        public const String PrintNum = "printnum";
+        public const String PrintChar = "printchar";
+        public const String PrintDouble = "printdouble";
+        public const String TPrint = "print";
+        public const String TIf = "if";
+        public const String TIfFalse = "ifFalse";
+        public const String TGoto = "goto";
+        public const String TMain = "main";
+        public const String THeap = "heap";
+        public const String TStack = "stack";
+        public const String TH = "h";
+        public const String TP = "p";
+
+
+        public const String Tope = "tope";
     }
 }

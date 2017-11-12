@@ -27,6 +27,7 @@ namespace C3DCombiner
                         }
                         else
                         {
+                            sim.Ambito.Nombre = "§global§";
                             if (simbolo.Tamaño > 0)
                             {
                                 SetPosicion(sim, 0);
@@ -54,7 +55,7 @@ namespace C3DCombiner
                 case Constante.TConstructor:
                     foreach (Simbolo sim in ((FMetodo)simbolo.Valor).Parametros)
                     {
-                        sim.Posicion = pos++;
+                        sim.Posicion = pos;
                         pos++;
                     }
 
@@ -200,7 +201,7 @@ namespace C3DCombiner
                     {
                         List<String> archivos = new List<String>();
 
-                        archivos.Add(Nodo.ChildNodes[2].Token.ValueString);
+                        archivos.Add(Nodo.ChildNodes[1].Token.ValueString);
 
                         return archivos;
                     }
@@ -641,8 +642,8 @@ namespace C3DCombiner
                         else
                         {
                             FNodoExpresion val = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[3]);
-                            List<FNodoExpresion> dim = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
-                            FDeclaracion dec = new FDeclaracion(Constante.TProtegido, tipo, Nodo.ChildNodes[1].Token.ValueString, dim, new Ambito(Constante.DECLARACION), Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column, null);
+                            List<FNodoExpresion> dim = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);                            
+                            FDeclaracion dec = new FDeclaracion(Constante.TProtegido, tipo, Nodo.ChildNodes[1].Token.ValueString, dim, new Ambito(Constante.DECLARACION), Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column, val);
                             Simbolo sim = new Simbolo(dec.Visibilidad, dec.Tipo, dec.Nombre, Constante.DECLARACION, dec.Fila, dec.Columna, dec.Ambito, dec)
                             {
                                 Tamaño = 1
@@ -1247,7 +1248,7 @@ namespace C3DCombiner
                         }
                         else if (Nodo.ChildNodes.Count == 3)
                         {
-                            if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.TNuevo))
+                            if (Nodo.ChildNodes[0].Term.Name.Equals(Constante.TNew))
                             {
                                 List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[2]);
                                 FNuevo fn = new FNuevo(Nodo.ChildNodes[1].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
@@ -1314,6 +1315,13 @@ namespace C3DCombiner
                                         List<FNodoExpresion> p = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
                                         FLlamadaMetodo lm = new FLlamadaMetodo(Nodo.ChildNodes[0].Token.ValueString, p, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
                                         return new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
+                                    }
+
+                                case Constante.LISTA_DIMENSIONES:
+                                    {
+                                        List<FNodoExpresion> d = (List<FNodoExpresion>)RecorrerArbol(Nodo.ChildNodes[1]);
+                                        FLlamadaArreglo lm = new FLlamadaArreglo(Nodo.ChildNodes[0].Token.ValueString, d, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1);
+                                        return new FLlamadaObjeto(Constante.LLAMADA_ARREGLO, lm.Nombre, lm.Fila, lm.Columna, lm);
                                     }
                             }
                         }

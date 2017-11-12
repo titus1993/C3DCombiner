@@ -298,6 +298,14 @@ namespace C3DCombiner.Funciones
                     codigo3d = LlamadaObjeto.Generar3D();
                     break;
 
+                case Constante.TNuevo:
+                    codigo3d = Nuevo.Generar3D();
+                    break;
+
+                case Constante.TNew:
+                    codigo3d = Nuevo.Generar3D();
+                    break;
+
             }
             return codigo3d;
         }

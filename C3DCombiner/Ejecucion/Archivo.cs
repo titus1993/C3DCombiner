@@ -26,6 +26,13 @@ namespace C3DCombiner.Ejecucion
             this.Imports = Imports;
             this.Clases = Clases;
             this.Ruta = Ruta;
+
+            foreach (Simbolo sim in Clases.TablaSimbolo)
+            {
+                FClase clase = (FClase)sim.Valor;
+                clase.Padre = sim;
+                clase.ArchivoPadre = this;
+            }
         }
 
         public void IniciarTablaSimbolos()
@@ -192,6 +199,22 @@ namespace C3DCombiner.Ejecucion
             }
         }
 
+        public void EjecutarConMain()
+        {
+            CrearTablasSimbolos();
+            TitusTools.Codigo3D.Text = Generar3DConMain();
+
+            int i = 0;
+            foreach (Archivo archivo in TitusTools.Archivos_Importados)
+            {
+                if (i > 0)
+                {
+                    TitusTools.Codigo3D.Text += archivo.Generar3D();
+                }
+                i++;
+            }
+        }
+
         public void Ejecutar()
         {
             CrearTablasSimbolos();
@@ -200,6 +223,7 @@ namespace C3DCombiner.Ejecucion
 
         public void GenerarImports()
         {
+            List<String> nuevosImports = new List<String>();
             foreach (String ruta in Imports)
             {
                 if (!TitusTools.ExisteArchivo(ruta))
@@ -208,7 +232,7 @@ namespace C3DCombiner.Ejecucion
                     {
                         ObtenerCodigoArchivos(ruta, 0);
                     }
-                    else if (ruta.ToLower().Contains("/"))
+                    else if (ruta.ToLower().Contains("\\"))
                     {
                         if (ruta.ToLower().Contains(".tree"))
                         {
@@ -227,11 +251,13 @@ namespace C3DCombiner.Ejecucion
                     {
                         if (ruta.ToLower().Contains(".tree"))
                         {
-                            ObtenerCodigoArchivos(ruta, 3);
+                            nuevosImports.Add(Path.GetDirectoryName(this.Ruta) + "\\" + ruta);
+                            ObtenerCodigoArchivos(Path.GetDirectoryName(this.Ruta) + "\\" + ruta, 1);
                         }
                         else if (ruta.ToLower().Contains(".olc"))
                         {
-                            ObtenerCodigoArchivos(ruta, 4);
+                            nuevosImports.Add(Path.GetDirectoryName(this.Ruta) + "\\" + ruta);
+                            ObtenerCodigoArchivos(Path.GetDirectoryName(this.Ruta) + "\\" + ruta, 2);
                         }
                         else
                         {
@@ -240,6 +266,7 @@ namespace C3DCombiner.Ejecucion
                     }
                 }
             }
+            Imports = nuevosImports;
         }
 
         BaseDatos Base = new BaseDatos();
@@ -332,7 +359,7 @@ namespace C3DCombiner.Ejecucion
                         nueva += "\\" + ruta;
                         if (File.Exists(nueva))
                         {
-                            Language = new LanguageData(new TreeGrammar());
+                            Language = new LanguageData(new OLCGrammar());
                             parser = new Parser(Language);
                             codigo = File.ReadAllText(nueva);
                             Tipo = 0;
@@ -390,7 +417,25 @@ namespace C3DCombiner.Ejecucion
         }
 
 
+        public String Generar3DConMain()
+        {
+            String cadena = "";
+            int i = 0;
+            foreach (Simbolo sim in Clases.TablaSimbolo)
+            {
+                if (i==0)
+                {
+                    cadena += sim.Generar3DConMain();
+                }
+                else
+                {
 
+                    cadena += sim.Generar3D();
+                }
+                i++;
+            }
+            return cadena;
+        }
 
     }
 }

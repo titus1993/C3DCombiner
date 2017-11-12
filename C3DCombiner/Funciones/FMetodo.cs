@@ -57,11 +57,56 @@ namespace C3DCombiner.Funciones
             return cadena;
         }
 
+        public String Generar3DConstructor()
+        {
+            String cadena = "";
+
+            Simbolo clase = Padre.BuscarClasePadre();
+
+            cadena += "void " + clase.Nombre + "_constructor";
+
+            foreach (Simbolo s in Parametros)
+            {
+                FParametro d = (FParametro)s.Valor;
+                cadena += "_" + s.Tipo + d.Dimensiones.ToString();
+            }
+
+            cadena += "(){\n";
+
+            foreach (Simbolo simbolo in Ambito.TablaSimbolo)
+            {
+                cadena += simbolo.Generar3D();
+            }
+
+            cadena += "}\n\n";
+
+            return cadena;
+        }
+
+        public String GenerarPrincipal3D()
+        {
+            String cadena = "";
+            String temp = TitusTools.GetTemp();
+            Simbolo clasePadre = Padre.BuscarClasePadre();
+
+            cadena += "main(){\n";
+            cadena += "\t\t" + temp + " = P + 0;\n";
+            cadena += "\t\t" + "Stack[" + temp + "] = H;\n";
+            cadena += "\t\t" + "init_" +  clasePadre.Nombre + "();\n";
+            foreach (Simbolo simbolo in Ambito.TablaSimbolo)
+            {
+                cadena += simbolo.Generar3D();
+            }
+
+            cadena += "}\n\n";
+            return cadena;
+        }
+
         public String GetNombre3D()
         {
             String cadena = "";
 
-            cadena += this.Padre.Padre.Nombre + "_" + this.Nombre + "_" + this.Tipo;
+            cadena += this.Padre.Padre.Nombre + "_" + this.Nombre + this.Dimensiones.ToString() + "_" + this.Tipo;
 
             foreach (Simbolo s in Parametros)
             {
@@ -127,6 +172,10 @@ namespace C3DCombiner.Funciones
                             case Constante.TPrint:
                                 EjecutarPrint(sim);
                                 break;
+
+                            case Constante.TError:
+                                EjecutarError(sim);
+                                break;
                         }
                     }
                     else
@@ -136,6 +185,23 @@ namespace C3DCombiner.Funciones
                 }
             }
             Tabla3D.SacarAmbito();
+        }
+
+        public void EjecutarError(Simbolo sim)
+        {
+            switch (sim.Nombre)
+            {
+                case "1":
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "Acceso fuera de los limites", TitusTools.GetRuta(), sim.Fila, sim.Columna);
+                    break;
+
+                case "2":
+                    break;
+
+                default:
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "Error desconocido", TitusTools.GetRuta(), sim.Fila, sim.Columna);
+                    break;
+            }
         }
 
         public void EjecutarLlamadaMetodo(Simbolo sim)

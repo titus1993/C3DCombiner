@@ -71,7 +71,7 @@ namespace C3DCombiner.Funciones
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontroo el temporal " + this.Acceso.Nombre, TitusTools.GetRuta(), this.Acceso.Fila, this.Acceso.Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontroo el temporal " + this.Temporal, TitusTools.GetRuta(), this.Valor.Fila, this.Valor.Columna);
             }
         }
 

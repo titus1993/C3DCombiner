@@ -74,7 +74,7 @@ namespace C3DCombiner
                         //ejecucion del primer archivo en la lista
                         if (TitusTools.Archivos_Importados.Count > 0 && !TitusTools.HayErrores())
                         {
-                            TitusTools.Archivos_Importados[0].Ejecutar();
+                            TitusTools.Archivos_Importados[0].EjecutarConMain();
                         }
                         if (TitusTools.HayErrores())
                         {

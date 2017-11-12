@@ -140,7 +140,15 @@ namespace C3DCombiner
                         }
                         else if (Nodo.ChildNodes.Count == 2)
                         {
-                            return new Simbolo(Constante.TPublico, Constante.TGoto, Nodo.ChildNodes[1].Token.ValueString, Constante.TGoto, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TGoto), null);
+                            if (Nodo.ChildNodes[0].Token.ValueString.Equals(Constante.TGoto))
+                            {
+                                return new Simbolo(Constante.TPublico, Constante.TGoto, Nodo.ChildNodes[1].Token.ValueString, Constante.TGoto, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TGoto), null);
+                            }
+                            else
+                            {
+                                return new Simbolo(Constante.TPublico, Constante.TError, Nodo.ChildNodes[1].Token.ValueString, Constante.TError, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TError), null);
+                            }
+                            
                         }
                         else if (Nodo.ChildNodes.Count == 3)
                         {

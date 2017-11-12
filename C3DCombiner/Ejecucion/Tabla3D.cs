@@ -77,6 +77,7 @@ namespace C3DCombiner.Ejecucion
                     break;
                 }
             }
+            SacarVariable();//sacamos el tope
         }
 
         public static Boolean ExisteVariable(String nombre)

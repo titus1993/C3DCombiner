@@ -138,7 +138,7 @@ namespace C3DCombiner.BD
                 String url = "http://localhost:1993/Archivo?id=";
                 AbrirConexion();
 
-                SqlCommand comando = new SqlCommand("insert into archivo (nombre, descripcion, codigo, url, usuario) values('" + nombre.Replace(".tree","") + "','" + descripcion + "','" + codigo + "','" + url + "'," + TitusTools.Usuario.Id.ToString() + ");", conexion);
+                SqlCommand comando = new SqlCommand("insert into archivo (nombre, descripcion, codigo, url, usuario) values('" + nombre.Replace(".tree","") + "','" + descripcion + "','" + codigo.Replace("'","''") + "','" + url + "'," + TitusTools.Usuario.Id.ToString() + ");", conexion);
 
 
                 comando.ExecuteNonQuery();
@@ -173,7 +173,7 @@ namespace C3DCombiner.BD
             try
             {
                 AbrirConexion();
-                SqlCommand comando = new SqlCommand("update archivo set descripcion = '" + descripcion + "', codigo = '" + codigo + "', modificacion = getdate() where nombre = '" + nombre.Replace(".tree","") + "' and usuario =  " + TitusTools.Usuario.Id + ";", conexion);
+                SqlCommand comando = new SqlCommand("update archivo set descripcion = '" + descripcion + "', codigo = '" + codigo.Replace("'","''") + "', modificacion = getdate() where nombre = '" + nombre.Replace(".tree","") + "' and usuario =  " + TitusTools.Usuario.Id + ";", conexion);
                 comando.ExecuteNonQuery();
                 CerrarConexion();
             }

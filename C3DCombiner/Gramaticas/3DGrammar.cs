@@ -71,7 +71,7 @@ namespace C3DCombiner.Gramaticas
             var TIf = ToTerm(Constante.TIf);
             var TIfFalse = ToTerm(Constante.TIfFalse);
 
-
+            var TError = ToTerm(Constante.TError);
 
 
             MarkReservedWords(Constante.TPrint);
@@ -126,6 +126,7 @@ namespace C3DCombiner.Gramaticas
                 | TGoto + etq + TPuntoComa//2
                 | Id + TParentesis_Izq + TParentesis_Der + TPuntoComa//1
                 | TPrint + TParentesis_Izq + PRINT + TComa + temp + TParentesis_Der + TPuntoComa//3
+                | TError + TParentesis_Izq + Entero + TParentesis_Der + TPuntoComa//2
                 ;
 
             PRINT.Rule = printchar

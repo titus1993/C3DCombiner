@@ -167,5 +167,11 @@ namespace C3DCombiner
             Ast a = new Ast();
             a.Show();
         }
+
+        private void registrarseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Registro r = new Registro();
+            r.Show();
+        }
     }
 }

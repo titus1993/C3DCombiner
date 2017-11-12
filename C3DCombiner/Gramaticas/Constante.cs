@@ -189,6 +189,7 @@ namespace C3DCombiner
         public const String TH = "h";
         public const String TP = "p";
 
+        public const String TError = "error";
 
         public const String Tope = "tope";
     }

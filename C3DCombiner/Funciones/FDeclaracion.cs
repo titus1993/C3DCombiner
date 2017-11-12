@@ -270,9 +270,12 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default://asginacion a una variable de tipo objeto
-                            if (Tipo != Valor.Tipo)
+                            if (Tipo == val.Tipo)
                             {
-
+                                cadena += val.Codigo;
+                                String temp = TitusTools.GetTemp();
+                                cadena += "\t\t" + temp + " = P + " + pos.ToString() + ";//Declaracion de la variable " + this.Nombre + "\n";
+                                cadena += "\t\t" + "Stack[" + temp + "] = " + val.Valor + ";\n";
                             }
                             else
                             {
@@ -286,7 +289,7 @@ namespace C3DCombiner.Funciones
             {
                 if (Valor != null)
                 {
-
+                    
                 }
                 else
                 {
@@ -326,9 +329,9 @@ namespace C3DCombiner.Funciones
             return cadena;
         }
 
-        public String Generar3DInit(String tempH)
+        public String Generar3DInit(String tempH, int nueva_pos)
         {
-            int pos = Padre.Posicion;//sumamos la posicion donde se van a generar las variables en el Heap
+            int pos = Padre.Posicion + nueva_pos;//sumamos la posicion donde se van a generar las variables en el Heap
             String cadena = "";
 
             if (Dimensiones.Count == 0)//no es arreglo
@@ -565,7 +568,7 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default://asginacion a una variable de tipo objeto
-                            if (Tipo != Valor.Tipo)
+                            if (Tipo == Valor.Tipo)
                             {
 
                             }

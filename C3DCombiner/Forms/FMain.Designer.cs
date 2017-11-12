@@ -47,6 +47,8 @@
             this.iniciarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compartirClaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modulosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reporteASTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TabsNotificaciones = new System.Windows.Forms.TabControl();
@@ -56,8 +58,7 @@
             this.Tab3d = new System.Windows.Forms.TabPage();
             this.Tab3dOptimizado = new System.Windows.Forms.TabPage();
             this.TabSimbolos = new System.Windows.Forms.TabPage();
-            this.modulosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reporteASTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registrarseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -197,7 +198,8 @@
             this.codigoCompartidoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.iniciarSesionToolStripMenuItem,
             this.cerrarSesionToolStripMenuItem,
-            this.compartirClaseToolStripMenuItem});
+            this.compartirClaseToolStripMenuItem,
+            this.registrarseToolStripMenuItem});
             this.codigoCompartidoToolStripMenuItem.Name = "codigoCompartidoToolStripMenuItem";
             this.codigoCompartidoToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
             this.codigoCompartidoToolStripMenuItem.Text = "Codigo Compartido";
@@ -222,6 +224,21 @@
             this.compartirClaseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.compartirClaseToolStripMenuItem.Text = "Compartir clase";
             this.compartirClaseToolStripMenuItem.Click += new System.EventHandler(this.compartirClaseToolStripMenuItem_Click);
+            // 
+            // modulosToolStripMenuItem
+            // 
+            this.modulosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reporteASTToolStripMenuItem});
+            this.modulosToolStripMenuItem.Name = "modulosToolStripMenuItem";
+            this.modulosToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.modulosToolStripMenuItem.Text = "Reportes";
+            // 
+            // reporteASTToolStripMenuItem
+            // 
+            this.reporteASTToolStripMenuItem.Name = "reporteASTToolStripMenuItem";
+            this.reporteASTToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.reporteASTToolStripMenuItem.Text = "Reporte AST";
+            this.reporteASTToolStripMenuItem.Click += new System.EventHandler(this.reporteASTToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -326,20 +343,12 @@
             this.TabSimbolos.Text = "Tabla de Simbolos";
             this.TabSimbolos.UseVisualStyleBackColor = true;
             // 
-            // modulosToolStripMenuItem
+            // registrarseToolStripMenuItem
             // 
-            this.modulosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reporteASTToolStripMenuItem});
-            this.modulosToolStripMenuItem.Name = "modulosToolStripMenuItem";
-            this.modulosToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
-            this.modulosToolStripMenuItem.Text = "Reportes";
-            // 
-            // reporteASTToolStripMenuItem
-            // 
-            this.reporteASTToolStripMenuItem.Name = "reporteASTToolStripMenuItem";
-            this.reporteASTToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.reporteASTToolStripMenuItem.Text = "Reporte AST";
-            this.reporteASTToolStripMenuItem.Click += new System.EventHandler(this.reporteASTToolStripMenuItem_Click);
+            this.registrarseToolStripMenuItem.Name = "registrarseToolStripMenuItem";
+            this.registrarseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.registrarseToolStripMenuItem.Text = "Registrarse";
+            this.registrarseToolStripMenuItem.Click += new System.EventHandler(this.registrarseToolStripMenuItem_Click);
             // 
             // FMain
             // 
@@ -398,6 +407,7 @@
         private System.Windows.Forms.ToolStripMenuItem compartirClaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modulosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reporteASTToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem registrarseToolStripMenuItem;
     }
 }
 

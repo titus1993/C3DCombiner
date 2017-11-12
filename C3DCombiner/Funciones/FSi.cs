@@ -50,7 +50,7 @@ namespace C3DCombiner.Funciones
                     cond.F = TitusTools.GetEtq();
                     
                     cadena += "\t\t" + "if " + cond.Valor + " == 1 goto " + cond.V + ";\n";
-                    cadena += "\t\t" + "goto " + cond.F + ":\n";
+                    cadena += "\t\t" + "goto " + cond.F + ";\n";
                     cadena += "\t" + cond.V + ":\n";
                     foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
                     {

@@ -27,6 +27,7 @@ namespace C3DCombiner
                         }
                         else
                         {
+                            sim.Ambito.Nombre = "§global§";
                             if (simbolo.Tamaño > 0)
                             {
                                 SetPosicion(sim, 0);

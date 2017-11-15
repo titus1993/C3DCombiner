@@ -25,40 +25,38 @@ namespace C3DCombiner.Funciones
 
         public String Generar3D()
         {
-            String cadena = "\t\t//Comienza mientras\n";
+            String cadena = "\t\t//Comienza ciclo X\n";
             String retorno = TitusTools.GetEtq();
 
-            Nodo3D cond = Condicion1.Generar3D();
+
+            FNodoExpresion or = new FNodoExpresion(Condicion1, Condicion2, Constante.TOr, Constante.TOr, Condicion1.Fila, Condicion1.Columna, null);
+            FNodoExpresion and = new FNodoExpresion(Condicion1, Condicion2, Constante.TAnd, Constante.TAnd, Condicion1.Fila, Condicion1.Columna, null);
+
+            Nodo3D cond1 = or.Generar3D();
+            Nodo3D cond2 = and.Generar3D();
             if (!TitusTools.HayErrores())
             {
-                if (cond.Tipo == Constante.TBooleano)
+                cadena += cond1.Codigo;
+                cadena += "\t" + retorno + ":\n";
+                cadena += cond2.Codigo;
+                cadena += "\t" + cond1.V + ":\n";
+                cadena += "\t" + cond2.V + ":\n";
+
+                foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
                 {
-                    cadena += "\t" + retorno + ":\n";
-                    cadena += cond.Codigo;
-                    if (cond.V == "" && cond.F == "")
-                    {
-                        cond.V = TitusTools.GetEtq();
-                        cond.F = TitusTools.GetEtq();
-
-                        cadena += "\t\t" + "if " + cond.Valor + " == 1 goto " + cond.V + ";\n";
-                        cadena += "\t\t" + "goto " + cond.F + ";\n";
-
-                    }
-                    cadena += "\t" + cond.V + ":\n";
-
-                    foreach (Simbolo sim in Ambito.TablaSimbolo)//cuerpo si es verdadero
-                    {
-                        cadena += sim.Generar3D();
-                    }
-
-                    cadena += "\t\t" + "goto " + retorno + ";\n";
-                    cadena += "\t" + cond.F + "://Termina mientras\n";
+                    cadena += sim.Generar3D();
                 }
-                else
-                {
-                    TitusTools.InsertarError(Constante.TErrorSemantico, "El ciclo while esperaba un tipo booleano no un tipo " + cond.Tipo, TitusTools.GetRuta(), Padre.Fila, Padre.Columna);
-                }
+
+                cadena += "\t\t" + "goto " + retorno + ";\n";
+                cadena += "\t" + cond1.F + ":\n";
+                cadena += "\t" + cond2.F + ":\n";
+                
             }
+
+            cadena += "\t\t//Termina ciclo X\n";
+
+            cadena = cadena.Replace("§salir§;", "goto " + cond1.F + ";\n");
+            cadena = cadena.Replace("§continuar§;", "goto " + retorno + ";\n");
 
             return cadena;
         }

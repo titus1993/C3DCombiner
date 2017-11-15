@@ -21,6 +21,7 @@ namespace C3DCombiner
                     {
                         if (sim.Rol.Equals(Constante.DECLARACION))
                         {
+                            sim.Ambito.Tamaño = 2;
                             sim.Ambito.Nombre = "§global§";
                             sim.Posicion = pos;
                             pos++;
@@ -49,13 +50,15 @@ namespace C3DCombiner
                     {
                         pos = SetPosicion(sim, pos);
                     }
+                    FMetodo m = (FMetodo)simbolo.Valor;
+                    m.Ambito.Tamaño = pos + 2;
                     break;
 
-
+                    
                 case Constante.TConstructor:
                     foreach (Simbolo sim in ((FMetodo)simbolo.Valor).Parametros)
                     {
-                        sim.Posicion = pos++;
+                        sim.Posicion = pos;
                         pos++;
                     }
 
@@ -63,6 +66,8 @@ namespace C3DCombiner
                     {
                         pos = SetPosicion(sim, pos);
                     }
+                    FMetodo m2 = (FMetodo)simbolo.Valor;
+                    m2.Ambito.Tamaño = pos + 2;
                     break;
 
                 case Constante.TPara:
@@ -318,7 +323,7 @@ namespace C3DCombiner
                                 List<Simbolo> parametros = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[3]);
                                 List<Simbolo> cuerpo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[4]);
 
-                                FMetodo metodo = new FMetodo(visibilidad, Constante.TVoid, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                FMetodo metodo = new FMetodo(visibilidad, Constante.TVoid, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[2].Token.Location.Line + 1, Nodo.ChildNodes[2].Token.Location.Column + 1);
 
                                 Simbolo m = new Simbolo(metodo.Visibilidad, metodo.Tipo, metodo.Nombre, Constante.TMetodo, metodo.Fila, metodo.Columna, metodo.Ambito, metodo);
 
@@ -356,7 +361,7 @@ namespace C3DCombiner
                                 List<Simbolo> parametros = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[4]);
                                 List<Simbolo> cuerpo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[5]);
 
-                                FMetodo metodo = new FMetodo(visibilidad, Constante.TVoid, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[2].Token.Location.Line + 1, Nodo.ChildNodes[2].Token.Location.Column + 1);
+                                FMetodo metodo = new FMetodo(visibilidad, Constante.TVoid, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[3].Token.Location.Line + 1, Nodo.ChildNodes[3].Token.Location.Column + 1);
 
                                 Simbolo m = new Simbolo(metodo.Visibilidad, metodo.Tipo, metodo.Nombre, Constante.TMetodo, metodo.Fila, metodo.Columna, metodo.Ambito, metodo);
 
@@ -399,7 +404,7 @@ namespace C3DCombiner
                                 List<Simbolo> parametros = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[5]);
                                 List<Simbolo> cuerpo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[6]);
 
-                                FMetodo metodo = new FMetodo(visibilidad, tipo, dimensiones, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1);
+                                FMetodo metodo = new FMetodo(visibilidad, tipo, dimensiones, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[4].Token.Location.Line + 1, Nodo.ChildNodes[4].Token.Location.Column + 1);
 
                                 Simbolo m = new Simbolo(metodo.Visibilidad, metodo.Tipo, metodo.Nombre, Constante.TMetodo, metodo.Fila, metodo.Columna, metodo.Ambito, metodo);
 
@@ -439,7 +444,7 @@ namespace C3DCombiner
                                 List<Simbolo> parametros = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[6]);
                                 List<Simbolo> cuerpo = (List<Simbolo>)RecorrerArbol(Nodo.ChildNodes[7]);
 
-                                FMetodo metodo = new FMetodo(visibilidad, tipo, dimensiones, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[2].Token.Location.Line + 1, Nodo.ChildNodes[2].Token.Location.Column + 1);
+                                FMetodo metodo = new FMetodo(visibilidad, tipo, dimensiones, id, parametros, new Ambito(id, cuerpo), Nodo.ChildNodes[5].Token.Location.Line + 1, Nodo.ChildNodes[5].Token.Location.Column + 1);
 
                                 Simbolo m = new Simbolo(metodo.Visibilidad, metodo.Tipo, metodo.Nombre, Constante.TMetodo, metodo.Fila, metodo.Columna, metodo.Ambito, metodo);
 
@@ -650,6 +655,7 @@ namespace C3DCombiner
                             {
                                 new Simbolo(Constante.TProtegido, "", "", Constante.TRetorno, Nodo.ChildNodes[0].Token.Location.Line + 1, Nodo.ChildNodes[0].Token.Location.Column + 1, new Ambito(Constante.TRetorno), valor)
                             };
+                            valor.SetPadre(lista[0]);
                             return lista;
                         }
                     }
@@ -803,6 +809,7 @@ namespace C3DCombiner
                                 FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
 
                                 Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, lo.Fila, lo.Columna, new Ambito(Constante.LLAMADA_METODO), lo);
+                                lo.SetPadre(llamada);
                                 tabla.Add(llamada);
                             }
                             else
@@ -813,6 +820,7 @@ namespace C3DCombiner
                                     FLlamadaObjeto lo = new FLlamadaObjeto(Constante.LLAMADA_METODO, lm.Nombre, lm.Fila, lm.Columna, lm);
 
                                     Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, lo.Fila, lo.Columna, new Ambito(Constante.LLAMADA_METODO), lo);
+                                    lo.SetPadre(llamada);
                                     tabla.Add(llamada);
                                 }
                                 else
@@ -833,6 +841,7 @@ namespace C3DCombiner
                                 loaux.InsertarHijo(lo);
 
                                 Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, loaux.Fila, loaux.Columna, new Ambito(Constante.LLAMADA_METODO), loaux);
+                                loaux.SetPadre(llamada);
                                 tabla.Add(llamada);
                             }
                             else
@@ -846,6 +855,7 @@ namespace C3DCombiner
                                     loaux.InsertarHijo(lo);
 
                                     Simbolo llamada = new Simbolo(Constante.TProtegido, "", "", Constante.LLAMADA_METODO, loaux.Fila, loaux.Columna, new Ambito(Constante.LLAMADA_METODO), loaux);
+                                    loaux.SetPadre(llamada);
                                     tabla.Add(llamada);
                                 }
                                 else
@@ -1150,13 +1160,13 @@ namespace C3DCombiner
 
 
                         para.AccionAnterior.Padre = sim;
-                        condicion.Padre = sim;
+                        condicion.Padre = para.AccionSiguiente;
                         accionposterior.Padre = sim;
 
                         para.Padre = sim;
 
                         //asignamos el simbolo para de las expresiones
-                        condicion.SetPadre(sim);
+                        condicion.SetPadre(para.AccionSiguiente);
                         accionposterior.Padre = sim;
 
                         List<Simbolo> list = new List<Simbolo>
@@ -1255,7 +1265,8 @@ namespace C3DCombiner
                                 case Constante.TAumento:
                                     {
                                         FNodoExpresion izq = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
-                                        nodo = new FNodoExpresion(izq, null, Constante.TAumento, Constante.TAumento, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, null);
+                                        FNodoExpresion der = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, 1);
+                                        nodo = new FNodoExpresion(izq, der, Constante.TMas, Constante.TMas, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, null);
                                         izq.Hermano = nodo;
                                     }
                                     break;
@@ -1263,7 +1274,8 @@ namespace C3DCombiner
                                 case Constante.TDecremento:
                                     {
                                         FNodoExpresion izq = (FNodoExpresion)RecorrerArbol(Nodo.ChildNodes[0]);
-                                        nodo = new FNodoExpresion(izq, null, Constante.TDecremento, Constante.TDecremento, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, null);
+                                        FNodoExpresion der = new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, 1);
+                                        nodo = new FNodoExpresion(izq, der, Constante.TMenos, Constante.TMenos, Nodo.ChildNodes[1].Token.Location.Line + 1, Nodo.ChildNodes[1].Token.Location.Column + 1, null);
                                         izq.Hermano = nodo;
                                     }
                                     break;
@@ -1442,7 +1454,8 @@ namespace C3DCombiner
                     return new FNodoExpresion(null, null, Constante.TBooleano, Constante.TBooleano, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, Nodo.Token.ValueString);
 
                 case Constante.TSelf:
-                    return new FNodoExpresion(null, null, Constante.TSelf, Constante.TSelf, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, "");
+                    FLlamadaObjeto loe = new FLlamadaObjeto(Constante.Id, Constante.TEste, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, null);
+                    return new FNodoExpresion(null, null, Constante.LLAMADA_OBJETO, Constante.LLAMADA_OBJETO, Nodo.Token.Location.Line + 1, Nodo.Token.Location.Column + 1, "");
 
                 case Constante.LLAMADA_EXP:
                     {

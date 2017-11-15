@@ -54,6 +54,9 @@ namespace C3DCombiner.Funciones
                 }
 
                 cadena += "\t" + cond.F + "://Termina hacer mientras\n";
+
+                cadena = cadena.Replace("§salir§;", "goto " + cond.F + ";\n");
+                cadena = cadena.Replace("§continuar§;", "goto " + cond.V + ";\n");
             }
             else
             {

@@ -24,6 +24,7 @@ namespace C3DCombiner.Funciones
             this.AccionSiguiente = AccionSiguiente;
             this.Ambito = Ambito;
             this.Padre = null;
+            
         }
 
 
@@ -65,6 +66,9 @@ namespace C3DCombiner.Funciones
                     cadena += AccionSiguiente.Generar3D();//actualizacion de varaibles   
                     cadena += "\t\t" + "goto " + retorno + ";\n";
                     cadena += "\t" + cond.F + "://Termina para\n";
+
+                    cadena = cadena.Replace("§salir§;", "goto " + cond.F + ";\n");
+                    cadena = cadena.Replace("§continuar§;", "goto " + cond.V + ";\n");
                 }
                 else
                 {

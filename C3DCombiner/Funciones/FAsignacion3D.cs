@@ -62,6 +62,7 @@ namespace C3DCombiner.Funciones
                     if (valor.Tipo.Equals(Constante.TEntero) || valor.Tipo.Equals(Constante.TDecimal))
                     {
                         variable.Valor = valor;
+                        Console.WriteLine(variable.Nombre + " = " + valor.Cadena);
                     }
                     else
                     {
@@ -83,6 +84,7 @@ namespace C3DCombiner.Funciones
                 if (valor.Tipo.Equals(Constante.TEntero))
                 {
                      Tabla3D.H = valor.Entero;
+                    Console.WriteLine("H = " + valor.Cadena);
                 }
                 else
                 {
@@ -99,6 +101,7 @@ namespace C3DCombiner.Funciones
                 if (valor.Tipo.Equals(Constante.TEntero))
                 {
                     Tabla3D.P = valor.Entero;
+                    Console.WriteLine("P = " + valor.Cadena);
                 }
                 else
                 {
@@ -117,6 +120,7 @@ namespace C3DCombiner.Funciones
                 if (acceso.Tipo.Equals(Constante.TEntero))
                 {
                     Tabla3D.InsertarHeap(acceso.Entero, valor);
+                    Console.WriteLine(Acceso.Fila.ToString() + " Heap["+acceso.Cadena +"] = " + valor.Cadena);
                 }
                 else
                 {
@@ -135,6 +139,7 @@ namespace C3DCombiner.Funciones
                 if (acceso.Tipo.Equals(Constante.TEntero))
                 {
                     Tabla3D.InsertarStack(acceso.Entero, valor);
+                    Console.WriteLine(Acceso.Fila.ToString() + " Stack[" + acceso.Cadena + "] = " + valor.Cadena);
                 }
                 else
                 {

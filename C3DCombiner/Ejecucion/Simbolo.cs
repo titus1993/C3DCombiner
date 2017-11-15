@@ -19,6 +19,9 @@ namespace C3DCombiner.Ejecucion
         public Simbolo Siguiente = null;
         public Simbolo Anterior = null;
 
+
+        public int este = 0;
+
         public Simbolo(String visibilidad, String tipo, String nombre, String rol, int fila, int columna, Ambito ambito, Object valor)
         {
             this.Visibilidad = visibilidad;
@@ -42,9 +45,12 @@ namespace C3DCombiner.Ejecucion
             this.Fila = sim.Fila;
             this.Columna = sim.Columna;
             this.Ambito = sim.Ambito;
-            this.Valor = sim.Valor;
             this.Tamaño = sim.Tamaño;
             this.Posicion = sim.Posicion;
+            this.Hermano = sim.Hermano;
+            this.Padre = sim.Padre;
+            this.Valor = sim.Valor;
+            this.este = sim.este;
         }
 
         public String Generar3DConMain()
@@ -100,6 +106,10 @@ namespace C3DCombiner.Ejecucion
                     cadena = GenerarPara();
                     break;
 
+                case Constante.TX:
+                    cadena = GenerarX();
+                    break;
+
                 case Constante.TContinuar:
                     cadena = GenerarContinuar();
                     break;
@@ -114,6 +124,14 @@ namespace C3DCombiner.Ejecucion
 
                 case Constante.TImprimir:
                     cadena = GenerarImprimir();
+                    break;
+
+                case Constante.ASIGNACION:
+                    cadena = Generar3DAsignacion();
+                    break;
+
+                case Constante.LLAMADA_METODO:
+                    cadena = GenerarLlamadaMetodo();
                     break;
             }
             return cadena;
@@ -156,6 +174,10 @@ namespace C3DCombiner.Ejecucion
                     cadena = GenerarLoop();
                     break;
 
+                case Constante.TX:
+                    cadena = GenerarX();
+                    break;
+
                 case Constante.TSi:
                     cadena = GenerarSi();
                     break;
@@ -182,6 +204,14 @@ namespace C3DCombiner.Ejecucion
 
                 case Constante.TImprimir:
                     cadena = GenerarImprimir();
+                    break;
+
+                case Constante.ASIGNACION:
+                    cadena = Generar3DAsignacion();
+                    break;
+
+                case Constante.LLAMADA_METODO:
+                    cadena = GenerarLlamadaMetodo();
                     break;
             }
             return cadena;
@@ -237,6 +267,13 @@ namespace C3DCombiner.Ejecucion
             return cadena;
         }
 
+        private String GenerarLlamadaMetodo()
+        {
+            String cadena = "";
+            FLlamadaObjeto llamada = (FLlamadaObjeto)Valor;
+            cadena += llamada.Generar3D().Codigo;
+            return cadena;
+        }
 
         //ciclos
         private String GenerarMientras()
@@ -279,6 +316,14 @@ namespace C3DCombiner.Ejecucion
             return cadena;
         }
 
+        private String GenerarX()
+        {
+            String cadena = "";
+            FX para = (FX)Valor;
+            cadena += para.Generar3D();
+            return cadena;
+        }
+
         //sentencias
         private String GenerarSi()
         {
@@ -314,7 +359,57 @@ namespace C3DCombiner.Ejecucion
         private String GenerarRetornar()
         {
             String cadena = "";
-            cadena += "\t\t§retornar§;\n"; 
+            Nodo3D val = ((FNodoExpresion)Valor).Generar3D();
+            Simbolo metodopadre = BuscarMetodoPadre();
+            FMetodo met = (FMetodo)metodopadre.Valor;
+            String tipometodo = metodopadre.Tipo;
+
+            if (met.Dimensiones > 0)
+            {
+                tipometodo = "arreglo " + tipometodo;
+            }
+
+            if (val.Tipo.Equals(Constante.TBooleano))
+            {
+                if (val.V == "" && val.F == "")
+                {//si trae etiquetas viene de una relacional si no es un bool nativo
+
+                }
+                else
+                {
+                    var cad = "";
+
+                    var auxtemp = TitusTools.GetTemp();
+                    var salida = TitusTools.GetEtq();
+
+                    cad += "\t" + val.V + ":\n";
+                    cad += "\t\t" + auxtemp + " = 1;\n";
+                    cad += "\t\t" + "goto " + salida + ";\n";
+                    cad += "\t" + val.F + ":\n";
+                    cad += "\t\t" + auxtemp + " = 0;\n";
+                    cad += "\t" + salida + ":\n";
+
+                    val.Valor = auxtemp;
+                    cad += "\t\t" + val.Valor + " =  - " + auxtemp + ";\n";
+                    val.Codigo = val.Codigo + cad;
+                }
+            }
+
+            if (tipometodo.Equals(val.Tipo))
+            {
+                String retorno = TitusTools.GetTemp();
+                cadena += val.Codigo;
+                cadena += "\t\t" + retorno + " = P + 1;//Posicion de retorno\n";
+                cadena += "\t\t" + "Stack[" + retorno + "] = " + val.Valor + ";//Asignacion de retorno\n";
+
+                cadena += "\t\t§retornar§;\n";
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "El metodo " + met.Nombre + " solo puede retornar un tipo " + tipometodo + ", no un tipo " + val.Tipo, TitusTools.GetRuta() ,Fila, Columna);
+            }
+
+            
             return cadena;
         }
 
@@ -326,6 +421,13 @@ namespace C3DCombiner.Ejecucion
             return cadena;
         }
 
+        private String Generar3DAsignacion()
+        {
+            String cadena = "";
+            FAsignacion asignacion = (FAsignacion)Valor;
+            cadena += asignacion.Generar3D();
+            return cadena;
+        }
 
 
         //Codigo para busqueda de variables clases metodos y constructores
@@ -359,6 +461,7 @@ namespace C3DCombiner.Ejecucion
                         FMetodo metodo = (FMetodo)c.Valor;
                         if (metodo.Parametros.Count == parametros.Count)
                         {
+                            Boolean error = false;
                             for (int i = 0; i < metodo.Parametros.Count; i++)
                             {
                                 FParametro p = (FParametro)metodo.Parametros[i].Valor;
@@ -372,10 +475,14 @@ namespace C3DCombiner.Ejecucion
 
                                 if (!tipometodo.Equals(tipoparametro))
                                 {
+                                    error = true;
                                     break;
                                 }
                             }
-                            return c;
+                            if (!error)
+                            {
+                                return c;
+                            }
                         }
                     }
                 }
@@ -391,7 +498,7 @@ namespace C3DCombiner.Ejecucion
         public Simbolo BuscarMetodoPadre()
         {
             Simbolo aux = this;
-            while (aux.Padre != null && aux.Padre.Ambito.Equals("§global§"))
+            while (aux.Padre != null && !aux.Ambito.Nombre.Equals("§global§"))
             {
                 aux = aux.Padre;
             }
@@ -399,6 +506,91 @@ namespace C3DCombiner.Ejecucion
             return aux;
         }
 
+
+        public Simbolo BuscarMetodo(String nombre, List<Nodo3D> parametros)
+        {
+            Simbolo padreclase = BuscarClasePadre();
+
+            Boolean encontrado = false;
+
+            foreach (Simbolo sim in padreclase.Ambito.TablaSimbolo)
+            {
+                if ((sim.Rol.Equals(Constante.TMetodo) || sim.Rol.Equals(Constante.TFuncion)) && sim.Nombre.Equals(nombre))
+                {
+                    FMetodo metodo = (FMetodo)sim.Valor;
+                    if (metodo.Parametros.Count == parametros.Count)
+                    {
+                        Boolean error = false;
+                        for (int i = 0; i < metodo.Parametros.Count; i++)
+                        {
+                            FParametro p = (FParametro)metodo.Parametros[i].Valor;
+                            String tipometodo = p.Tipo;
+
+                            String tipoparametro = parametros[i].Tipo;
+                            if (p.Dimensiones > 0)
+                            {
+                                tipometodo = "arreglo " + tipometodo;
+                            }
+
+                            if (!tipometodo.Equals(tipoparametro))
+                            {
+                                error = true;
+                                break;
+                            }
+                        }
+                        if (!error)
+                        {
+                            return new Simbolo (sim);
+                        }
+                    }
+                }
+            }
+
+            if (!encontrado)
+            {
+                Simbolo here = BuscarMetodoHerencia(nombre, parametros);
+
+                if (here != null)
+                {
+                    Simbolo nuevo = new Simbolo(here);
+                    nuevo.este += padreclase.Ambito.Tamaño;
+                    here = nuevo;
+                }
+
+                return here;
+            }
+            return null;
+        }
+
+        public Simbolo BuscarMetodoHerencia(String nombre, List<Nodo3D> parametros)
+        {
+            Simbolo var = null;
+            Simbolo sim = BuscarClasePadre();
+
+            FClase clase = (FClase)sim.Valor;
+
+            if (!clase.Herencia.Equals(""))
+            {
+                Simbolo bc = BuscarClase(clase.Herencia, clase.ArchivoPadre);
+                if (bc != null)
+                {
+                    var = bc.BuscarMetodo(nombre, parametros);
+                    if (var != null)
+                    {
+                        if (!var.Visibilidad.Equals(Constante.TPublico) && !var.Visibilidad.Equals(Constante.TProtegido))
+                        {
+                            var = null;
+                        }
+                    }
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro una clase para herederar con el nombre " + clase.Herencia, TitusTools.GetRuta(), sim.Fila, sim.Columna);
+                }
+            }
+
+            return var;
+        }
 
         public Simbolo BuscarVariable(String nombre)
         {
@@ -411,7 +603,7 @@ namespace C3DCombiner.Ejecucion
                 aux = Hermano;
             }else if (Padre != null)
             {
-                aux = Padre.Hermano;
+                aux = Padre;
             }
             while (aux != null)
             {
@@ -506,6 +698,10 @@ namespace C3DCombiner.Ejecucion
             {
                 foreach(String import in archivo.Imports)
                 {
+                    if (aux != null)
+                    {
+                        break;
+                    }
                     aux = BuscarClaseImports(nombre, import);
                 }
             }

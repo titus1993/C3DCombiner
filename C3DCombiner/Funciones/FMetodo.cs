@@ -45,15 +45,17 @@ namespace C3DCombiner.Funciones
         public String Generar3D()
         {
             String cadena = "";
-
+            String salida = TitusTools.GetEtq();
             cadena += "void " + GetNombre3D() + "(){\n";
 
             foreach (Simbolo simbolo in Ambito.TablaSimbolo)
             {
                 cadena += simbolo.Generar3D();
-            }
-
+            }             
+            cadena += "\t" + salida + ":\n";
             cadena += "}\n\n";
+            cadena = cadena.Replace("§retornar§;", "goto " + salida + ";//salida al fin de metodo\n");
+
             return cadena;
         }
 
@@ -196,6 +198,7 @@ namespace C3DCombiner.Funciones
                     break;
 
                 case "2":
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede asignar el arreglo por que las dimensiones y sus tamaños no son iguales", TitusTools.GetRuta(), sim.Fila, sim.Columna);
                     break;
 
                 default:

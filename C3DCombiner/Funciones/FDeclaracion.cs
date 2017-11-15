@@ -287,43 +287,86 @@ namespace C3DCombiner.Funciones
             }
             else//es arreglo
             {
+                String arr = TitusTools.GetTemp();
+                String cont = TitusTools.GetTemp();
+                cadena += "\t\t" + arr + " = P + " + pos.ToString() + ";//Declaracion de arreglo " + this.Nombre + "\n";
+                cadena += "\t\t" + "Stack[" + arr + "]" + " = H;\n";
+                cadena += "\t\t" + cont + "= 1;\n";
+                cadena += "\t\t" + "Heap[H] = " + Dimensiones.Count.ToString() + ";//Guardamos dimensiones\n";
+                cadena += "\t\t" + "H = H + 1;\n";
+                int i = 1;
+                foreach (FNodoExpresion dimension in Dimensiones)
+                {
+                    Nodo3D size = dimension.Generar3D();
+
+                    if (!TitusTools.HayErrores())
+                    {
+                        if (size.Tipo == Constante.TEntero)
+                        {
+                            cadena += size.Codigo;
+                            cadena += "\t\t" + cont + " = " + cont + " * " + size.Valor + ";\n";
+                            cadena += "\t\t" + "Heap[H] = " + size.Valor + ";//Guardamos el tamaño de la dimension " + i.ToString() + "\n";
+                            cadena += "\t\t" + "H = H + 1;\n";
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede iniciar una dimension de un arreglo con un tipo de dato  " + size.Tipo + ", se esperaba un valor entero.", TitusTools.GetRuta(), Fila, Columna);
+                        }
+                    }
+                    i++;
+                }
+                cadena += "\t\t" + "H = H + " + cont + ";//termina declaracion de arreglo\n";
                 if (Valor != null)
                 {
-                    
-                }
-                else
-                {
-                    String arr = TitusTools.GetTemp();
-                    String cont = TitusTools.GetTemp();
-                    cadena += "\t\t" + arr + " = P + " + pos.ToString() + ";//Declaracion de arreglo " + this.Nombre + "\n";
-                    cadena += "\t\t" + "Stack[" + arr + "]" + " = H;\n";
-                    cadena += "\t\t" + cont + "= 1;\n";
-                    cadena += "\t\t" + "Heap[H] = " + Dimensiones.Count.ToString() + ";//Guardamos dimensiones\n";
-                    cadena += "\t\t" + "H = H + 1;\n";
-                    int i = 1;
-                    foreach (FNodoExpresion dimension in Dimensiones)
-                    {
-                        Nodo3D size = dimension.Generar3D();
+                    Nodo3D val = Valor.Generar3D();
 
-                        if (!TitusTools.HayErrores())
+                    if (!TitusTools.HayErrores())
+                    {
+                        if (val.Tipo == "arreglo " + this.Tipo)
                         {
-                            if (size.Tipo == Constante.TEntero)
-                            {
-                                cadena += size.Codigo;
-                                cadena += "\t\t" + cont + " = " + cont + " * " + size.Valor + ";\n";
-                                cadena += "\t\t" + "Heap[H] = " + size.Valor + ";//Guardamos el tamaño de la dimension " + i.ToString() + "\n";
-                                cadena += "\t\t" + "H = H + 1;\n";
-                            }
-                            else
-                            {
-                                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede iniciar una dimension de un arreglo con un tipo de dato  " + size.Tipo + ", se esperaba un valor entero.", TitusTools.GetRuta(), Fila, Columna);
-                            }
+                            cadena += val.Codigo;
+                            String etqerror = TitusTools.GetEtq();
+                            String etqsalida = TitusTools.GetEtq();
+
+                            String contador = TitusTools.GetTemp();
+                            String contador2 = TitusTools.GetTemp();
+                            String val1 = TitusTools.GetTemp();
+                            String val2 = TitusTools.GetTemp();
+                            cadena += "\t\t" + contador + " = Stack[" + arr + "];\n";
+                            cadena += "\t\t" + contador2 + " = " + val.Valor + ";\n";
+                            cadena += "\t\t" + val1 + " = Heap[" + contador + "];//acceso a la declaracion del arreglo\n";
+                            cadena += "\t\t" + val2 + " = Heap[" + contador2 + "];\n"; 
+                            cadena += "\t\t" + "ifFalse " + val1 + " == " + val2 + " goto " + etqerror + ";\n";
+                            String ciclo = TitusTools.GetTemp();
+                            String tope = TitusTools.GetTemp();
+                            cadena += "\t\t" + ciclo + " = 0;\n";
+                            cadena += "\t\t" + tope + " = " + val1 + ";\n";
+                            String recursivo = TitusTools.GetEtq();
+                            cadena += "\t" + recursivo + ":\n";
+                            cadena += "\t\t" + "ifFalse " + ciclo + " < " + tope + " goto " + etqsalida + ";\n";
+                            cadena += "\t\t" + val1 + " = Heap[" + contador + "];//acceso a tamanio dimension\n";
+                            cadena += "\t\t" + val2 + " = Heap[" + contador2 + "];//acceso a tamanio dimension 2\n";
+                            cadena += "\t\t" + contador + " = " + contador + " + 1;\n";
+                            cadena += "\t\t" + contador2 + " = " + contador2 + " + 1;\n";
+                            cadena += "\t\t" + ciclo + " = " + ciclo + " + 1;\n";
+                            cadena += "\t\t" + "if " + val1 + " == " + val2 + " goto " + recursivo + ";\n";
+                            cadena += "\t\t" + "goto " + etqerror + ";\n";
+                            cadena += "\t\t" + "goto " + etqsalida + ";\n"; 
+                            cadena += "\t" + etqerror + ":\n";
+                            cadena += "\t\t" + "Error(2);\n";
+                            cadena += "\t" + etqsalida + ":\n";
+
+                            //validacio de dimensiones
+                            cadena += "\t\t" + arr + " = P + " + pos.ToString() + ";//Declaracion de arreglo " + this.Nombre + "\n";
+                            cadena += "\t\t" + "Stack[" + arr + "]" + " = " + val.Valor + ";\n";
                         }
-                        i++;
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede asignar un " + val.Tipo + " a un arreglo de tipo " + this.Tipo, TitusTools.GetRuta(), Fila, Columna);
+                        }
                     }
-                    cadena += "\t\t" + "H = H + " + cont + ";//termina declaracion de arreglo\n";
-                }
-                
+
+                }                
             }
 
             return cadena;
@@ -388,7 +431,7 @@ namespace C3DCombiner.Funciones
                                             String temp = TitusTools.GetTemp();
 
                                             cadena += "\t\t" + temp + " = " + tempH + " + " + pos.ToString() + ";//Declaracion de la variable " + this.Nombre + "\n";
-                                            cadena += "\t\t" + "Heap[" + temp + "] = " + val.Valor + ";\n";
+                                            cadena += "\t\t" + "Heap[" + temp + "] = " + auxtemp + ";\n";
                                         }
                                     }
                                     break;
@@ -446,7 +489,7 @@ namespace C3DCombiner.Funciones
                                             String temp = TitusTools.GetTemp();
 
                                             cadena += "\t\t" + temp + " = " + tempH + " + " + pos.ToString() + ";//Declaracion de la variable " + this.Nombre + "\n";
-                                            cadena += "\t\t" + "Heap[" + temp + "] = " + val.Valor + ";\n";
+                                            cadena += "\t\t" + "Heap[" + temp + "] = " + auxtemp + ";\n";
                                         }
                                     }
                                     break;
@@ -556,7 +599,7 @@ namespace C3DCombiner.Funciones
                                             String temp = TitusTools.GetTemp();
 
                                             cadena += "\t\t" + temp + " = " + tempH + " + " + pos.ToString() + ";//Declaracion de la variable " + this.Nombre + "\n";
-                                            cadena += "\t\t" + "Heap[" + temp + "] = " + val.Valor + ";\n";
+                                            cadena += "\t\t" + "Heap[" + temp + "] = " + auxtemp + ";\n";
                                         }
                                     }
                                     break;
@@ -568,9 +611,16 @@ namespace C3DCombiner.Funciones
                             break;
 
                         default://asginacion a una variable de tipo objeto
-                            if (Tipo == Valor.Tipo)
+                            if (Tipo == val.Tipo)
                             {
-
+                                cadena += val.Codigo;
+                                String temp = TitusTools.GetTemp();
+                                String heap = TitusTools.GetTemp();
+                                String posheap = TitusTools.GetTemp();
+                                cadena += "\t\t" + temp + " = P + 0;//Posicion del this\n";
+                                cadena += "\t\t" + heap +  " = Stack[" + temp + "];\n";
+                                cadena += "\t\t" + posheap + " = " + heap + " + " + pos.ToString() + ";//Declaracion de la variable " + this.Nombre + "\n";
+                                cadena += "\t\t" + "Heap[" + posheap + "] = " + val.Valor + ";\n";
                             }
                             else
                             {
@@ -582,40 +632,88 @@ namespace C3DCombiner.Funciones
             }
             else//es arreglo
             {
+                String stack = TitusTools.GetTemp();
+                String posheap = TitusTools.GetTemp();
+                String arr = TitusTools.GetTemp();
+                String cont = TitusTools.GetTemp();
+                cadena += "\t\t" + stack + " = P + 0;\n";
+                cadena += "\t\t" + posheap + " = Stack[" + stack + "];\n";
+                cadena += "\t\t" + arr + " = " + posheap + " + " + pos.ToString() + ";//Declaracion de arreglo " + this.Nombre + "\n";
+                cadena += "\t\t" + "Heap[" + arr + "]" + " = H;\n";
+                cadena += "\t\t" + cont + "= 1;\n";
+                cadena += "\t\t" + "Heap[H] = " + Dimensiones.Count.ToString() + ";//Guardamos dimensiones\n";
+                cadena += "\t\t" + "H = H + 1;\n";
+                int i = 1;
+                foreach (FNodoExpresion dimension in Dimensiones)
+                {
+                    Nodo3D size = dimension.Generar3D();
+
+                    if (!TitusTools.HayErrores())
+                    {
+                        if (size.Tipo == Constante.TEntero)
+                        {
+                            cadena += size.Codigo;
+                            cadena += "\t\t" + cont + " = " + cont + " * " + size.Valor + ";\n";
+                            cadena += "\t\t" + "Heap[H] = " + size.Valor + ";//Guardamos el tamaño de la dimension " + i.ToString() + "\n";
+                            cadena += "\t\t" + "H = H + 1;\n";
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede iniciar una dimension de un arreglo con un tipo de dato  " + size.Tipo + ", se esperaba un valor entero.", TitusTools.GetRuta(), Fila, Columna);
+                        }
+                    }
+                    i++;
+                }
+                cadena += "\t\t" + "H = H + " + cont + ";//termina declaracion de arreglo\n";
                 if (Valor != null)
                 {
+                    Nodo3D val = Valor.Generar3D();
 
-                }
-                else
-                {
-                    String arr = TitusTools.GetTemp();
-                    String cont = TitusTools.GetTemp();
-                    cadena += "\t\t" + arr + " = " + tempH + " + " + pos.ToString() + ";//Declaracion de arreglo " + this.Nombre + "\n";
-                    cadena += "\t\t" + cont + "= 1;\n";
-                    cadena += "\t\t" + "Heap[H] = " + Dimensiones.Count.ToString() + ";//Guardamos dimensiones\n";
-                    cadena += "\t\t" + "H = H + 1;\n";
-                    int i = 1;
-                    foreach (FNodoExpresion dimension in Dimensiones)
+                    if (!TitusTools.HayErrores())
                     {
-                        Nodo3D size = dimension.Generar3D();
-
-                        if (!TitusTools.HayErrores())
+                        if (val.Tipo == "arreglo " + this.Tipo)
                         {
-                            if (size.Tipo == Constante.TEntero)
-                            {
-                                cadena += size.Codigo;
-                                cadena += "\t\t" + cont + " = " + cont + " * " + size.Valor + ";\n";
-                                cadena += "\t\t" + "Heap[H] = " + size.Valor + ";//Guardamos el tamaño de la dimension " + i.ToString()  + "\n";
-                                cadena += "\t\t" + "H = H + 1;\n";
-                            }
-                            else
-                            {
-                                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede iniciar una dimension de un arreglo con un tipo de dato  " + size.Tipo + ", se esperaba un valor entero.", TitusTools.GetRuta(), Fila, Columna);
-                            }
+                            cadena += val.Codigo;
+                            String etqerror = TitusTools.GetEtq();
+                            String etqsalida = TitusTools.GetEtq();
+
+                            String contador = TitusTools.GetTemp();
+                            String contador2 = TitusTools.GetTemp();
+                            String val1 = TitusTools.GetTemp();
+                            String val2 = TitusTools.GetTemp();
+                            cadena += "\t\t" + contador + " = Heap[" + arr + "];\n";
+                            cadena += "\t\t" + contador2 + " = " + val.Valor + ";\n";
+                            cadena += "\t\t" + val1 + " = Heap[" + contador + "];//acceso a la declaracion del arreglo\n";
+                            cadena += "\t\t" + val2 + " = Heap[" + contador2 + "];\n";
+                            cadena += "\t\t" + "ifFalse " + val1 + " == " + val2 + " goto " + etqerror + ";\n";
+                            String ciclo = TitusTools.GetTemp();
+                            String tope = TitusTools.GetTemp();
+                            cadena += "\t\t" + ciclo + " = 0;\n";
+                            cadena += "\t\t" + tope + " = " + val1 + ";\n";
+                            String recursivo = TitusTools.GetEtq();
+                            cadena += "\t" + recursivo + ":\n";
+                            cadena += "\t\t" + "ifFalse " + ciclo + " < " + tope + " goto " + etqsalida + ";\n";
+                            cadena += "\t\t" + val1 + " = Heap[" + contador + "];//acceso a tamanio dimension\n";
+                            cadena += "\t\t" + val2 + " = Heap[" + contador2 + "];//acceso a tamanio dimension 2\n";
+                            cadena += "\t\t" + contador + " = " + contador + " + 1;\n";
+                            cadena += "\t\t" + contador2 + " = " + contador2 + " + 1;\n";
+                            cadena += "\t\t" + ciclo + " = " + ciclo + " + 1;\n";
+                            cadena += "\t\t" + "if " + val1 + " == " + val2 + " goto " + recursivo + ";\n";
+                            cadena += "\t\t" + "goto " + etqerror + ";\n";
+                            cadena += "\t\t" + "goto " + etqsalida + ";\n";
+                            cadena += "\t" + etqerror + ":\n";
+                            cadena += "\t\t" + "Error(2);\n";
+                            cadena += "\t" + etqsalida + ":\n";
+
+                            //validacio de dimensiones
+                            cadena += "\t\t" + "Heap[" + arr + "]" + " = " + val.Valor + ";//Declaracion de arreglo global" + this.Nombre + "\n";
                         }
-                        i++;
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede asignar un " + val.Tipo + " a un arreglo de tipo " + this.Tipo, TitusTools.GetRuta(), Fila, Columna);
+                        }
                     }
-                    cadena += "\t\t" + "H = H + " + cont + ";//termina declaracion de arreglo\n";
+
                 }
 
             }

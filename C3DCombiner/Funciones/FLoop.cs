@@ -35,7 +35,10 @@ namespace C3DCombiner.Funciones
             cadena += "\t\t" + "goto " + V + ";\n";
             
             cadena += "\t" + F + "://Termina loop\n";
-            
+
+            cadena = cadena.Replace("§salir§;", "goto " + F + ";\n");
+            cadena = cadena.Replace("§continuar§;", "goto " + V + ";\n");
+
             return cadena;
         }
     }

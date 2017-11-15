@@ -32,5 +32,73 @@ namespace C3DCombiner.Funciones
                 nodo.SetPadre(simbolo);
             }
         }
+
+        public Nodo3D Generar3D()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Simbolo sim = Padre.BuscarVariable(this.Nombre);
+
+            if (sim != null)//es un arreglo
+            {
+                FLlamadaArreglo arr = new FLlamadaArreglo(this.Nombre, Parametros, Fila, Columna);
+                arr.setPadre(Padre);
+
+                nodo = arr.Generar3D();
+            }
+            else// es un metodo
+            {
+                FLlamadaMetodo metodo = new FLlamadaMetodo(this.Nombre, this.Parametros, Fila, Columna);
+                metodo.setPadre(Padre);
+
+                nodo = metodo.Generar3D();
+
+                sim = metodo.Encontrado;
+            }
+
+            if (sim == null)
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro un arreglo o metodo para ejecutar", TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DHijo(Simbolo padre, String temporal)
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Simbolo sim = padre.BuscarVariable(this.Nombre);
+
+            if (sim != null)//es un arreglo
+            {
+                FLlamadaArreglo arr = new FLlamadaArreglo(this.Nombre, Parametros, Fila, Columna);
+                arr.setPadre(Padre);
+
+                nodo = arr.Generar3DHijo(padre, temporal);
+            }
+            else// es un metodo
+            {
+                FLlamadaMetodo metodo = new FLlamadaMetodo(this.Nombre, this.Parametros, Fila, Columna);
+                metodo.setPadre(Padre);
+
+                nodo = metodo.Generar3DHijo(padre, temporal);
+
+                sim = metodo.Encontrado;
+            }
+
+            if (sim == null)
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro un arreglo o metodo para ejecutar", TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+
+
+        ///////////////////////////////////codigo de arreglos
+        
+
     }
 }

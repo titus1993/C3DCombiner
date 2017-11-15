@@ -332,7 +332,7 @@ namespace C3DCombiner
 
             MIENTRAS.Rule = TMientras + TParentesis_Izq + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der;
 
-            HACER.Rule = THacer + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + TMientras + TParentesis_Izq + EXP + TParentesis_Der;
+            HACER.Rule = THacer + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der + TMientras + TParentesis_Izq + EXP + TParentesis_Der +TPuntoComa;
 
             X.Rule = TX + TParentesis_Izq + EXP + TComa + EXP + TParentesis_Der + TLlave_Izq + LISTA_INSTRUCCIONES + TLlave_Der;
 

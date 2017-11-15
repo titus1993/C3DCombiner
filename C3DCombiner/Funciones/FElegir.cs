@@ -64,6 +64,8 @@ namespace C3DCombiner.Funciones
 
             cadena += "\t" + salida + "://termina elegir\n";
 
+            cadena = cadena.Replace("§salir§;", "goto " + salida + ";\n");
+
             return cadena;
         }
 

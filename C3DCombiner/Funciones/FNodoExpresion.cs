@@ -22,6 +22,10 @@ namespace C3DCombiner.Funciones
         public Boolean Bool;
         public FLlamadaObjeto LlamadaObjeto;
         public FNuevo Nuevo;
+        public List<FNodoExpresion> Arreglo;
+
+
+        List<int> tamanioDimension = new List<int>();
 
         public FNodoExpresion(FNodoExpresion nodo)
         {
@@ -66,6 +70,15 @@ namespace C3DCombiner.Funciones
                 case Constante.TNuevo:
                     {
                         this.Nuevo.setPadre(simbolo);
+                    }
+                    break;
+
+                case "arreglo":
+                    {
+                        foreach (FNodoExpresion nodo in Arreglo)
+                        {
+                            nodo.SetPadre(simbolo);
+                        }
                     }
                     break;
             }
@@ -126,6 +139,12 @@ namespace C3DCombiner.Funciones
                 case Constante.TNuevo:
                     {
                         this.Nuevo = (FNuevo)valor;
+                    }
+                    break;
+
+                case "arreglo":
+                    {
+                        this.Arreglo = (List<FNodoExpresion>)valor;
                     }
                     break;
             }
@@ -212,7 +231,15 @@ namespace C3DCombiner.Funciones
                     codigo3d = Or3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
+                case Constante.TOrOCL:
+                    codigo3d = Or3D(nodo.Izquierda, nodo.Derecha);
+                    break;
+
                 case Constante.TXor:
+                    codigo3d = Xor3D(nodo.Izquierda, nodo.Derecha);
+                    break;
+
+                case Constante.TXorOCL:
                     codigo3d = Xor3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
@@ -220,7 +247,15 @@ namespace C3DCombiner.Funciones
                     codigo3d = And3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
+                case Constante.TAndOCL:
+                    codigo3d = And3D(nodo.Izquierda, nodo.Derecha);
+                    break;
+
                 case Constante.TNot:
+                    codigo3d = Not3D(nodo.Derecha);
+                    break;
+
+                case Constante.TNotOCL:
                     codigo3d = Not3D(nodo.Derecha);
                     break;
 
@@ -306,8 +341,232 @@ namespace C3DCombiner.Funciones
                     codigo3d = Nuevo.Generar3D();
                     break;
 
+                case "arreglo":
+                    codigo3d = Generar3DArreglo();
+                    break;
+
+                case Constante.TIntToStr:
+                    codigo3d = Generar3DIntToStr();
+                    break;
+
+                case Constante.TDoubleToStr:
+                    codigo3d = Generar3DDoubleToStr();
+                    break;
+
+
             }
             return codigo3d;
+        }
+
+        public int Nivel = 0;
+        public List<Nodo3D> ArregloResuelto = new List<Nodo3D>();
+        private Nodo3D Generar3DArreglo()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            GetLevel();//obtenemos el nivel
+
+            Boolean estado = ValidarArreglo(0, this);
+
+            if (estado)
+            {
+                nodo.Valor = TitusTools.GetTemp();
+
+                String contador = TitusTools.GetTemp();
+
+                nodo.Codigo += "\t\t" + nodo.Valor + " = H;//Comienza arreglo\n";
+                nodo.Codigo += "\t\t" + "Heap[H] = " + Nivel.ToString() + ";//Cantidad de dimensiones del arreglo\n";
+                nodo.Codigo += "\t\t" + "H = H + 1;\n";
+                int i = 1;
+                int size = 1;
+                foreach (int a in tamanioDimension)
+                {
+                    nodo.Codigo += "\t\t" + "Heap[H] = " + a.ToString() + ";//Tamaño dimension " + i.ToString() + "\n";
+                    nodo.Codigo += "\t\t" + "H = H + 1;\n";
+                    i++;
+                    size = size * a;
+                }
+                String temp = TitusTools.GetTemp();
+                nodo.Codigo += "\t\t" + temp + " = H;\n";
+                nodo.Codigo += "\t\t" + "H = H + " + size.ToString() + ";//Reservamos el espacio para los valores\n";
+
+                ResolverArreglo(this);
+                if (!TitusTools.HayErrores())
+                {
+                    String tipo = ArregloResuelto[0].Tipo;
+                    foreach (Nodo3D n in ArregloResuelto)
+                    {
+                        if (!n.Tipo.Equals(tipo) && !TitusTools.HayErrores())
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "Los valores en el arreglo no son iguales", TitusTools.GetRuta(), Fila, Columna);
+                        }
+                    }
+
+                    if (!TitusTools.HayErrores())
+                    {
+                        nodo.Tipo = "arreglo " + tipo;
+                        foreach (Nodo3D n in ArregloResuelto)
+                        {
+                            nodo.Codigo += n.Codigo;
+                            nodo.Codigo += "\t\t" + "Heap[" + temp + "] = " + n.Valor + ";//Asignacion en arreglo\n";
+                            nodo.Codigo += "\t\t" + temp + " = " + temp + " + 1;\n";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "El arreglo no cuenta con las mismas dimensiones", TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+        
+        private void ResolverArreglo(FNodoExpresion exp)
+        {
+            if (exp.Tipo.Equals("arreglo"))
+            {
+                foreach (FNodoExpresion n in exp.Arreglo)
+                {
+                    if (!TitusTools.HayErrores())
+                    {
+                        ResolverArreglo(n);
+                    }
+                }
+            }
+            else
+            {
+                Nodo3D a = exp.Generar3D();
+
+                //validacion de bool
+                if (a.Tipo.Equals(Constante.TBooleano))//conversion siviene de una relacional
+                {
+                    if (a.V == "" && a.F == "")
+                    {//si trae etiquetas viene de una relacional si no es un bool nativo
+
+                    }
+                    else
+                    {
+                        var cad = "";
+
+                        var auxtemp = TitusTools.GetTemp();
+                        var salida = TitusTools.GetEtq();
+
+                        cad += "\t" + a.V + ":\n";
+                        cad += "\t\t" + auxtemp + " = 1;\n";
+                        cad += "\t\t" + "goto " + salida + ";\n";
+                        cad += "\t" + a.F + ":\n";
+                        cad += "\t\t" + auxtemp + " = 0;\n";
+                        cad += "\t" + salida + ":\n";
+
+                        a.Valor = auxtemp;
+                        a.Codigo = a.Codigo + cad;
+                    }
+                }
+                ArregloResuelto.Add(a);
+            }
+        }
+
+        private void GetLevel()
+        {
+            Nivel = 0;
+            FNodoExpresion nodo = this;
+            while (nodo.Tipo == "arreglo")
+            {
+                this.tamanioDimension.Add(nodo.Arreglo.Count);
+                nodo = nodo.Arreglo[0];
+                Nivel++;
+            }
+        }
+
+        private Boolean ValidarArreglo(int pos, FNodoExpresion exp)
+        {
+            Boolean estado = true;
+            int cantidad = tamanioDimension[pos];
+            if (pos < tamanioDimension.Count - 1)
+            {
+
+                if (exp.Arreglo.Count == cantidad)
+                {
+                    foreach (FNodoExpresion n in exp.Arreglo)
+                    {
+                        if (n.Tipo.Equals("arreglo") && estado)
+                        {
+                            estado = ValidarArreglo(pos + 1, n);
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+                else
+                {
+                    estado = false;
+                }
+            }
+            else
+            {
+                if (exp.Arreglo.Count == cantidad)
+                {
+                    foreach (FNodoExpresion n in exp.Arreglo)
+                    {
+                        if (n.Tipo.Equals("arreglo") && estado)
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+                else
+                {
+                    estado = false;
+                }
+            }
+            return estado;
+        }
+
+        private Nodo3D Generar3DIntToStr()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Nodo3D aux = Derecha.Generar3D();
+
+            if (aux.Tipo.Equals(Constante.TEntero))
+            {
+                Nodo3D conv = IntToCadena(aux.Valor);
+                nodo.Codigo += aux.Codigo;
+                nodo.Codigo += conv.Codigo;
+                nodo.Valor = conv.Valor;
+                nodo.Tipo = conv.Tipo;
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede converir a cadena con IntToStr un tipo " + aux.Tipo, TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+        private Nodo3D Generar3DDoubleToStr()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Nodo3D aux = Derecha.Generar3D();
+
+            if (aux.Tipo.Equals(Constante.TDecimal))
+            {
+                Nodo3D conv = DoubleToCadena(aux.Valor);
+                nodo.Codigo += aux.Codigo;
+                nodo.Codigo += conv.Codigo;
+                nodo.Valor = conv.Valor;
+                nodo.Tipo = conv.Tipo;
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede converir a cadena con DoubleToStr un tipo " + aux.Tipo, TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
         }
 
         private Nodo3D IntToCadena(String tnum)
@@ -403,6 +662,110 @@ namespace C3DCombiner.Funciones
             codigo3d.Valor = t5;
             return codigo3d;
         }
+
+        private Nodo3D DoubleToCadena(String tnum)
+        {
+            String cadena = "";
+            Nodo3D codigo3d = new Nodo3D();
+
+            String t0 = TitusTools.GetTemp();
+            String t1 = TitusTools.GetTemp();
+            String t2 = TitusTools.GetTemp();
+            String t3 = TitusTools.GetTemp();
+            String t4 = TitusTools.GetTemp();
+            String t5 = TitusTools.GetTemp();
+            String t6 = TitusTools.GetTemp();
+            String t7 = TitusTools.GetTemp();
+
+            String e1 = TitusTools.GetEtq();
+            String e2 = TitusTools.GetEtq();
+            String e3 = TitusTools.GetEtq();
+            String e4 = TitusTools.GetEtq();
+            String e5 = TitusTools.GetEtq();
+            String e6 = TitusTools.GetEtq();
+            String e7 = TitusTools.GetEtq();
+            String e8 = TitusTools.GetEtq();
+            String e9 = TitusTools.GetEtq();
+            String e10 = TitusTools.GetEtq();
+            String e11 = TitusTools.GetEtq();
+            String e12 = TitusTools.GetEtq();
+
+            //codigo 3d
+            cadena += "\t\t" + t0 + " = " + tnum + ";//Convirtiendo decimal a cadena\n"; // temporal que guarda el numero a convertir en cadena
+            cadena += "\t\t" + t1 + " = " + "1;\n"; //temporal que guardara si es negativo o positivo
+            cadena += "\t\t" + "if " + t0 + " >= 0 goto " + e1 + ";\n"; // si es negativo guardamos el -1
+            cadena += "\t\t" + t1 + " = -1;\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " * " + t1 + ";\n";
+            cadena += "\t" + e1 + ":\n";
+            cadena += "\t\t" + t2 + " = 1;\n"; // temporal con el que sabremos el tamaño del numero  
+            cadena += "\t" + e3 + ":\n";
+            cadena += "\t\t" + t3 + " = 1;\n"; // temporal que llevara el contador de 9
+            cadena += "\t" + e4 + ":\n";
+            cadena += "\t\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
+            cadena += "\t\t" + "if " + t3 + " > 10 goto " + e5 + ";\n";
+            cadena += "\t\t" + "if " + t0 + " < " + t4 + " goto " + e2 + ";\n";
+            cadena += "\t\t" + t3 + " = " + t3 + " + 1;\n";
+            cadena += "\t\t" + "goto " + e4 + ";\n";
+            cadena += "\t" + e5 + ":\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " * 10;\n";
+            cadena += "\t\t" + "goto " + e3 + ";\n";
+            ////////////////////////////////////////////////////////////////
+            cadena += "\t" + e2 + "://comenzamos a guardar el numero en el heap\n";
+            cadena += "\t\t" + t5 + " = H;\n"; // temporal que guardara la posicion del heap donde creamos el numero
+            cadena += "\t\t" + "if " + t1 + " == 1 goto " + e6 + ";\n";
+            cadena += "\t\t" + "Heap[H] = 45;\n";
+            cadena += "\t\t" + "H = H + 1;\n";
+            cadena += "\t" + e6 + ":\n";
+            cadena += "\t\t" + t3 + " = " + t3 + " - 1;\n";
+            cadena += "\t\t" + t6 + " = 0;\n";
+            cadena += "\t\t" + t7 + "= 48;\n";
+            cadena += "\t" + e7 + ":\n";
+            cadena += "\t\t" + "if " + t6 + " == " + t3 + " goto " + e8 + ";\n";
+            cadena += "\t\t" + t6 + " = " + t6 + " + 1;\n";
+            cadena += "\t\t" + t7 + " = " + t7 + " + 1;\n";
+            cadena += "\t\t" + "goto " + e7 + ";\n";
+
+            cadena += "\t" + e8 + ":\n";//aqui guarda ascii
+            cadena += "\t\t" + "Heap[H] = " + t7 + ";\n";
+            cadena += "\t\t" + "H = H + 1;\n";
+
+
+            cadena += "\t\t" + "if " + t2 + " == 1 goto " + e9 + ";\n";
+            cadena += "\t\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " - " + t4 + ";\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " / 10;\n";
+
+            cadena += "\t" + e10 + ":\n";
+            cadena += "\t\t" + t3 + " = 1;\n"; // temporal que llevara el contador de 9
+            cadena += "\t" + e11 + ":\n";
+            cadena += "\t\t" + t4 + " = " + t2 + " * " + t3 + ";\n";
+            cadena += "\t\t" + "if " + t3 + " > 10 goto " + e12 + ";\n";
+            cadena += "\t\t" + "if " + t0 + " < " + t4 + " goto " + e6 + ";\n";
+            cadena += "\t\t" + t3 + " = " + t3 + " + 1;\n";
+            cadena += "\t\t" + "goto " + e11 + ";\n";
+            cadena += "\t" + e12 + ":\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " * 10;\n";
+            cadena += "\t\t" + "goto " + e10 + ";\n";
+
+            cadena += "\t" + e9 + ":\n";
+
+            cadena += "\t\t" + t0 + " = " + t0 + " - " + t6 + ";//obtenemos el decimal\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " * 1000;\n";
+
+            cadena += "\t\t" + "Heap[H] = 46;//ascii del punto\n";
+            cadena += "\t\t" + "H = H + 1;\n";
+
+            Nodo3D aux = IntToCadena(t0);
+
+
+
+            codigo3d.Codigo = cadena;
+            codigo3d.Codigo += aux.Codigo;
+            codigo3d.Tipo = Constante.TCadena;
+            codigo3d.Valor = t5;
+            return codigo3d;
+        }
+
 
         private Nodo3D Suma3D(FNodoExpresion izq, FNodoExpresion der)
         {
@@ -581,7 +944,56 @@ namespace C3DCombiner.Funciones
 
                                 case Constante.TCadena:
                                     {
+                                        String cad = "";
 
+                                        Nodo3D toString = DoubleToCadena(auxizq.Valor);
+
+                                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
+
+                                        cad += "\t\t" + codigo3d.Valor + " = H;//decimal + cadena\n";//obtenemos el valor del heap donde guardaremos la concatenacion
+
+                                        //cadena 1
+                                        String auxpool = TitusTools.GetTemp();
+
+                                        String auxetqif = TitusTools.GetEtq();
+                                        String auxetqifsalida = TitusTools.GetEtq();
+
+                                        String auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + toString.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+
+                                        //cadena2
+                                        auxpool = TitusTools.GetTemp();
+
+                                        auxetqif = TitusTools.GetEtq();
+                                        auxetqifsalida = TitusTools.GetEtq();
+
+                                        auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + auxder.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + toString.Codigo + cad;//asignamos la cadena al nodo de retorno
+                                        codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato
                                     }
                                     break;
 
@@ -758,7 +1170,55 @@ namespace C3DCombiner.Funciones
 
                                 case Constante.TDecimal:
                                     {
+                                        String cad = "";
+                                        Nodo3D toString = DoubleToCadena(auxder.Valor);
+                                        codigo3d.Valor = TitusTools.GetTemp();//obtenemos el temporal
 
+                                        cad += "\t" + codigo3d.Valor + " = H;//cadena + entero\n";//obtenemos el valor del heap donde guardaremos la concatenacion
+
+                                        //cadena 1
+                                        String auxpool = TitusTools.GetTemp();
+
+                                        String auxetqif = TitusTools.GetEtq();
+                                        String auxetqifsalida = TitusTools.GetEtq();
+
+                                        String auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + auxizq.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+
+                                        //cadena2
+
+                                        auxpool = TitusTools.GetTemp();
+
+                                        auxetqif = TitusTools.GetEtq();
+                                        auxetqifsalida = TitusTools.GetEtq();
+
+                                        auxpool2 = TitusTools.GetTemp();
+
+                                        cad += "\t\t" + auxpool + " = " + toString.Valor + ";\n";
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t" + auxetqif + ":\n";
+                                        cad += "\t\t" + "if " + auxpool2 + " == 0 goto " + auxetqifsalida + ";\n";
+                                        cad += "\t\t" + "Heap[H] = " + auxpool2 + ";\n";//asignamos el valor de cada caracter al temporal
+                                        cad += "\t\t" + "H = H + 1;\n";//asignamos la siguiente posicion del pool
+                                        cad += "\t\t" + auxpool + " = " + auxpool + " + 1;\n";//obtenemos el nuevo valor del heap
+                                        cad += "\t\t" + auxpool2 + " = " + "Heap[" + auxpool + "];\n";
+                                        cad += "\t\t" + "goto " + auxetqif + ";\n";// salto para volver a evaluar el pool
+                                        cad += "\t" + auxetqifsalida + ":\n";//etq de salida por si el if es verdadero
+                                        cad += "\t\t" + "Heap[H] = 0;\n";
+                                        cad += "\t\t" + "H = H + 1;\n";
+
+                                        codigo3d.Codigo = auxizq.Codigo + auxder.Codigo + toString.Codigo + cad;//asignamos la cadena al nodo de retorno
+                                        codigo3d.Tipo = Constante.TCadena;//asignamos el tipo de dato
                                     }
                                     break;
 
@@ -2796,7 +3256,7 @@ namespace C3DCombiner.Funciones
                     }
                     else
                     {
-                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el temporal " + this.Nombre, TitusTools.GetRuta(), Fila, Columna);                        
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el temporal " + this.Nombre, TitusTools.GetRuta(), Fila, Columna);
                     }
                     break;
 
@@ -2888,7 +3348,7 @@ namespace C3DCombiner.Funciones
                             aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero + der.Decimal);
 
                             break;
-                            
+
                         default:
                             TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede +, " + izq.Tipo + " con " + der.Tipo, TitusTools.GetRuta(), Fila, Columna);
                             break;

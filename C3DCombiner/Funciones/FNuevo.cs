@@ -43,18 +43,19 @@ namespace C3DCombiner.Funciones
 
             String tempsimulacion = TitusTools.GetTemp();
 
-            cadena += "\t\t" + tempsimulacion + " = P + " + (simulacion.Ambito.Tamaño + 2).ToString() + ";//simulacion de cambio de ambito \n";
+            cadena += "\t\t" + tempsimulacion + " = P + " + (simulacion.Ambito.Tamaño).ToString() + ";//simulacion de cambio de ambito \n";
 
             nodo.Valor = TitusTools.GetTemp();
 
             nodo.Tipo = this.Nombre;
+            String este = TitusTools.GetTemp();
 
             cadena += "\t\t" + nodo.Valor + " = H;//posicion del objeto\n";
-
-            cadena += "\t\t" + "init_" + this.Nombre + "();\n";
-
-            String este = TitusTools.GetTemp();
             cadena += "\t\t" + este + " = " + tempsimulacion + " + 0;//metiendo el this\n";
+            cadena += "\t\t" + "Stack[" + este + "] = " + nodo.Valor + ";\n";
+            cadena += "\t\t" + "P = P + " + (simulacion.Ambito.Tamaño).ToString() + ";//cambio de ambito para llamar al constructor\n";
+            cadena += "\t\t" + "init_" + this.Nombre + "();\n";
+            cadena += "\t\t" + "P = P - " + (simulacion.Ambito.Tamaño).ToString() + ";//cambio de ambito para llamar al constructor\n";
             cadena += "\t\t" + "Stack[" + este + "] = " + nodo.Valor + ";\n";
             List<Nodo3D> resueltas = new List<Nodo3D>();
 
@@ -106,7 +107,7 @@ namespace C3DCombiner.Funciones
             {
                 Simbolo sim = Padre.BuscarConstructor(this.Nombre, resueltas);
 
-                cadena += "\t\t" + "P = P + " + (simulacion.Ambito.Tamaño + 2).ToString() + ";//cambio de ambito para llamar al constructor\n";
+                cadena += "\t\t" + "P = P + " + (simulacion.Ambito.Tamaño).ToString() + ";//cambio de ambito para llamar al constructor\n";
                 if (sim != null)
                 {
                     FMetodo m = (FMetodo)sim.Valor;
@@ -131,7 +132,7 @@ namespace C3DCombiner.Funciones
                 {
                     TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro el constructor para la clase " + this.Nombre, TitusTools.GetRuta(), this.Fila, this.Columna);
                 }
-                cadena += "\t\t" + "P = P - " + (simulacion.Ambito.Tamaño + 2).ToString() + ";//cambio de ambito para llamar al constructor\n";
+                cadena += "\t\t" + "P = P - " + (simulacion.Ambito.Tamaño).ToString() + ";//cambio de ambito para llamar al constructor\n";
 
             }
 

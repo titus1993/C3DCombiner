@@ -195,14 +195,6 @@ namespace C3DCombiner.Funciones
                     codigo3d = Potencia3D(nodo.Izquierda, nodo.Derecha);
                     break;
 
-                /*case Constante.TAumento:
-                    codigo3d = Aumento(izq);
-                    break;
-
-                case Constante.TDecremento:
-                    codigo3d = Disminucion(izq);
-                    break;*/
-
                 case Constante.TMayor:
                     codigo3d = Relacional3D(nodo.Izquierda, nodo.Derecha);
                     break;

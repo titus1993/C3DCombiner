@@ -133,6 +133,10 @@ namespace C3DCombiner.Ejecucion
                 case Constante.LLAMADA_METODO:
                     cadena = GenerarLlamadaMetodo();
                     break;
+
+                case Constante.TSuper:
+                    cadena = GenerarSuper();
+                    break;
             }
             return cadena;
         }
@@ -213,6 +217,10 @@ namespace C3DCombiner.Ejecucion
                 case Constante.LLAMADA_METODO:
                     cadena = GenerarLlamadaMetodo();
                     break;
+
+                case Constante.TSuper:
+                    cadena = GenerarSuper();
+                    break;
             }
             return cadena;
         }
@@ -239,6 +247,16 @@ namespace C3DCombiner.Ejecucion
 
             FMetodo constructor = (FMetodo)Valor;
             cadena += constructor.Generar3DConstructor();
+
+            return cadena;
+        }
+
+        private String GenerarSuper()
+        {
+            String cadena = "";
+
+            FSuper super = (FSuper)Valor;
+            cadena += super.Generar3D();
 
             return cadena;
         }

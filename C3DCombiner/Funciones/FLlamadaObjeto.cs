@@ -82,6 +82,62 @@ namespace C3DCombiner.Funciones
             }
         }
 
+        //3d super acceso
+        public Nodo3D Generar3DSuper(String temporal)
+        {
+            Nodo3D cadena = new Nodo3D();
+
+            switch (Tipo)
+            {
+                case Constante.LLAMADA_ARREGLO:
+                    cadena = Generar3DArregloSuper(temporal);
+                    break;
+
+
+                case Constante.LLAMADA_METODO:
+                    cadena = Generar3DMetodoSuper(temporal);
+                    break;
+
+                case Constante.LLAMADA_METODO_ARREGLO:
+                    cadena = Generar3DMetodoArregloSuper(temporal);
+                    break;
+
+                default:
+                    cadena = Generar3DVariableSuper(temporal);
+
+                    break;
+            }
+
+            return cadena;
+        }
+
+        //3d super asignacion
+        public Nodo3D Generar3DSuperAsginacion(String temporal)
+        {
+            Nodo3D cadena = new Nodo3D();
+
+            switch (Tipo)
+            {
+                case Constante.LLAMADA_ARREGLO:
+                    cadena = Generar3DArregloSuperAsignacion(temporal);
+                    break;
+
+                case Constante.LLAMADA_METODO_ARREGLO:
+                    cadena = Generar3DMetodoArregloSuperAsignacion(temporal);
+                    break;
+
+                case Constante.LLAMADA_METODO:
+                    cadena = Generar3DMetodoSuperAsignacion(temporal);
+                    break;
+
+                default:
+                    cadena = Generar3DVariableSuperAsignacion(temporal);
+                    break;
+            }
+
+            return cadena;
+        }
+
         //3d para acceso
         public Nodo3D Generar3D()
         {
@@ -99,6 +155,7 @@ namespace C3DCombiner.Funciones
                     break;
 
                 case Constante.LLAMADA_METODO_ARREGLO:
+                    cadena = Generar3DMetodoArreglo();
                     break;
 
                 case Constante.TSelf:
@@ -110,6 +167,7 @@ namespace C3DCombiner.Funciones
                     break;
 
                 case Constante.TSuper:
+                    cadena = Generar3DSuperAcceso();
                     break;
 
                 default:
@@ -143,6 +201,7 @@ namespace C3DCombiner.Funciones
                     break;
 
                 case Constante.LLAMADA_METODO_ARREGLO:
+                    cadena = Generar3DMetodoArregloHijo(padre, temporal);
                     break;
 
                 default:
@@ -153,34 +212,126 @@ namespace C3DCombiner.Funciones
             return cadena;
         }
 
-        private Nodo3D Generar3DEste()
+        private Nodo3D Generar3DSuperAcceso()
         {
             Nodo3D nodo = new Nodo3D();
 
             Simbolo padre = this.Padre.BuscarClasePadre();
 
+            FClase clasepadre = (FClase)padre.Valor;
 
-            String posStack = TitusTools.GetTemp();
-            nodo.Valor = TitusTools.GetTemp();
-            nodo.Codigo += "\t\t" + posStack + " = P + 0;//Posicion del this\n";
-            nodo.Codigo += "\t\t" + nodo.Valor + " = Stack[" + posStack + "];//valor del this\n";
-            nodo.Tipo = padre.Nombre;
+            if (!clasepadre.Herencia.Equals(""))
+            {
+
+
+                Simbolo simhere = padre.BuscarClase(clasepadre.Herencia, clasepadre.ArchivoPadre);
+
+                if (simhere != null)
+                {
+                    String posstack = TitusTools.GetTemp();
+                    nodo.Codigo += "\t\t" + posstack + " = Stack[P];\n";
+                    String nuevapos = TitusTools.GetTemp();
+                    nodo.Codigo += "\t\t" + nuevapos + " = " + posstack + " + " + clasepadre.Ambito.Tamaño.ToString() + ";//posicion en el this de la herencia\n";
+
+                    if (Hijo != null)
+                    {
+                        Hijo.SetPadre(simhere);
+                        Hijo.Padre = simhere;
+                        Nodo3D hijo = Hijo.Generar3DSuper(nuevapos);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No exite ninguna clase llamada " + clasepadre.Herencia, TitusTools.GetRuta(), Fila, Columna);
+                }
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede utiliza la instruccion super porque no existe ninguna herencia", TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+        private Nodo3D Generar3DSuperAsignacion()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Simbolo padre = this.Padre.BuscarClasePadre();
+
+            FClase clasepadre = (FClase)padre.Valor;
+
+            if (!clasepadre.Herencia.Equals(""))
+            {
+
+
+                Simbolo simhere = padre.BuscarClase(clasepadre.Herencia, clasepadre.ArchivoPadre);
+
+                if (simhere != null)
+                {
+                    String posstack = TitusTools.GetTemp();
+                    nodo.Codigo += "\t\t" + posstack + " = Stack[P];\n";
+                    String nuevapos = TitusTools.GetTemp();
+                    nodo.Codigo += "\t\t" + nuevapos + " = " + posstack + " + " + clasepadre.Ambito.Tamaño.ToString() + ";//posicion en el this de la herencia\n";
+
+                    if (Hijo != null)
+                    {
+                        Hijo.SetPadre(simhere);
+                        Hijo.Padre = simhere;
+                        Nodo3D hijo = Hijo.Generar3DSuperAsginacion(nuevapos);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No exite ninguna clase llamada " + clasepadre.Herencia, TitusTools.GetRuta(), Fila, Columna);
+                }
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede utiliza la instruccion super porque no existe ninguna herencia", TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+        private Nodo3D Generar3DEste()
+        {
+            Nodo3D nodo = new Nodo3D();
 
             if (Hijo != null)
-            {                
-                Nodo3D hijo = Hijo.Generar3DHijo(padre, nodo.Valor);
+            {
 
+                Nodo3D hijo = Hijo.Generar3D();
                 nodo.Valor = hijo.Valor;
                 nodo.Codigo += hijo.Codigo;
                 nodo.F = hijo.F;
                 nodo.V = hijo.V;
                 nodo.Tipo = hijo.Tipo;
             }
+            else
+            {
+                Simbolo padre = this.Padre.BuscarClasePadre();
+                String posStack = TitusTools.GetTemp();
+                nodo.Valor = TitusTools.GetTemp();
+                nodo.Codigo += "\t\t" + posStack + " = P + 0;//Posicion del this\n";
+                nodo.Codigo += "\t\t" + nodo.Valor + " = Stack[" + posStack + "];//valor del this\n";
+                nodo.Tipo = padre.Nombre;
+            }
 
             return nodo;
         }
-
-
 
         public Nodo3D Generar3DVariable()
         {
@@ -600,6 +751,18 @@ namespace C3DCombiner.Funciones
             return nodo;
         }
 
+        public Nodo3D Generar3DMetodoArreglo()
+        {
+            Nodo3D nodo = LlamadaMetodoArreglo.Generar3D();
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoArregloHijo(Simbolo padre, String temporal)
+        {
+            Nodo3D nodo = LlamadaMetodoArreglo.Generar3DHijo(padre, temporal);
+            return nodo;
+        }
+
         //3d para asignaciones
         public Nodo3D Generar3DAsginacion()
         {
@@ -611,26 +774,42 @@ namespace C3DCombiner.Funciones
                     cadena = Generar3DArregloAsignacion();
                     break;
 
-
-                case Constante.LLAMADA_METODO:
+                case Constante.LLAMADA_METODO_ARREGLO:
+                    cadena = Generar3DMetodoArregloAsignacion();
                     break;
 
-                case Constante.LLAMADA_METODO_ARREGLO:
+                case Constante.LLAMADA_METODO:
+                    cadena = Generar3DMetodoAsignacion();
                     break;
 
                 case Constante.TSelf:
+                    cadena = Generar3DEsteAsignacion();
+                    break;
+
+                case Constante.TEste:
+                    cadena = Generar3DEsteAsignacion();
                     break;
 
                 case Constante.TSuper:
+                    cadena = Generar3DSuperAsignacion();
                     break;
 
                 default:
-                    cadena = Generar3DVariableAsignacion();
+                    if (Nombre.Equals(Constante.TEste) || Nombre.Equals(Constante.TSelf))
+                    {
+                        cadena = Generar3DEsteAsignacion();
+
+                    }
+                    else
+                    {
+                        cadena = Generar3DVariableAsignacion();
+                    }
                     break;
             }
 
             return cadena;
         }
+
 
         public Nodo3D Generar3DHijoAsignacion(Simbolo padre, String temporal)
         {
@@ -644,15 +823,11 @@ namespace C3DCombiner.Funciones
 
 
                 case Constante.LLAMADA_METODO:
+                    cadena = Generar3DMetodoHijoAsignacion(padre, temporal);
                     break;
 
                 case Constante.LLAMADA_METODO_ARREGLO:
-                    break;
-
-                case Constante.TSelf:
-                    break;
-
-                case Constante.TSuper:
+                    cadena = Generar3DMetodoArregloHijoAsignacion(padre, temporal);
                     break;
 
                 default:
@@ -663,6 +838,36 @@ namespace C3DCombiner.Funciones
             return cadena;
         }
 
+        private Nodo3D Generar3DEsteAsignacion()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Simbolo padre = this.Padre.BuscarClasePadre();
+
+
+
+            if (Hijo != null)
+            {
+                Nodo3D hijo = Hijo.Generar3DAsginacion();
+
+                nodo.Valor = hijo.Valor;
+                nodo.Codigo += hijo.Codigo;
+                nodo.F = hijo.F;
+                nodo.V = hijo.V;
+                nodo.Tipo = hijo.Tipo;
+            }
+            else
+            {
+                String posStack = TitusTools.GetTemp();
+                nodo.Valor = TitusTools.GetTemp();
+                nodo.Codigo += "\t\t" + posStack + " = P + 0;//Posicion del this\n";
+                nodo.Codigo += "\t\t" + nodo.Valor + " = Stack[" + posStack + "];//valor del this\n";
+                nodo.Tipo = padre.Nombre;
+            }
+
+            return nodo;
+        }
+        
         public Nodo3D Generar3DVariableAsignacion()
         {
             Nodo3D nodo = new Nodo3D();
@@ -1007,5 +1212,440 @@ namespace C3DCombiner.Funciones
 
             return nodo;
         }
+
+        public Nodo3D Generar3DMetodoAsignacion()
+        {
+            Nodo3D nodo = new Nodo3D();
+            nodo = LlamadaMetodo.Generar3DAsignacion();
+
+            if (Hijo != null)
+            {
+                if (!nodo.Tipo.Equals(Constante.TEntero) && !nodo.Tipo.Equals(Constante.TDecimal) && !nodo.Tipo.Equals(Constante.TCaracter) && !nodo.Tipo.Equals(Constante.TCadena) && !nodo.Tipo.Equals(Constante.TBooleano))
+                {
+                    //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                    Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                    FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                    Simbolo padre = papa.BuscarClase(nodo.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                    if (padre != null)
+                    {
+                        Nodo3D hijo = Hijo.Generar3DHijoAsignacion(padre, nodo.Valor);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+
+
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + LlamadaArreglo.Nombre + " de tipo " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoHijoAsignacion(Simbolo padrepadre, String temporal)
+        {
+            Nodo3D nodo = new Nodo3D();
+            nodo = LlamadaMetodo.Generar3DHijoAsignacion(padrepadre, temporal);
+
+            if (Hijo != null)
+            {
+                if (!nodo.Tipo.Equals(Constante.TEntero) && !nodo.Tipo.Equals(Constante.TDecimal) && !nodo.Tipo.Equals(Constante.TCaracter) && !nodo.Tipo.Equals(Constante.TCadena) && !nodo.Tipo.Equals(Constante.TBooleano))
+                {
+                    //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                    Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                    FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                    Simbolo padre = papa.BuscarClase(nodo.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                    if (padre != null)
+                    {
+                        Nodo3D hijo = Hijo.Generar3DHijoAsignacion(padre, nodo.Valor);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+
+
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + LlamadaArreglo.Nombre + " de tipo " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoArregloAsignacion()
+        {
+            Nodo3D nodo = LlamadaMetodoArreglo.Generar3DAsignacion();
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoArregloHijoAsignacion(Simbolo padre, String temporal)
+        {
+            Nodo3D nodo = LlamadaMetodoArreglo.Generar3DHijoAsignacion(padre, temporal);
+            return nodo;
+        }
+        
+        //////////////////////super acceso
+        public Nodo3D Generar3DVariableSuper(String temporalposicion)
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Simbolo sim = Padre.BuscarVariable(this.Nombre);
+
+
+            if (sim != null)
+            {
+                if (Hijo == null)
+                {
+                    FDeclaracion decla = (FDeclaracion)sim.Valor;
+                    if (decla.Dimensiones.Count == 0)
+                    {
+                        nodo.Tipo = sim.Tipo;
+                    }
+                    else
+                    {
+                        nodo.Tipo = "arreglo " + sim.Tipo;
+                    }
+
+                    String pos = TitusTools.GetTemp();
+                    String heap = TitusTools.GetTemp();
+                    nodo.Valor = TitusTools.GetTemp();
+                    nodo.Codigo += "\t\t" + heap + " = " + temporalposicion + " + " + sim.Posicion.ToString() + ";//posicion de la variable " + sim.Nombre + "\n";
+                    nodo.Codigo += "\t\t" + nodo.Valor + " = Heap[" + heap + "];\n";
+                }
+                else//si tiene hijo 
+                {
+                    if (!sim.Tipo.Equals(Constante.TEntero) && !sim.Tipo.Equals(Constante.TDecimal) && !sim.Tipo.Equals(Constante.TCaracter) && !sim.Tipo.Equals(Constante.TCadena) && !sim.Tipo.Equals(Constante.TBooleano))
+                    {
+                        FDeclaracion decla = (FDeclaracion)sim.Valor;
+                        if (decla.Dimensiones.Count == 0)
+                        {
+                            //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                            Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                            FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                            Simbolo padre = papa.BuscarClase(sim.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                            if (padre != null)
+                            {
+                                String heap = TitusTools.GetTemp();
+                                String temp = TitusTools.GetTemp();
+                                nodo.Codigo += "\t\t" + heap + " = " + temporalposicion + " + " + sim.Posicion.ToString() + ";//posicion de la variable " + sim.Nombre + "\n";
+                                nodo.Codigo += "\t\t" + temp + " = Heap[" + heap + "];\n";
+
+                                Nodo3D hijo = Hijo.Generar3DHijo(padre, temp);
+
+                                nodo.Valor = hijo.Valor;
+                                nodo.Codigo += hijo.Codigo;
+                                nodo.F = hijo.F;
+                                nodo.V = hijo.V;
+                                nodo.Tipo = hijo.Tipo;
+
+                            }
+                            else
+                            {
+                                TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + sim.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                            }
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder al arreglo " + decla.Nombre + " como objeto.", TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + sim.Nombre + " de tipo " + sim.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+                }
+
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro la variable " + this.Nombre, TitusTools.GetRuta(), this.Fila, this.Columna);
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DArregloSuper(String temporalposicion)
+        {
+            Nodo3D nodo = new Nodo3D();
+            nodo = LlamadaArreglo.Generar3DSuper(temporalposicion);
+
+            if (Hijo != null)
+            {
+                if (!nodo.Tipo.Equals(Constante.TEntero) && !nodo.Tipo.Equals(Constante.TDecimal) && !nodo.Tipo.Equals(Constante.TCaracter) && !nodo.Tipo.Equals(Constante.TCadena) && !nodo.Tipo.Equals(Constante.TBooleano))
+                {
+                    //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                    Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                    FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                    Simbolo padre = papa.BuscarClase(nodo.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                    if (padre != null)
+                    {
+                        Nodo3D hijo = Hijo.Generar3DHijo(padre, nodo.Valor);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+
+
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + LlamadaArreglo.Nombre + " de tipo " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoSuper(String temporaposicion)
+        {
+            Nodo3D nodo = new Nodo3D();
+            nodo = LlamadaMetodo.Generar3DSuper(temporaposicion);
+
+            if (Hijo != null)
+            {
+                if (!nodo.Tipo.Equals(Constante.TEntero) && !nodo.Tipo.Equals(Constante.TDecimal) && !nodo.Tipo.Equals(Constante.TCaracter) && !nodo.Tipo.Equals(Constante.TCadena) && !nodo.Tipo.Equals(Constante.TBooleano))
+                {
+                    //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                    Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                    FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                    Simbolo padre = papa.BuscarClase(nodo.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                    if (padre != null)
+                    {
+                        Nodo3D hijo = Hijo.Generar3DHijo(padre, nodo.Valor);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+
+
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + LlamadaArreglo.Nombre + " de tipo " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoArregloSuper(String temporalposicion)
+        {
+            Nodo3D nodo = LlamadaMetodoArreglo.Generar3DSuper(temporalposicion);/////cambair a super
+            return nodo;
+        }
+        
+
+
+        ////////////////////////super asignacion
+        public Nodo3D Generar3DVariableSuperAsignacion(String temporal)
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Simbolo sim = Padre.BuscarVariable(this.Nombre);
+
+
+            if (sim != null)
+            {
+                if (Hijo == null)
+                {
+                    FDeclaracion decla = (FDeclaracion)sim.Valor;
+                    if (decla.Dimensiones.Count == 0)
+                    {
+                        nodo.Tipo = sim.Tipo;
+                    }
+                    else
+                    {
+                        nodo.Tipo = "arreglo " + sim.Tipo;
+                    }
+
+                    String heap = TitusTools.GetTemp();
+                    nodo.Codigo += "\t\t" + heap + " = " + temporal + " + " + sim.Posicion.ToString() + ";//posicion de la variable " + sim.Nombre + "\n";
+                    nodo.Valor = "Heap[" + heap + "]";
+
+                }
+                else//si tiene hijo 
+                {
+                    if (!sim.Tipo.Equals(Constante.TEntero) && !sim.Tipo.Equals(Constante.TDecimal) && !sim.Tipo.Equals(Constante.TCaracter) && !sim.Tipo.Equals(Constante.TCadena) && !sim.Tipo.Equals(Constante.TBooleano))
+                    {
+                        FDeclaracion decla = (FDeclaracion)sim.Valor;
+                        if (decla.Dimensiones.Count == 0)
+                        {
+                            //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                            Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                            FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                            Simbolo padre = papa.BuscarClase(sim.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                            if (padre != null)
+                            {
+                                String heap = TitusTools.GetTemp();
+                                String temp = TitusTools.GetTemp();
+                                nodo.Codigo += "\t\t" + heap + " = " + temporal + " + " + sim.Posicion.ToString() + ";//posicion de la variable " + sim.Nombre + "\n";
+                                nodo.Codigo += "\t\t" + temp + " = Heap[" + heap + "];\n";
+
+                                Nodo3D hijo = Hijo.Generar3DHijoAsignacion(padre, temp);
+
+                                nodo.Valor = hijo.Valor;
+                                nodo.Codigo += hijo.Codigo;
+                                nodo.F = hijo.F;
+                                nodo.V = hijo.V;
+                                nodo.Tipo = hijo.Tipo;
+
+                            }
+                            else
+                            {
+                                TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + sim.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                            }
+                        }
+                        else
+                        {
+                            TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder al arreglo " + decla.Nombre + " como objeto.", TitusTools.GetRuta(), this.Fila, this.Columna);
+                        }
+
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + sim.Nombre + " de tipo " + sim.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+                }
+
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se encontro la variable " + this.Nombre, TitusTools.GetRuta(), this.Fila, this.Columna);
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DArregloSuperAsignacion(String temporal)
+        {
+            Nodo3D nodo = new Nodo3D();
+
+
+            if (Hijo != null)
+            {
+                nodo = LlamadaArreglo.Generar3DSuperAsignacion(temporal);
+                if (!nodo.Tipo.Equals(Constante.TEntero) && !nodo.Tipo.Equals(Constante.TDecimal) && !nodo.Tipo.Equals(Constante.TCaracter) && !nodo.Tipo.Equals(Constante.TCadena) && !nodo.Tipo.Equals(Constante.TBooleano))
+                {
+                    //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                    Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                    FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                    Simbolo padre = papa.BuscarClase(nodo.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                    if (padre != null)
+                    {
+                        Nodo3D hijo = Hijo.Generar3DHijoAsignacion(padre, nodo.Valor);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+
+
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + LlamadaArreglo.Nombre + " de tipo " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+            else
+            {
+                nodo = LlamadaArreglo.Generar3DSuperAsignacion(temporal);
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoSuperAsignacion(String temporaposicion)
+        {
+            Nodo3D nodo = new Nodo3D();
+            nodo = LlamadaMetodo.Generar3DSuperAsignacion(temporaposicion);
+
+            if (Hijo != null)
+            {
+                if (!nodo.Tipo.Equals(Constante.TEntero) && !nodo.Tipo.Equals(Constante.TDecimal) && !nodo.Tipo.Equals(Constante.TCaracter) && !nodo.Tipo.Equals(Constante.TCadena) && !nodo.Tipo.Equals(Constante.TBooleano))
+                {
+                    //nodo.Tipo = sim.Tipo;//el simbolo trae el tipo de la variable 
+                    Simbolo papa = Padre.BuscarClasePadre();//obtenemos quien es la clase padre para obtener a que archivo pertenece
+                    FClase clasepapa = (FClase)papa.Valor;//castemos la clase
+                    Simbolo padre = papa.BuscarClase(nodo.Tipo, clasepapa.ArchivoPadre);//buscamos la clase para saber su estructura
+
+                    if (padre != null)
+                    {
+                        Nodo3D hijo = Hijo.Generar3DHijoAsignacion(padre, nodo.Valor);
+
+                        nodo.Valor = hijo.Valor;
+                        nodo.Codigo += hijo.Codigo;
+                        nodo.F = hijo.F;
+                        nodo.V = hijo.V;
+                        nodo.Tipo = hijo.Tipo;
+                    }
+                    else
+                    {
+                        TitusTools.InsertarError(Constante.TErrorSemantico, "No exite la clase " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                    }
+
+
+                }
+                else
+                {
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede acceder a la variable " + LlamadaArreglo.Nombre + " de tipo " + nodo.Tipo, TitusTools.GetRuta(), this.Fila, this.Columna);
+                }
+            }
+
+            return nodo;
+        }
+
+        public Nodo3D Generar3DMetodoArregloSuperAsignacion(String temporal)
+        {
+            Nodo3D nodo = LlamadaMetodoArreglo.Generar3DSuperAsignacion(temporal);
+            return nodo;
+        }
+
     }
 }

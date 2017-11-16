@@ -20,8 +20,43 @@ namespace C3DCombiner.Funciones
             this.Acceso = acceso;
             this.Valor = valor;
             this.Temporal = tempo;
+
+            if (Tipo.Equals(Constante.TH) || Tipo.Equals(Constante.TP))
+            {
+                this.Temporal = tipo;
+            }
         }
 
+
+        public String Generar3DOptimizado()
+        {
+            String cadena = "";
+            switch (Tipo)
+            {
+                case Constante.TH:
+                    cadena += "\t\t" + "H = " + Valor.Generar3DOptimizado() + ";\n";
+                    break;
+
+                case Constante.TP:
+                    cadena += "\t\t" + "P = " + Valor.Generar3DOptimizado() + ";\n";
+                    break;
+
+                case Constante.Temporal:
+                    cadena += "\t\t" + Temporal + " = " + Valor.Generar3DOptimizado() + ";\n";
+                    break;
+
+                case Constante.THeap:
+                    cadena += "\t\t" + "Heap["+Acceso.Generar3DOptimizado() + "] = " + Valor.Generar3DOptimizado() + ";\n";
+                    break;
+
+                case Constante.TStack:
+
+                    cadena += "\t\t" +"Stack["+ Acceso.Generar3DOptimizado() + "] = " + Valor.Generar3DOptimizado() + ";\n";
+                    break;
+
+            }
+            return cadena;
+        }
 
         public void Ejecutar()
         {

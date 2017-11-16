@@ -263,13 +263,16 @@ namespace C3DCombiner
 
         private void TitusTree_DoubleClick(object sender, EventArgs e)
         {
-            string ruta = SelectedNode.Name + "\\" + SelectedNode.Text;
-            if (FileSystem.FileExists(ruta))
+            if (SelectedNode != null)
             {
-                
-                TitusTools.Tabs.abrirTab(SelectedNode.Text, ruta, SelectedNode.SelectedImageIndex - 1);
-                //aqui metes el codigo para abrir un archivo XD
-                Console.WriteLine(ruta);
+                string ruta = SelectedNode.Name + "\\" + SelectedNode.Text;
+                if (FileSystem.FileExists(ruta))
+                {
+
+                    TitusTools.Tabs.abrirTab(SelectedNode.Text, ruta, SelectedNode.SelectedImageIndex - 1);
+                    //aqui metes el codigo para abrir un archivo XD
+                    Console.WriteLine(ruta);
+                }
             }
         }
     }

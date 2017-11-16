@@ -41,12 +41,16 @@ namespace C3DCombiner
 
         public static DataGridView TablaSimbolos = new DataGridView();
 
+        public static DataGridView ReporteOptimizacion = new DataGridView();
+
         public static List<Archivo> Archivos_Importados = new List<Archivo>();
 
         public static List<String> Rutas = new List<String>();
 
         public static IronyFCTB Codigo3D = new IronyFCTB();
-        
+
+        public static IronyFCTB Codigo3DOptmizado = new IronyFCTB();
+
         public static Boolean ExisteArchivo(String ruta)
         {
             foreach (Archivo archivo in Archivos_Importados)
@@ -89,9 +93,14 @@ namespace C3DCombiner
 
             IniciarTablaSimbolos();
 
+            IniciarReporteOptimizacion();
+
             Codigo3D.Dock = DockStyle.Fill;
             Codigo3D.Grammar = new _3DGrammar();
-           
+
+            Codigo3DOptmizado.Dock = DockStyle.Fill;
+            Codigo3DOptmizado.Grammar = new _3DGrammar();
+
         }
 
         public static void IniciarConsola()
@@ -115,6 +124,8 @@ namespace C3DCombiner
         public static void LimpiarConsola()
         {
             Consola.Text = "";
+            Codigo3D.Text = "";
+            Codigo3DOptmizado.Text = "";
         }
 
         public static void IniciarErrores()
@@ -143,17 +154,51 @@ namespace C3DCombiner
             }
 
         }
-        
-        
+
+        public static void IniciarReporteOptimizacion()
+        {
+            ReporteOptimizacion.Columns.Add("No.", "No.");
+            ReporteOptimizacion.Columns.Add("Regla", "Regla");
+            ReporteOptimizacion.Columns.Add("Descripcion", "Descripcion");
+            ReporteOptimizacion.Columns.Add("Linea", "Linea");
+            ReporteOptimizacion.Columns.Add("Columna", "Columna");
+            ReporteOptimizacion.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            ReporteOptimizacion.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ReporteOptimizacion.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ReporteOptimizacion.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            ReporteOptimizacion.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            ReporteOptimizacion.Dock = DockStyle.Fill;
+            ReporteOptimizacion.ReadOnly = true;
+            ReporteOptimizacion.ScrollBars = ScrollBars.Both;
+            ReporteOptimizacion.AutoGenerateColumns = true;
+            ReporteOptimizacion.RowsDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            foreach (DataGridViewColumn col in ReporteOptimizacion.Columns)
+            {
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.HeaderCell.Style.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            }
+
+        }
+
+
 
         public static void InsertarError(String Tipo, String Descripcion, String Ruta, int Fila, int Columna)
         {
             Errores.Rows.Insert(Errores.Rows.Count - 1, Errores.Rows.Count, Tipo, Descripcion, Ruta, Fila, Columna);
         }
 
+        public static void InsertarReporteOptimizacion(String Regla, String Descripcion, int Fila, int Columna)
+        {
+            ReporteOptimizacion.Rows.Insert(ReporteOptimizacion.Rows.Count - 1, ReporteOptimizacion.Rows.Count, Regla, Descripcion, Fila, Columna);
+        }
+
         public static void LimpiarDatosErrores()
         {
             Errores.Rows.Clear();
+        }
+        public static void LimpiarReporteOptimizacion()
+        {
+            ReporteOptimizacion.Rows.Clear();
         }
 
         public static bool HayErrores()
@@ -211,6 +256,7 @@ namespace C3DCombiner
             
             LimpiarConsola();
             LimpiarDatosErrores();
+            LimpiarReporteOptimizacion();
             LimpiarDatosTablaSimbolos();
             LimpiarArchivos();
             Temporal = 0;

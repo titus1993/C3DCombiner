@@ -10,7 +10,7 @@ namespace C3DCombiner.Ejecucion
 {
     class Ejecucion3D
     {
-        Ambito Codigo3D;
+        public Ambito Codigo3D;
 
         public Ejecucion3D(Ambito codigo3d)
         {
@@ -29,6 +29,11 @@ namespace C3DCombiner.Ejecucion
             {
                 MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public void Optimizar()
+        {
+            Optimizacion.Optimizar(Codigo3D);
         }
 
 

@@ -201,6 +201,14 @@ namespace C3DCombiner.Funciones
                     TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede asignar el arreglo por que las dimensiones y sus tamaños no son iguales", TitusTools.GetRuta(), sim.Fila, sim.Columna);
                     break;
 
+                case "3":
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puedo convertir de cadena a entero", TitusTools.GetRuta(), sim.Fila, sim.Columna);
+                    break;
+
+                case "4":
+                    TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede convertir de cadena a decimal", TitusTools.GetRuta(), sim.Fila, sim.Columna);
+                    break;
+
                 default:
                     TitusTools.InsertarError(Constante.TErrorSemantico, "Error desconocido", TitusTools.GetRuta(), sim.Fila, sim.Columna);
                     break;

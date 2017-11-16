@@ -48,5 +48,21 @@ namespace C3DCombiner.Funciones
 
             return "";
         }
+
+        public String Generar3DOptimizado()
+        {
+            String cadena = "";
+
+            if (Tipo.Equals(Constante.TIf))
+            {
+                cadena += "\t\t" + "if " + Condicion.Generar3DOptimizado() + " goto " + Etiqueta + ";\n";
+            }
+            else
+            {
+                cadena += "\t\t" + "ifFalse " + Condicion.Generar3DOptimizado() + " goto " + Etiqueta + ";\n";
+            }
+
+            return cadena;
+        }
     }
 }

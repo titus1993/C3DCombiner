@@ -100,6 +100,7 @@
     <Compile Include="Ejecucion\Archivo.cs" />
     <Compile Include="Ejecucion\Bloque3D.cs" />
     <Compile Include="Ejecucion\Ejecucion3D.cs" />
+    <Compile Include="Ejecucion\Optimizacion.cs" />
     <Compile Include="Ejecucion\Simbolo.cs" />
     <Compile Include="Ejecucion\Tabla3D.cs" />
     <Compile Include="Ejecucion\Variable.cs" />

@@ -35,14 +35,19 @@ namespace C3DCombiner
             TabConsola.Controls.Add(TitusTools.Consola);
             TabErrores.Controls.Add(TitusTools.Errores);
             TabSimbolos.Controls.Add(TitusTools.TablaSimbolos);
+            TabOptimizacion.Controls.Add(TitusTools.ReporteOptimizacion);
+            TitusTools.ReporteOptimizacion.Dock = DockStyle.Fill;
             Tab3d.Controls.Add(TitusTools.Codigo3D);
             Tab3d.Controls.Add(panel);
+            Tab3dOptimizado.Controls.Add(TitusTools.Codigo3DOptmizado);
+            Tab3dOptimizado.Controls.Add(panel2);
             //configuramos el label
 
 
             TitusTools.Tabs.agregarNewTab(0);                        
         }
 
+        Label panel2;
         Label panel;
         private void IniciarComponentes()
         {
@@ -56,6 +61,17 @@ namespace C3DCombiner
 
             //agregamos los eventos
             TitusTools.Codigo3D.SelectionChanged += TBContenido_SelectionChanged;
+
+            panel2 = new Label()
+            {
+                Dock = DockStyle.Bottom,
+                Text = "Linea: 1, Columna: 1",
+                TextAlign = ContentAlignment.MiddleRight,
+                BackColor = Color.LightGray
+            };
+
+            //agregamos los eventos
+            TitusTools.Codigo3DOptmizado.SelectionChanged += TBContenido2_SelectionChanged;
         }
 
         private void AbrirCarpetaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -75,6 +91,11 @@ namespace C3DCombiner
         private void TBContenido_SelectionChanged(object sender, EventArgs e)
         {
             panel.Text = "Linea: " + (TitusTools.Codigo3D.Selection.Start.iLine + 1).ToString() + ", Columna: " + (TitusTools.Codigo3D.Selection.Start.iChar + 1).ToString();
+        }
+
+        private void TBContenido2_SelectionChanged(object sender, EventArgs e)
+        {
+            panel2.Text = "Linea: " + (TitusTools.Codigo3DOptmizado.Selection.Start.iLine + 1).ToString() + ", Columna: " + (TitusTools.Codigo3DOptmizado.Selection.Start.iChar + 1).ToString();
         }
 
         private void AbrirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -120,7 +141,7 @@ namespace C3DCombiner
 
         private void EjecutarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TitusTools.Tabs.Ejecutar();
+            //TitusTools.Tabs.Ejecutar();
         }
 
         private void iniciarSesionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -172,6 +193,16 @@ namespace C3DCombiner
         {
             Registro r = new Registro();
             r.Show();
+        }
+
+        private void ejecutarToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TitusTools.Tabs.Ejecutar();
+        }
+
+        private void optimizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TitusTools.Tabs.Optimizar();
         }
     }
 }

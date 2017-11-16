@@ -97,11 +97,13 @@ namespace C3DCombiner.Funciones
             {
                 case Constante.TEntero:
                     this.Entero = Int32.Parse(valor.ToString());
+                    this.Decimal = this.Entero;
                     this.Cadena = valor.ToString();
                     break;
 
                 case Constante.TDecimal:
                     this.Decimal = Double.Parse(valor.ToString());
+                    
                     this.Cadena = valor.ToString();
                     break;
 
@@ -151,6 +153,66 @@ namespace C3DCombiner.Funciones
         }
 
 
+        public String Generar3DOptimizado()
+        {
+            return Generar3DOptimizado(this);
+        }
+
+        public String Generar3DOptimizado(FNodoExpresion nodo)
+        {
+            String cadena = "";
+
+            if (nodo.Izquierda == null && nodo.Derecha == null)
+            {
+                switch (nodo.Tipo)
+                {
+                    case Constante.Temporal:
+                        cadena += nodo.Nombre;
+                        break;
+
+                    case Constante.TH:
+                        cadena += "H";
+                        break;
+
+                    case Constante.TP:
+                        cadena += "P";
+                        break;
+
+                    case Constante.TEntero:
+                        cadena += nodo.Entero.ToString();
+                        break;
+
+                    case Constante.TDecimal:
+                        cadena += nodo.Decimal.ToString();
+                        break;
+                }
+            }
+            else if (nodo.Izquierda != null && nodo.Derecha != null)
+            {
+                cadena += Izquierda.Generar3DOptimizado() + " " + nodo.Tipo + " " + nodo.Derecha.Generar3DOptimizado();
+            }
+            else if (nodo.Izquierda != null)
+            {
+
+            }
+            else if (nodo.Derecha != null)
+            {
+                if (nodo.Tipo.Equals(Constante.THeap))
+                {
+                    cadena += "Heap[" + nodo.Derecha.Generar3DOptimizado() + "]";
+                }
+                else if (nodo.Tipo.Equals(Constante.TStack))
+                {
+                    cadena += "Stack[" + nodo.Derecha.Generar3DOptimizado() + "]";
+                }
+                else
+                {
+                    cadena += "-" + nodo.Derecha.Generar3DOptimizado();
+                }
+            }
+
+            return cadena;
+        }
 
         public Nodo3D Generar3D()
         {
@@ -345,7 +407,13 @@ namespace C3DCombiner.Funciones
                     codigo3d = Generar3DDoubleToStr();
                     break;
 
+                case Constante.TParseInt:
+                    codigo3d = Generar3DStrToInt();
+                    break;
 
+                case Constante.TParseDouble:
+                    codigo3d = Generar3DStrToDouble();
+                    break;
             }
             return codigo3d;
         }
@@ -413,7 +481,7 @@ namespace C3DCombiner.Funciones
 
             return nodo;
         }
-        
+
         private void ResolverArreglo(FNodoExpresion exp)
         {
             if (exp.Tipo.Equals("arreglo"))
@@ -556,6 +624,50 @@ namespace C3DCombiner.Funciones
             else
             {
                 TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede converir a cadena con DoubleToStr un tipo " + aux.Tipo, TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+        private Nodo3D Generar3DStrToInt()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Nodo3D aux = Derecha.Generar3D();
+
+            if (aux.Tipo.Equals(Constante.TCadena))
+            {
+                Nodo3D conv = StrToInt(aux.Valor);
+                nodo.Codigo += aux.Codigo;
+                nodo.Codigo += conv.Codigo;
+                nodo.Valor = conv.Valor;
+                nodo.Tipo = conv.Tipo;
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede converir a entero con StrToInt un tipo " + aux.Tipo, TitusTools.GetRuta(), Fila, Columna);
+            }
+
+            return nodo;
+        }
+
+        private Nodo3D Generar3DStrToDouble()
+        {
+            Nodo3D nodo = new Nodo3D();
+
+            Nodo3D aux = Derecha.Generar3D();
+
+            if (aux.Tipo.Equals(Constante.TCadena))
+            {
+                Nodo3D conv = StrToDouble(aux.Valor);
+                nodo.Codigo += aux.Codigo;
+                nodo.Codigo += conv.Codigo;
+                nodo.Valor = conv.Valor;
+                nodo.Tipo = conv.Tipo;
+            }
+            else
+            {
+                TitusTools.InsertarError(Constante.TErrorSemantico, "No se puede converir a entero con StrToDouble un tipo " + aux.Tipo, TitusTools.GetRuta(), Fila, Columna);
             }
 
             return nodo;
@@ -758,7 +870,105 @@ namespace C3DCombiner.Funciones
             return codigo3d;
         }
 
+        private Nodo3D StrToInt(String tcad)
+        {
+            String cadena = "";
+            Nodo3D codigo3d = new Nodo3D();
 
+            String t0 = TitusTools.GetTemp();
+            String t1 = TitusTools.GetTemp();
+            String t2 = TitusTools.GetTemp();
+            String t3 = TitusTools.GetTemp();
+
+            String e1 = TitusTools.GetEtq();
+            String e2 = TitusTools.GetEtq();
+            String e3 = TitusTools.GetEtq();
+
+
+            //codigo 3d
+            cadena += "\t\t" + t0 + " = " + tcad + ";//Convirtiendo entero a cadena\n"; // temporal que guarda el numero a convertir en cadena
+            cadena += "\t\t" + t1 + " = Heap[" + t0 + "];\n"; //temporal que guardara si es negativo o positivo
+            cadena += "\t\t" + t2 + " = 0;\n";
+            cadena += "\t" + e1 + ":\n";
+            cadena += "\t\t" + "ifFalse " + t1 + " >= 48 goto " + e2 + ";\n";
+            cadena += "\t\t" + "ifFalse " + t1 + " <= 57 goto " + e2 + ";\n";
+            cadena += "\t\t" + t3 + " = " + t1 + " - 48;\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " * 10;\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " + " + t3 + ";\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " + 1;\n";
+            cadena += "\t\t" + t1 + " = Heap[" + t0 + "];\n";
+            cadena += "\t\t" + "ifFalse " + t1 + " == 0 goto " + e1 + ";\n";
+            cadena += "\t\t" + "goto " + e3 + ";\n";
+            cadena += "\t" + e2 + ":\n";
+            cadena += "\t\t" + "Error(3);\n";
+            cadena += "\t" + e3 + ":\n";
+
+            codigo3d.Codigo = cadena;
+            codigo3d.Tipo = Constante.TEntero;
+            codigo3d.Valor = t2;
+            return codigo3d;
+        }
+
+        private Nodo3D StrToDouble(String tcad)
+        {
+            String cadena = "";
+            Nodo3D codigo3d = new Nodo3D();
+
+            String t0 = TitusTools.GetTemp();
+            String t1 = TitusTools.GetTemp();
+            String t2 = TitusTools.GetTemp();
+            String t3 = TitusTools.GetTemp();
+            String t4 = TitusTools.GetTemp();
+            String t5 = TitusTools.GetTemp();
+            String t6 = TitusTools.GetTemp();
+            String t7 = TitusTools.GetTemp();
+            String t8 = TitusTools.GetTemp();
+
+            String e1 = TitusTools.GetEtq();
+            String e2 = TitusTools.GetEtq();
+            String e3 = TitusTools.GetEtq();
+            String e4 = TitusTools.GetEtq();
+            String e5 = TitusTools.GetEtq();
+            //codigo 3d
+            cadena += "\t\t" + t0 + " = " + tcad + ";//Convirtiendo entero a cadena\n"; // temporal que guarda el numero a convertir en cadena
+            cadena += "\t\t" + t1 + " = Heap[" + t0 + "];\n"; //temporal que guardara si es negativo o positivo
+            cadena += "\t\t" + t2 + " = 0;\n";
+            cadena += "\t" + e1 + ":\n";
+            cadena += "\t\t" + "ifFalse " + t1 + " >= 48 goto " + e2 + ";\n";
+            cadena += "\t\t" + "ifFalse " + t1 + " <= 57 goto " + e2 + ";\n";
+            cadena += "\t\t" + t3 + " = " + t1 + " - 48;\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " * 10;\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " + " + t3 + ";\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " + 1;\n";
+            cadena += "\t\t" + t1 + " = Heap[" + t0 + "];\n";
+            cadena += "\t\t" + "if " + t1 + " == 46 goto " + e4 + ";\n";
+            cadena += "\t\t" + "ifFalse " + t1 + " == 0 goto " + e1 + ";\n";
+            cadena += "\t\t" + "goto " + e3 + ";\n";
+            cadena += "\t" + e2 + ":\n";
+            cadena += "\t\t" + "Error(4);\n";
+            cadena += "\t" + e4 + ":\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " + 1;\n";
+            cadena += "\t\t" + t4 + " = 0;\n";
+            cadena += "\t\t" + t5 + " = 1;\n";
+            cadena += "\t\t" + t6 + "= Heap[" + t0 + "];\n";
+            cadena += "\t" + e5 + ":\n";
+            cadena += "\t\t" + "ifFalse " + t6 + " >= 48 goto " + e2 + ";\n";
+            cadena += "\t\t" + "ifFalse " + t6 + " <= 57 goto " + e2 + ";\n";
+            cadena += "\t\t" + t7 + " = " + t6 + " - 48;\n";
+            cadena += "\t\t" + t4 + " = " + t4 + " * 10;\n";
+            cadena += "\t\t" + t4 + " = " + t4 + " + " + t7 + ";\n";
+            cadena += "\t\t" + t5 + " = " + t5 + " * 10;\n";
+            cadena += "\t\t" + t0 + " = " + t0 + " + 1;\n";
+            cadena += "\t\t" + t6 + "= Heap[" + t0 + "];\n";
+            cadena += "\t\t" + "ifFalse " + t6 + " == 0 goto " + e5 + ";\n";
+            cadena += "\t\t" + t8 + " = " + t4 + " / " + t5 + ";\n";
+            cadena += "\t\t" + t2 + " = " + t2 + " + " + t8 + ";\n";
+            cadena += "\t" + e3 + ":\n";
+            codigo3d.Codigo = cadena;
+            codigo3d.Tipo = Constante.TDecimal;
+            codigo3d.Valor = t2;
+            return codigo3d;
+        }
         private Nodo3D Suma3D(FNodoExpresion izq, FNodoExpresion der)
         {
             Nodo3D codigo3d = new Nodo3D();
@@ -767,7 +977,6 @@ namespace C3DCombiner.Funciones
 
             if (!TitusTools.HayErrores())
             {
-
                 switch (auxizq.Tipo)
                 {
                     case Constante.TEntero:
@@ -3495,19 +3704,20 @@ namespace C3DCombiner.Funciones
         public FNodoExpresion Division(FNodoExpresion izq, FNodoExpresion der)
         {
             FNodoExpresion aux = new FNodoExpresion(null, null, Constante.TErrorSemantico, Constante.TErrorSemantico, Fila, Columna, null);
-
+            double a = 0;
             switch (izq.Tipo)
             {
                 case Constante.TEntero:
                     switch (der.Tipo)
                     {
                         case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero / der.Entero);
+                            a = Double.Parse(izq.Entero.ToString()) / Double.Parse(der.Entero.ToString());
+                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, a);
                             break;
 
                         case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Entero / der.Decimal);
-
+                            a = Double.Parse(izq.Entero.ToString()) / Double.Parse(der.Entero.ToString());
+                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, a);
                             break;
 
                         default:
@@ -3520,11 +3730,13 @@ namespace C3DCombiner.Funciones
                     switch (der.Tipo)
                     {
                         case Constante.TEntero:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal / der.Entero);
+                            a = Double.Parse(izq.Entero.ToString()) / Double.Parse(der.Entero.ToString());
+                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, a);
                             break;
 
                         case Constante.TDecimal:
-                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, izq.Decimal / der.Decimal);
+                            a = Double.Parse(izq.Entero.ToString()) / Double.Parse(der.Entero.ToString());
+                            aux = new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, Fila, Columna, a);
 
                             break;
 

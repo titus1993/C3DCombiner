@@ -18,6 +18,28 @@ namespace C3DCombiner.Funciones
             this.Temporal = temporal;
         }
 
+
+        public String Generar3DOptimizado()
+        {
+            String cadena = "\t\t";
+
+            switch (Tipo) {
+                case Constante.PrintChar:
+                    cadena += "print(\"%c\", " + Temporal + ");\n";   
+                    break;
+
+                case Constante.PrintNum:
+                    cadena += "print(\"%d\", " + Temporal + ");\n";
+                    break;
+
+                case Constante.PrintDouble:
+                    cadena += "print(\"%f\", " + Temporal + ");\n";
+                    break;
+            }
+
+            return cadena;
+        }
+
         public void Ejecutar()
         {
             switch (this.Tipo)

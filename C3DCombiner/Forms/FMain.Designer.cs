@@ -47,6 +47,7 @@
             this.iniciarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compartirClaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registrarseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modulosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reporteASTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -58,7 +59,8 @@
             this.Tab3d = new System.Windows.Forms.TabPage();
             this.Tab3dOptimizado = new System.Windows.Forms.TabPage();
             this.TabSimbolos = new System.Windows.Forms.TabPage();
-            this.registrarseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ejecutarToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.optimizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -188,6 +190,9 @@
             // 
             // ejecutarToolStripMenuItem
             // 
+            this.ejecutarToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ejecutarToolStripMenuItem1,
+            this.optimizarToolStripMenuItem});
             this.ejecutarToolStripMenuItem.Name = "ejecutarToolStripMenuItem";
             this.ejecutarToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.ejecutarToolStripMenuItem.Text = "Ejecutar";
@@ -224,6 +229,13 @@
             this.compartirClaseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.compartirClaseToolStripMenuItem.Text = "Compartir clase";
             this.compartirClaseToolStripMenuItem.Click += new System.EventHandler(this.compartirClaseToolStripMenuItem_Click);
+            // 
+            // registrarseToolStripMenuItem
+            // 
+            this.registrarseToolStripMenuItem.Name = "registrarseToolStripMenuItem";
+            this.registrarseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.registrarseToolStripMenuItem.Text = "Registrarse";
+            this.registrarseToolStripMenuItem.Click += new System.EventHandler(this.registrarseToolStripMenuItem_Click);
             // 
             // modulosToolStripMenuItem
             // 
@@ -343,12 +355,19 @@
             this.TabSimbolos.Text = "Tabla de Simbolos";
             this.TabSimbolos.UseVisualStyleBackColor = true;
             // 
-            // registrarseToolStripMenuItem
+            // ejecutarToolStripMenuItem1
             // 
-            this.registrarseToolStripMenuItem.Name = "registrarseToolStripMenuItem";
-            this.registrarseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.registrarseToolStripMenuItem.Text = "Registrarse";
-            this.registrarseToolStripMenuItem.Click += new System.EventHandler(this.registrarseToolStripMenuItem_Click);
+            this.ejecutarToolStripMenuItem1.Name = "ejecutarToolStripMenuItem1";
+            this.ejecutarToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.ejecutarToolStripMenuItem1.Text = "Ejecutar";
+            this.ejecutarToolStripMenuItem1.Click += new System.EventHandler(this.ejecutarToolStripMenuItem1_Click);
+            // 
+            // optimizarToolStripMenuItem
+            // 
+            this.optimizarToolStripMenuItem.Name = "optimizarToolStripMenuItem";
+            this.optimizarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optimizarToolStripMenuItem.Text = "Optimizar";
+            this.optimizarToolStripMenuItem.Click += new System.EventHandler(this.optimizarToolStripMenuItem_Click);
             // 
             // FMain
             // 
@@ -408,6 +427,8 @@
         private System.Windows.Forms.ToolStripMenuItem modulosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reporteASTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registrarseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ejecutarToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem optimizarToolStripMenuItem;
     }
 }
 

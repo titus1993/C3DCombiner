@@ -172,5 +172,14 @@ namespace C3DCombiner
                 TTaux.Analizar();
             }
         }
+
+        public void Optimizar()
+        {
+            TitusTab TTaux = (TitusTab)this.SelectedPage;
+            if (TTaux != null)
+            {
+                TTaux.Optimizar();
+            }
+        }
     }
 }

@@ -230,7 +230,7 @@ namespace C3DCombiner.Ejecucion
             String cadena = "";
             FClase clase = (FClase)Valor;
             cadena += clase.Generar3D();
-            return cadena;            
+            return cadena;
         }
 
         private String GenerarClaseConMain()
@@ -424,10 +424,10 @@ namespace C3DCombiner.Ejecucion
             }
             else
             {
-                TitusTools.InsertarError(Constante.TErrorSemantico, "El metodo " + met.Nombre + " solo puede retornar un tipo " + tipometodo + ", no un tipo " + val.Tipo, TitusTools.GetRuta() ,Fila, Columna);
+                TitusTools.InsertarError(Constante.TErrorSemantico, "El metodo " + met.Nombre + " solo puede retornar un tipo " + tipometodo + ", no un tipo " + val.Tipo, TitusTools.GetRuta(), Fila, Columna);
             }
 
-            
+
             return cadena;
         }
 
@@ -506,7 +506,7 @@ namespace C3DCombiner.Ejecucion
                 }
                 if (!encontrado)
                 {
-                    FMetodo m = new FMetodo(Constante.TPublico, Constante.TConstructor,0, clase.Nombre, new List<Simbolo>(), new Ambito(clase.Nombre),clase.Fila, clase.Columna);
+                    FMetodo m = new FMetodo(Constante.TPublico, Constante.TConstructor, 0, clase.Nombre, new List<Simbolo>(), new Ambito(clase.Nombre), clase.Fila, clase.Columna);
                     return new Simbolo(m.Visibilidad, Constante.TConstructor, m.Nombre, Constante.TConstructor, m.Fila, m.Columna, m.Ambito, m);
                 }
             }
@@ -558,7 +558,7 @@ namespace C3DCombiner.Ejecucion
                         }
                         if (!error)
                         {
-                            return new Simbolo (sim);
+                            return new Simbolo(sim);
                         }
                     }
                 }
@@ -619,7 +619,8 @@ namespace C3DCombiner.Ejecucion
             if (Hermano != null)
             {
                 aux = Hermano;
-            }else if (Padre != null)
+            }
+            else if (Padre != null)
             {
                 aux = Padre;
             }
@@ -637,7 +638,7 @@ namespace C3DCombiner.Ejecucion
                 else
                 {
                     aux = aux.Hermano;
-                }                
+                }
             }
             //buscamos en todo el ambito global
             if (sim == null)
@@ -648,7 +649,7 @@ namespace C3DCombiner.Ejecucion
                 {
                     if ((decla.Rol.Equals(Constante.PARAMETRO) || decla.Rol.Equals(Constante.DECLARACION)) && decla.Nombre.Equals(nombre))
                     {
-                        sim = new  Simbolo(decla);
+                        sim = new Simbolo(decla);
                         break;
                     }
                 }
@@ -714,7 +715,7 @@ namespace C3DCombiner.Ejecucion
             //si no existe en el ambito de clases local las buscamos en los imports
             if (aux == null)
             {
-                foreach(String import in archivo.Imports)
+                foreach (String import in archivo.Imports)
                 {
                     if (aux != null)
                     {
@@ -742,6 +743,91 @@ namespace C3DCombiner.Ejecucion
             }
 
             return clase;
+        }
+
+        public String Generar3DOptimizado()
+        {
+            String cadena = "";
+
+            switch (Rol)
+            {
+                case Constante.LLAMADA_METODO:
+                    cadena = Generar3DOptimizadoLlamadaMetodo();
+                    break;
+
+                case Constante.TGoto:
+                    cadena = Generar3DOptimizadoGoTo();
+                    break;
+
+                case Constante.TIf:
+                    cadena = Generar3DOptimizadoIf();                    
+                    break;
+
+                case Constante.Etiqueta:
+                    cadena = "\t" + Nombre + ":\n";
+                    break;
+
+                case Constante.ASIGNACION:
+                    cadena = Generar3DOptimizadoAsignacion();
+                    break;
+
+                case Constante.TPrint:
+                    cadena = Generar3DOptimizadoPrint();
+                    break;
+
+                case Constante.TError:
+                    cadena = Generar3DOptimizadoError();
+                    break;
+            }
+
+            return cadena;
+        }
+
+        public String Generar3DOptimizadoError()
+        {
+            String cadena = "";
+            cadena = "\t\t" + "Error(" + Nombre + ");\n";
+            return cadena;
+        }
+
+        public String Generar3DOptimizadoLlamadaMetodo()
+        {
+            String cadena = "";
+            cadena = "\t\t" + Nombre + "();\n";
+            return cadena;
+        }
+
+        public String Generar3DOptimizadoGoTo()
+        {
+            String cadena = "";
+            cadena += "\t\t" + "goto " + Nombre + ";\n";
+            return cadena;
+        }
+
+
+
+        public String Generar3DOptimizadoIf()
+        {
+            String cadena = "";
+            FIf si = (FIf)Valor;
+            cadena += si.Generar3DOptimizado();
+            return cadena;
+        }
+
+        public String Generar3DOptimizadoAsignacion()
+        {
+            String cadena = "";
+            FAsignacion3D asig = (FAsignacion3D)Valor;
+            cadena = asig.Generar3DOptimizado();
+            return cadena;
+        }
+
+        public String Generar3DOptimizadoPrint()
+        {
+            String cadena = "";
+            FPrint print = (FPrint)Valor;
+            cadena = print.Generar3DOptimizado();
+            return cadena;
         }
     }
 }

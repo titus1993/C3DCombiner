@@ -64,7 +64,7 @@ namespace C3DCombiner
                 ParseTree arbol = parser.Parse(TBContenido.Text);
 
                 if (arbol.Root != null && arbol.ParserMessages.Count == 0)
-                {                    
+                {
                     //generacion de la escructura del archivo ejecutad y sus imports
                     ArbolSintactico Arbol = new ArbolSintactico(arbol.Root, this.Tipo, this.Ruta);
 
@@ -85,9 +85,9 @@ namespace C3DCombiner
                             MessageBox.Show("Generacion de codigo 3D finalizada con exito.", "Codigo 3D", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
-                    
 
-                    
+
+
                 }
                 else
                 {
@@ -109,7 +109,77 @@ namespace C3DCombiner
                     }
                     MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
+
+            }
+
+        }
+
+        public void Optimizar()
+        {
+            if (GuardarArchivo())
+            {
+                if (this.Tipo == 2)
+                {
+                    TitusTools.Limpiar();
+                    ParseTree arbol = parser.Parse(TBContenido.Text);
+
+                    if (arbol.Root != null && arbol.ParserMessages.Count == 0)
+                    {
+                        //revisamos si es tipo .ddd
+                        if (this.Tipo == 2)
+                        {
+                            TitusTools.Rutas.Add(this.Ruta);
+                            Ejecucion3D Ejecucion = (Ejecucion3D)GenerarTablaSimbolo3D.RecorrerArbol(arbol.Root);
+
+                            if (Ejecucion != null)
+                            {
+                                Ejecucion.Optimizar();
+                            }
+                            TitusTools.Rutas.RemoveAt(TitusTools.Rutas.Count - 1);
+                            //ejecucion del primer archivo en la lista
+                            if (TitusTools.Archivos_Importados.Count > 0 && !TitusTools.HayErrores())
+                            {
+                                TitusTools.Archivos_Importados[0].EjecutarConMain();
+                            }
+                            if (TitusTools.HayErrores())
+                            {
+                                MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Generacion de codigo 3D finalizada con exito.", "Codigo 3D", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        foreach (Irony.LogMessage error in arbol.ParserMessages)
+                        {
+                            if (error.Message.Contains("Syntax error,"))
+                            {
+                                TitusTools.InsertarError("Sintactico", error.Message.Replace("Syntax error", " "), this.Ruta, (error.Location.Line + 1), (error.Location.Column + 1));
+                            }
+                            else if (error.Message.Contains("Invalid character"))
+                            {
+                                TitusTools.InsertarError("Lexico", error.Message.Replace("Invalid character", "Caracter invalido"), Ruta, (error.Location.Line + 1), (error.Location.Column + 1));
+                            }
+                            else
+                            {
+                                TitusTools.InsertarError("Sintactico", error.Message.Replace("Unclosed cooment block", "Comentario de bloque sin cerrar"), Ruta, (error.Location.Line + 1), (error.Location.Column + 1));
+                            }
+
+                        }
+                        MessageBox.Show("Se encontraron errores", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Solo de pueden optimizar archivos .ddd", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }              
+
             }
 
         }
